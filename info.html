@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>情報 | DBT XPression 学習ノート</title>
+<style>
+:root{--bg:#FAF9F6;--panel:#FFFFFF;--panel2:#F0EDE7;--line:#EAE6DD;--ink:#1B1B1A;--sub:#8A8983;--accent:#F26A1B}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);line-height:1.8;font-family:-apple-system,"Segoe UI","Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif}
+header{background:#fff;border-bottom:1px solid var(--line);padding:12px 18px;display:flex;align-items:center;gap:12px;position:sticky;top:0;z-index:5}
+header .brand{display:flex;align-items:center;gap:8px;font-weight:800;color:var(--ink);font-size:15px;text-decoration:none}
+header .brand .dot{width:10px;height:10px;border-radius:50%;background:var(--accent)}
+.hbtns{margin-left:auto;display:flex;gap:8px}
+header a.back,header button.lang{font-size:12.5px;color:var(--ink);text-decoration:none;border:1px solid var(--line);border-radius:9px;padding:6px 12px;background:#fff;cursor:pointer;box-shadow:2px 2px 6px rgba(120,102,72,.10),-2px -2px 6px rgba(255,255,255,.85)}
+header a.back{color:var(--accent)}
+main{max-width:820px;margin:0 auto;padding:26px 18px 70px}
+h1{font-size:24px;margin:.2em 0 .1em}
+.lead{color:var(--sub);font-size:14px;margin:0 0 18px}
+.toc{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 24px}
+.toc a{font-size:12.5px;color:var(--accent);text-decoration:none;border:1px solid var(--line);border-radius:20px;padding:6px 13px;background:#fff;box-shadow:2px 2px 6px rgba(120,102,72,.10),-2px -2px 6px rgba(255,255,255,.85)}
+section{background:#fff;border:1px solid var(--line);border-radius:16px;padding:20px 22px;margin:0 0 16px;box-shadow:4px 4px 10px rgba(120,102,72,.13),-4px -4px 10px rgba(255,255,255,.85);scroll-margin-top:70px}
+section h2{font-size:17px;margin:0 0 12px;border-left:4px solid var(--accent);padding-left:10px}
+table.kv{width:100%;border-collapse:collapse;font-size:14px}
+table.kv th{text-align:left;color:var(--sub);font-weight:600;width:150px;vertical-align:top;padding:7px 10px 7px 0}
+table.kv td{padding:7px 0;vertical-align:top}
+a{color:var(--accent)}
+p{margin:.5em 0;font-size:14px}
+.sub{color:var(--sub);font-size:13px}
+ul.log{list-style:none;padding:0;margin:6px 0}
+ul.log li{border-left:3px solid var(--accent);padding:4px 0 4px 12px;margin:10px 0}
+ul.log li b{font-size:14px}
+ul.log li span{display:block;font-size:13px;color:var(--sub)}
+.note{background:#FFF3EA;border:1px solid #F6D8C1;border-radius:10px;padding:10px 14px;font-size:13px;color:#8a5a30;margin:10px 0}
+footer{border-top:1px solid var(--line);padding:22px 16px;text-align:center;color:var(--sub);font-size:12px}
+.orgrow{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-bottom:8px}
+.orglink{font-size:12px;color:var(--accent);text-decoration:none;border:1px solid var(--line);border-radius:20px;padding:5px 12px;background:#fff}
+</style>
+</head>
+<body>
+<header>
+  <a class="brand" href="index.html"><span class="dot"></span>DBT XPression 学習ノート</a>
+  <div class="hbtns">
+    <button class="lang" id="langBtn" onclick="toggleLang()">EN</button>
+    <a class="back" id="backBtn" href="index.html">▲ トップへ戻る</a>
+  </div>
+</header>
+<main id="infomain"></main>
+<footer>
+  <div class="orgrow">
+    <a class="orglink" id="f_site" href="https://dekobokotech.com/" target="_blank" rel="noopener">公式サイト ↗</a>
+    <a class="orglink" id="f_shop" href="https://dbtps.dekobokotech.com/" target="_blank" rel="noopener">オンラインショップ ↗</a>
+  </div>
+  <div id="f_copy">© DekoBokoTech合同会社 · DBT XPression Learning Suite</div>
+</footer>
+<script>
+const SITE='https://dekobokotech.com/', SHOP='https://dbtps.dekobokotech.com/', NOTE='https://note.com/dekobokotech';
+const TERMS='https://dbtps.dekobokotech.com/policies/terms-of-service';
+const TOKU='https://dbtps.dekobokotech.com/policies/legal-notice';
+const PRIV='https://dbtps.dekobokotech.com/policies/privacy-policy';
+const FORM='https://dbtps.dekobokotech.com/pages/contact';
+function mail(a){return `<a href="mailto:${a}">${a}</a>`;}
+function link(u,t){return `<a href="${u}" target="_blank" rel="noopener">${t} ↗</a>`;}
+const C={
+ ja:{docTitle:'情報 | DBT XPression 学習ノート', back:'▲ トップへ戻る', lang:'EN',
+  h1:'情報', lead:'本アプリ「DBT XPression 実務ノート・学習ノート」に関する各種情報です。',
+  toc:['運営者情報','お問い合わせ','利用規約','プライバシーポリシー','更新履歴'],
+  op_h:'運営者情報',
+  op:[['運営者','DekoBokoTech合同会社'],['代表者','龍 健一'],['所在地','〒810-0001　福岡県福岡市中央区天神2丁目2番12号 T&Jビルディング7F'],
+      ['連絡先',mail('info@dekobokotech.com')],['公式サイト',link(SITE,'dekobokotech.com')],['オンラインショップ',link(SHOP,'DBT Partners Studio')],['note',link(NOTE,'note.com/dekobokotech')]],
+  ct_h:'お問い合わせ', ct_intro:'本アプリ・教材に関するお問い合わせは、下記までご連絡ください。',
+  ct:[['サポート窓口',mail('support@dekobokotech.com')],['メール（一般）',mail('info@dekobokotech.com')],['お問い合わせフォーム',link(FORM,'オンラインショップのお問い合わせページ')],['対応時間','平日 10:00〜17:00（JST）']],
+  tm_h:'利用規約', tm_body:'本アプリおよび教材のご利用にあたっては、当店（DBT Partners Studio）の利用規約が適用されます。詳細は下記をご確認ください。',
+  tm_links:[link(TERMS,'利用規約を読む'),link(TOKU,'特定商取引法に基づく表記')],
+  tm_note:'※ 本学習ノートは学習・確認用ツールです。教材・素材の無断転載・再配布はご遠慮ください。詳細は上記規約に従います。',
+  pv_h:'プライバシーポリシー',
+  pv_body:'本学習アプリは、学習の進捗（読了状況・フラッシュカードの記憶度・クイズ成績・お気に入り・言語設定など）を、<b>お使いの端末のブラウザ内（localStorage）にのみ保存</b>します。これらのデータが外部サーバーへ送信されることはなく、個人情報の収集や Cookie による追跡も行いません。「学習の記録をリセット」でいつでも削除できます。',
+  pv_note:'※ 本アプリをWebで公開して閲覧する場合、ホスティング事業者がアクセスログ等を記録することがあります。オンラインショップでのご購入等に関する個人情報の取り扱いは、当店の詳細なプライバシーポリシーをご確認ください。',
+  pv_link:link(PRIV,'詳細なプライバシーポリシーを読む'),
+  hs_h:'更新履歴',
+  hs:[['v1.0（2026年7月）','初版公開。XPression実務ノート全6巻をもとに、学習ノートと逆引きCookbookを統合した学習スイートを公開。'],
+      ['学習ノート','ロードマップ／レッスン／確認クイズ（273問）／フラッシュカード（間隔反復・1,729枚）／画像ギャラリー（1,001枚・高画質DL）／全文横断検索／学習ダッシュボード／ハンズオン（作例）／制作・運用の注意点、を搭載。'],
+      ['逆引き Cookbook & Builders 連携','Visual Logic・RossTalk・Dynamic Material の逆引きと3つのビルダー、Scriptリファレンスを同梱し、学習ノートと相互リンク。'],
+      ['デザイン','白＋オレンジのクリーンなテーマに刷新。やわらかな立体感（ソフトUI）とスマホ・タブレット対応、日本語／英語の切り替えに対応。'],
+      ['この情報ページを追加','運営者情報・お問い合わせ・利用規約・プライバシーポリシー・更新履歴を掲載。']],
+  hs_note:'今後の更新はこの欄に追記していきます（例:「vX.X 〇〇を追加」）。',
+  copy:'© DekoBokoTech合同会社 · DBT XPression Learning Suite', f_site:'公式サイト ↗', f_shop:'オンラインショップ ↗'},
+ en:{docTitle:'Information | DBT XPression Study', back:'▲ Back to top', lang:'日本語',
+  h1:'Information', lead:'Information about the "DBT XPression Field Notes / Study App".',
+  toc:['Operator','Contact','Terms of Use','Privacy Policy','Changelog'],
+  op_h:'Operator information',
+  op:[['Operator','DekoBokoTech LLC (Godo Kaisha)'],['Representative','Kenichi Ryu'],['Address','7F, T&J Building, 2-2-12 Tenjin, Chuo-ku, Fukuoka-shi, Fukuoka 810-0001, Japan'],
+      ['Email',mail('info@dekobokotech.com')],['Website',link(SITE,'dekobokotech.com')],['Online shop',link(SHOP,'DBT Partners Studio')],['note',link(NOTE,'note.com/dekobokotech')]],
+  ct_h:'Contact', ct_intro:'For inquiries about this app or the learning materials, please contact us below.',
+  ct:[['Support',mail('support@dekobokotech.com')],['General email',mail('info@dekobokotech.com')],['Contact form',link(FORM,'Online shop contact page')],['Hours','Weekdays 10:00–17:00 (JST)']],
+  tm_h:'Terms of Use', tm_body:'Use of this app and the materials is subject to the Terms of Use of DBT Partners Studio. Please see below for details.',
+  tm_links:[link(TERMS,'Read the Terms of Use'),link(TOKU,'Specified Commercial Transaction Act disclosure')],
+  tm_note:'* This Study App is a learning / reference tool. Please do not reproduce or redistribute the materials or assets without permission. Details follow the Terms above.',
+  pv_h:'Privacy Policy',
+  pv_body:'This Study App stores your learning progress (read status, flashcard memory levels, quiz results, favorites, language setting, etc.) <b>only in your browser (localStorage)</b>. This data is never sent to any external server; we do not collect personal information or use cookies for tracking. You can delete it anytime via "Reset progress".',
+  pv_note:'* When this app is published on the web, the hosting provider may record access logs. For handling of personal information related to purchases on the online shop, please see our full Privacy Policy.',
+  pv_link:link(PRIV,'Read the full Privacy Policy'),
+  hs_h:'Changelog',
+  hs:[['v1.0 (July 2026)','First release. A learning suite integrating the Study App and the reverse-lookup Cookbook, based on all 6 volumes of the XPression Field Notes.'],
+      ['Study App','Roadmap / lessons / quizzes (273) / flashcards (spaced repetition, 1,729) / image gallery (1,001, full-res download) / full-text search / dashboard / hands-on tutorials / production & live watch-outs.'],
+      ['Cookbook & Builders integration','Reverse-lookup for Visual Logic, RossTalk and Dynamic Material with 3 builders and a Script Reference, cross-linked with the Study App.'],
+      ['Design','Refreshed to a clean white + orange theme with a soft UI, mobile / tablet support, and a Japanese / English toggle.'],
+      ['Added this Information page','Operator info, contact, terms, privacy policy, and changelog.']],
+  hs_note:'Future updates will be listed here (e.g., "vX.X added ...").',
+  copy:'© DekoBokoTech LLC · DBT XPression Learning Suite', f_site:'Website ↗', f_shop:'Online shop ↗'}
+};
+let LANG=localStorage.getItem('xpr_lang')||'ja';
+function kvTable(rows){return `<table class="kv">${rows.map(r=>`<tr><th>${r[0]}</th><td>${r[1]}</td></tr>`).join('')}</table>`;}
+function render(){
+  const d=C[LANG];document.documentElement.lang=LANG;document.title=d.docTitle;
+  document.getElementById('backBtn').textContent=d.back;
+  document.getElementById('langBtn').textContent=d.lang;
+  document.getElementById('f_site').textContent=d.f_site;
+  document.getElementById('f_shop').textContent=d.f_shop;
+  document.getElementById('f_copy').textContent=d.copy;
+  const ids=['operator','contact','terms','privacy','history'];
+  document.getElementById('infomain').innerHTML=`
+    <h1>${d.h1}</h1>
+    <p class="lead">${d.lead}</p>
+    <div class="toc">${d.toc.map((t,i)=>`<a href="#${ids[i]}">${t}</a>`).join('')}</div>
+    <section id="operator"><h2>${d.op_h}</h2>${kvTable(d.op)}</section>
+    <section id="contact"><h2>${d.ct_h}</h2><p>${d.ct_intro}</p>${kvTable(d.ct)}</section>
+    <section id="terms"><h2>${d.tm_h}</h2><p>${d.tm_body}</p><p>${d.tm_links.join('<br>')}</p><p class="sub">${d.tm_note}</p></section>
+    <section id="privacy"><h2>${d.pv_h}</h2><p>${d.pv_body}</p><p class="sub">${d.pv_note}</p><p>${d.pv_link}</p></section>
+    <section id="history"><h2>${d.hs_h}</h2><ul class="log">${d.hs.map(x=>`<li><b>${x[0]}</b><span>${x[1]}</span></li>`).join('')}</ul><p class="note">${d.hs_note}</p></section>`;
+}
+function toggleLang(){LANG=LANG==='ja'?'en':'ja';localStorage.setItem('xpr_lang',LANG);render();}
+render();
+</script>
+</body>
+</html>
