@@ -60,10 +60,20 @@ button.ghost:hover{background:var(--panel2)}
 .lesson p{margin:.5em 0;color:#3A3A37}
 .secnav{display:flex;justify-content:space-between;gap:10px;margin:22px 0 0}
 .quizbox .q{font-size:16px;font-weight:700;margin:6px 0 14px}
+.qhead{display:flex;align-items:center;gap:14px;margin:2px 0 16px}
+.qcount{flex:0 0 auto;line-height:1;white-space:nowrap}
+.qcount b{font-size:32px;font-weight:800;color:var(--accent)}
+.qcount span{font-size:17px;color:var(--sub);margin-left:3px}
+.qmeta{flex:1;min-width:0}
+.qvol{font-size:13px;color:var(--sub);margin-bottom:7px;font-weight:600}
+.qbar{height:10px;background:var(--chip);border-radius:6px;overflow:hidden;box-shadow:inset 2px 2px 5px rgba(120,102,72,.16),inset -2px -2px 5px rgba(255,255,255,.8)}
+.qbar>i{display:block;height:100%;background:var(--accent);border-radius:6px;transition:width .25s}
 .choice{display:block;width:100%;text-align:left;background:var(--panel);border:1px solid var(--line);color:var(--ink);padding:12px 14px;border-radius:11px;margin:8px 0;cursor:pointer;font-size:14px}
 .choice:hover{background:var(--panel2)}
 .choice.correct{background:rgba(31,163,122,.15);border-color:var(--accent2)}
 .choice.wrong{background:rgba(226,75,74,.12);border-color:var(--bad)}
+.choice.dim{opacity:.35;text-decoration:line-through;pointer-events:none}
+.hintbtn{font-size:13px}
 .flash{perspective:1200px;max-width:520px;margin:14px auto}
 .flashinner{position:relative;min-height:220px;transition:transform .5s;transform-style:preserve-3d;cursor:pointer}
 .flashinner.flip{transform:rotateY(180deg)}
@@ -378,7 +388,7 @@ const I18N={
   quiz_h1:'確認クイズ',quiz_intro:'XPressionの<b>機能・用途の理解</b>を問う問題です。「このコマンド／ブロックは何をする？」「この目的にはどの機能？」を考えて選びます。答え合わせのたびに解説が出ます。',
   quiz_all:'全範囲からランダム',quiz_start:'開始',quiz_none:'この範囲に問題がありません',
   quiz_result:'結果',quiz_review:'復習したいテーマ：',quiz_perfect:'全問正解！すばらしい 🎉',quiz_again:'もう一度',
-  quiz_correct:'正解',quiz_wrong:'おしい！ 正解は下の解説',quiz_readsrc:'この項目を本文で読む →',quiz_seeresult:'結果を見る',quiz_next:'次の問題 →',
+  quiz_correct:'正解',quiz_wrong:'おしい！ 正解は下の解説',quiz_readsrc:'この項目を本文で読む →',quiz_seeresult:'結果を見る',quiz_next:'次の問題 →',hint_5050:'ヒント（2つ消す）',
   cards_h1:'フラッシュカード',cards_intro:'用語・コマンド・概念を反復で覚えます。「覚えた／まだ」で仕分けし、あとで“まだ”だけ復習できます。',
   cards_known:'覚えた',cards_due:'まだ覚えていないカードだけ復習',cards_nocards:'カードがありません',deck_done:'このデッキは終了！',deck_list:'デッキ一覧へ',to_list:'一覧へ',review:'復習',
   face_front:'おもて（タップで裏）',face_back:'うら',mark_later:'まだ →',mark_known:'覚えた ✓',card_isknown:'（このカードは覚えた済み）',
@@ -397,7 +407,7 @@ const I18N={
   quiz_h1:'Quiz',quiz_intro:'Questions test your understanding of XPression <b>features and their uses</b>. Think "what does this command/block do?" / "which feature fits this goal?" An explanation appears after each answer. (Questions are in Japanese.)',
   quiz_all:'Random from all',quiz_start:'Start',quiz_none:'No questions in this range',
   quiz_result:'Result',quiz_review:'Themes to review:',quiz_perfect:'Perfect score! 🎉',quiz_again:'Again',
-  quiz_correct:'Correct',quiz_wrong:'Close! See the explanation',quiz_readsrc:'Read this in the book →',quiz_seeresult:'See result',quiz_next:'Next →',
+  quiz_correct:'Correct',quiz_wrong:'Close! See the explanation',quiz_readsrc:'Read this in the book →',quiz_seeresult:'See result',quiz_next:'Next →',hint_5050:'Hint (remove 2)',
   cards_h1:'Flashcards',cards_intro:'Memorize terms, commands and concepts by repetition. Sort into Known / Later, then review only the Later ones.',
   cards_known:'known',cards_due:'Review only cards not yet learned',cards_nocards:'No cards',deck_done:'Deck finished!',deck_list:'Back to decks',to_list:'To list',review:'Review',
   face_front:'front (tap to flip)',face_back:'back',mark_later:'Later →',mark_known:'Known ✓',card_isknown:'(already learned)',
@@ -618,9 +628,10 @@ function showQuestion(){
   }
   const q=quizPool[quizIdx];quizAnswered=false;
   area.innerHTML=`<div class="card quizbox">
-    <div class="sub">${esc(VOLNAME(q.vol))} · ${quizIdx+1}/${quizPool.length}</div>
+    <div class="qhead"><div class="qcount"><b>${quizIdx+1}</b><span>/ ${quizPool.length}</span></div><div class="qmeta"><div class="qvol">${esc(VOLNAME(q.vol))}</div><div class="qbar"><i style="width:${Math.round((quizIdx+1)/quizPool.length*100)}%"></i></div></div></div>
     <div class="q">${esc(q.q).replace(/\n/g,'<br>')}</div>
     <div id="choices">${q.choices.map((c,i)=>`<button class="choice" onclick="answer(${i})">${esc(c)}</button>`).join('')}</div>
+    <div id="hintrow" style="margin-top:8px"><button class="ghost hintbtn" onclick="useHint()">💡 ${tr('hint_5050')}</button></div>
     <div id="explain"></div>
   </div>`;
 }
@@ -629,6 +640,7 @@ function answer(i){
   const q=quizPool[quizIdx];const btns=document.querySelectorAll('#choices .choice');
   btns.forEach((b,j)=>{b.disabled=true;if(j===q.answer)b.classList.add('correct');if(j===i&&i!==q.answer)b.classList.add('wrong')});
   const ok=i===q.answer;
+  {const hr=document.getElementById('hintrow');if(hr)hr.style.display='none';}
   if(ok)quizScore++;else quizWrong.push(q);
   {const w=s_weak();if(ok){if(w[q.q])delete w[q.q];}else{w[q.q]=(w[q.q]||0)+1;}}
   markStudyDay();
@@ -643,6 +655,7 @@ function answer(i){
     </div>`;
   document.getElementById('explain').scrollIntoView({behavior:'smooth',block:'nearest'});
 }
+function useHint(){const q=quizPool[quizIdx];const btns=document.querySelectorAll('#choices .choice');const wrong=[];btns.forEach((b,j)=>{if(j!==q.answer)wrong.push(j);});for(let i=wrong.length-1;i>0;i--){const k=Math.floor(Math.random()*(i+1));const t=wrong[i];wrong[i]=wrong[k];wrong[k]=t;}wrong.slice(0,2).forEach(j=>{btns[j].classList.add('dim');btns[j].disabled=true;});const hr=document.getElementById('hintrow');if(hr)hr.style.display='none';}
 function nextQuestion(){quizIdx++;showQuestion();window.scrollTo(0,0)}
 
 // ---------- FLASHCARDS ----------
@@ -936,7 +949,7 @@ function lbShow(){
   const it=lbList[lbIdx];if(!it)return;
   const im=document.getElementById('lbImg');im.classList.remove('zoom');im.src=`gallery/v${it.vol}/${it.fn}`;
   const base=it.fn.replace(/\.[a-z0-9]+$/i,'');const fext=(window.FULLEXT&&window.FULLEXT[base])||'jpg';
-  const dl=`<a class="lb-dl" href="gallery_full/v${it.vol}/${base}.${fext}" download="${base}.${fext}">${tr('gal_dl')}</a>`;
+  const dl=`<a class="lb-dl" href="gallery_full/v${it.vol}/${base}.${fext}" download="${base}.${fext}" target="_blank" rel="noopener">${tr('gal_dl')}</a>`;
   document.getElementById('lbCap').innerHTML=`${esc(it.cap)} 〔${lbIdx+1}/${lbList.length}〕`+(it.ci!=null?`<span class="rd" onclick="lbClose();openLesson(${it.vol},${it.ci}${it.si!=null?(','+it.si):''})">${tr('readbody')}</span>`:'')+dl;
   document.getElementById('lightbox').classList.add('show');
 }
