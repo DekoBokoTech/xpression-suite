@@ -234,6 +234,7 @@ footer.orgfoot{margin-top:30px;padding:22px 16px;border-top:1px solid var(--line
       <span class="tab" id="tabBuilder" data-i18n="tabBuilder" onclick="setView('builder')">Scriptビルダー</span>
       <span class="tab" id="tabRossTalk" data-i18n="tabRossTalk" onclick="setView('rosstalk')">RossTalk</span>
       <span class="tab" id="tabDynMat" data-i18n="tabDynMat" onclick="setView('dynmat')">Dynamic Material</span>
+      <span class="tab" id="tabDataLinq" data-i18n="tabDataLinq" onclick="setView('datalinq')">DataLinq</span>
       <button class="btn" id="langBtn" onclick="toggleLang()" style="margin-left:auto">EN</button>
     </div>
     <input id="q" data-i18n-ph="searchPh" placeholder="やりたいことを入力（例：値で表示を切り替える / スコア / タイマー / 色）">
@@ -1921,6 +1922,7 @@ const UI={
   tabBuilder:{ja:"Scriptビルダー",en:"Script Builder"},
   tabRossTalk:{ja:"RossTalk",en:"RossTalk"},
   tabDynMat:{ja:"Dynamic Material",en:"Dynamic Material"},
+  tabDataLinq:{ja:"DataLinq",en:"DataLinq"},
   searchPh:{ja:"やりたいことを入力（例：値で表示を切り替える / スコア / タイマー / 色）",en:"Type what you want to do (e.g. toggle visibility by value / score / timer / color)"},
   fav:{ja:"★ お気に入り",en:"★ Favorites"},
   add:{ja:"＋ レシピを追加",en:"+ Add recipe"},
@@ -2353,8 +2355,8 @@ function dmBuilderCard(){
 }
 function setView(v){
   view=v;
-  const rec=v==="recipes", glo=v==="glossary", scr=(v==="scriptScene"||v==="scriptExt"||v==="scriptDict"||v==="builder"||v==="rosstalk"||v==="dynmat");
-  [["tabRecipes","recipes"],["tabGlossary","glossary"],["tabScrScene","scriptScene"],["tabScrExt","scriptExt"],["tabScrDict","scriptDict"],["tabBuilder","builder"],["tabRossTalk","rosstalk"],["tabDynMat","dynmat"]].forEach(a=>{const t=document.getElementById(a[0]);if(t)t.classList.toggle("active",v===a[1]);});
+  const rec=v==="recipes", glo=v==="glossary", scr=(v==="scriptScene"||v==="scriptExt"||v==="scriptDict"||v==="builder"||v==="rosstalk"||v==="dynmat"||v==="datalinq");
+  [["tabRecipes","recipes"],["tabGlossary","glossary"],["tabScrScene","scriptScene"],["tabScrExt","scriptExt"],["tabScrDict","scriptDict"],["tabBuilder","builder"],["tabRossTalk","rosstalk"],["tabDynMat","dynmat"],["tabDataLinq","datalinq"]].forEach(a=>{const t=document.getElementById(a[0]);if(t)t.classList.toggle("active",v===a[1]);});
   document.getElementById("q").style.display=v==="builder"?"none":"";
   document.getElementById("meta").style.display=rec?"":"none";
   document.getElementById("cards").style.display=rec?"":"none";
@@ -2365,10 +2367,11 @@ function setView(v){
     : glo ? (lang==='en'?"Filter blocks by name or meaning":"ブロック名や意味で絞り込み")
     : v==="rosstalk" ? (lang==='en'?"Filter RossTalk commands (e.g. take / clear / gpi)":"RossTalkコマンドを絞り込み（例 take / clear / gpi）")
     : v==="dynmat" ? (lang==='en'?"Filter dynamic material (e.g. color / clipstore / macro)":"Dynamic Material を絞り込み（例 色 / clipstore / マクロ）")
+    : v==="datalinq" ? (lang==='en'?"Filter DataLinq (e.g. Excel / JSON / Live Update)":"DataLinq を絞り込み（例 Excel / JSON / 更新 / 失敗）")
     : (lang==='en'?"Filter script recipes / API":"スクリプトのレシピ/APIを絞り込み");
   rerender();
 }
-function rerender(){ if(view==="recipes")render(); else if(view==="glossary")renderGlossary(); else if(view==="scriptDict")renderScriptDict(); else if(view==="builder")renderBuilder(); else if(view==="rosstalk")renderRossTalk(); else if(view==="dynmat")renderDynMat(); else renderScript(view==="scriptScene"?"scene":"ext"); }
+function rerender(){ if(view==="recipes")render(); else if(view==="glossary")renderGlossary(); else if(view==="scriptDict")renderScriptDict(); else if(view==="builder")renderBuilder(); else if(view==="rosstalk")renderRossTalk(); else if(view==="dynmat")renderDynMat(); else if(view==="datalinq")renderDataLinq(); else renderScript(view==="scriptScene"?"scene":"ext"); }
 function renderScript(ctx){
   const g=document.getElementById("script");
   const q=(query||"").toLowerCase().split(/\s+/).filter(Boolean);
@@ -2575,6 +2578,59 @@ function renderDynMat(){
   if(!samples.length && !types.length && !macros.length) html=dmIntro()+dmBuilderCard()+`<div class="empty">${lang==='en'?'No matches.':'該当なし'}</div>`;
   g.innerHTML=html;
   dmbGen();
+}
+/* ===== DataLinq: 対応ソース一覧 & 主要項目の使い方 ===== */
+const DL_SOURCES=[
+ ["ASCII / Text（CSV・区切りテキスト）","カンマ・タブ等で区切ったテキスト。CSVはこのソースで読む。単純で追いやすいデータ向き。先頭行を列名（＝キー）にできる。","Delimited text (comma/tab). Read CSV via this source. Best for simple, traceable data; the first row can be the header (column names = keys).",false],
+ ["ADODB（Excel・データベース）","OLEDB/ODBCプロバイダ経由。Excel（XLSX/XLS）やSQLite等。ExcelはMicrosoft ACE/Jetプロバイダが必要（32bitに注意）。接続文字列＋Data Sourceで指定。","Via OLEDB/ODBC providers. Excel (XLSX/XLS), SQLite, etc. Excel needs the Microsoft ACE/Jet provider (mind 32-bit). Set connection string + Data Source.",false],
+ ["JSON","構造化データ。外部システム連携向き。読みたい値のキー階層を指定して取り込む。","Structured data, good for external integration. Point at the key path of the value you want.",false],
+ ["XML","XML形式のデータ。要素・属性を指定して参照する。","XML data; reference by element/attribute.",true],
+ ["RSS（RSSフィード）","ニュース等のRSSフィードを取り込む。","Pull in RSS feeds (news, etc.).",true],
+ ["ODBC（データベース）","ODBCドライバ経由で SQL Server / MySQL / Access / SQLite 等のデータベースに接続。","Connect to databases (SQL Server / MySQL / Access / SQLite …) via ODBC drivers.",true],
+ ["Scoreboard（スコアボード・計時連携）","競技用スコアボード／計時システムのベンダー別ソース。対応ベンダーは版により異なる。","Vendor-specific scoreboard/clock sources; supported vendors vary by version.",true],
+ ["競技データ（NFL GSIS 等）","特定競技のデータ形式（例：NFL GSIS）。","Specific sports data formats (e.g., NFL GSIS).",true]
+];
+const DL_FIELDS=[
+ ["Live Update","データ変化時に自動で表示を更新。便利だが全項目で使うものではない（負荷・意図しない更新に注意）。","Auto-refresh when data changes. Handy, but not for every field — watch load and unintended updates."],
+ ["Poll every（取得間隔）","データを取りに行く間隔。短ければよいわけではない（頻度が高すぎると負荷・ちらつき）。","How often to fetch. Shorter isn't always better — too frequent causes load/flicker."],
+ ["Return Empty on Failure","取得失敗時に空を返す。前の値を残すか空にするか＝失敗時の見え方が決まる。必ず一度確認する。","Return empty on failure. Decides whether the old value stays or goes blank — always test this."],
+ ["Prepend / Append","取得データの前後に固定行を足す。便利だが空データ時の挙動に注意。","Add fixed rows before/after fetched data. Useful, but mind behavior when data is empty."],
+ ["Header（HDR＝先頭行を列名に）","先頭行を列名（キー）として扱うか。CSV/Excelで重要。ExcelのHDR=Yesに相当。","Treat the first row as column names (keys). Key for CSV/Excel; equals Excel HDR=Yes."],
+ ["区切り・文字コード（CSV/ASCII）","区切り文字（, / tab 等）と文字コード（UTF-8推奨）を実データに合わせる。","Match delimiter (comma/tab…) and encoding (UTF-8 recommended) to the actual data."],
+ ["キー階層（JSON/XML）","読みたい値のキー階層／要素・属性を指定する。","Specify the key path / element-attribute of the value you want."],
+ ["Connection String / Data Source（ADODB/ODBC）","プロバイダ＋Data Source（ファイルパス/DSN/URL）。Test Connectionで接続確認。失敗時はData Source値とプロバイダ導入を確認。","Provider + Data Source (file path/DSN/URL). Use Test Connection; on failure check the Data Source value and provider install."],
+ ["Load / Save / Append（ソース構成）","ソースの設定を保存・読み込み・追記して使い回す。","Save/load/append the source configuration to reuse it."]
+];
+function dlBadge(){ return lang==='en'
+  ? `<span style="display:inline-block;font-size:11px;padding:1px 7px;border-radius:8px;background:#FFF3E8;color:#8a4a10;border:1px solid #F2B183;margin-left:6px;white-space:nowrap">verify on system</span>`
+  : `<span style="display:inline-block;font-size:11px;padding:1px 7px;border-radius:8px;background:#FFF3E8;color:#8a4a10;border:1px solid #F2B183;margin-left:6px;white-space:nowrap">要実機確認</span>`; }
+function dlIntro(){
+  if(lang==='en') return `<div class="card"><h3 style="margin:0 0 8px">DataLinq — sources & main settings</h3>`
+    +`<div class="rtdesc">DataLinq brings external data (tables, databases, feeds) into XPression and feeds it to text objects and materials. The actual source types are listed below (ADODB / ASCII / Text / JSON / XML / RSS / ODBC / Scoreboard …). <b>Read CSV via the ASCII/Text source and Excel via the ADODB source.</b> The common shape is: source → key (column/field) → display target.</div>`
+    +`<div class="gotcha" style="margin-top:8px">Items marked <b>verify on system</b> are beyond this book's scope. Available source types and field names vary by XPression version and DataLinq Server setup — confirm on your machine.</div></div>`;
+  return `<div class="card"><h3 style="margin:0 0 8px">DataLinq — 対応ソースと主要項目</h3>`
+    +`<div class="rtdesc">外部データ（表・DB・フィード）をXPressionに取り込み、Text ObjectやMaterialに流し込む仕組み。実際の「ソース種別」は下の一覧（ADODB / ASCII / Text / JSON / XML / RSS / ODBC / Scoreboard 等）。<b>CSVはASCII/Textソース、ExcelはADODBソース</b>で読む。共通構造は「ソース → キー（列/項目）→ 表示先」。</div>`
+    +`<div class="gotcha" style="margin-top:8px"><b>要実機確認</b>付きは本書（第5巻）の範囲外。利用可能な種別・項目名はXPressionのバージョンやDataLinq Server構成で異なるため、実機で確認してください。</div></div>`;
+}
+function renderDataLinq(){
+  const g=document.getElementById("script");
+  const q=(query||"").toLowerCase().split(/\s+/).filter(Boolean);
+  const mt=s=>q.every(t=>(s||"").toLowerCase().includes(t));
+  let html=dlIntro();
+  const srcs=DL_SOURCES.filter(c=>mt(c[0]+" "+c[1]+" "+c[2]));
+  if(srcs.length){
+    html+=`<div class="gcat"><div class="gcat-h"><b>${lang==='en'?'Supported source types':'対応ソース種別'}</b> <span class="gcount">${srcs.length}</span></div>`;
+    srcs.forEach(c=>{ html+=`<div class="grow"><div class="rtrow"><div class="rtsyn"><code>${esc(c[0])}</code></div><div class="rtdesc">${esc(lang==='en'?c[2]:c[1])}${c[3]?dlBadge():""}</div></div></div>`; });
+    html+="</div>";
+  }
+  const fields=DL_FIELDS.filter(c=>mt(c[0]+" "+c[1]+" "+c[2]));
+  if(fields.length){
+    html+=`<div class="gcat"><div class="gcat-h"><b>${lang==='en'?'Main settings & how to use them':'主要項目の使い方'}</b> <span class="gcount">${fields.length}</span></div>`;
+    fields.forEach(c=>{ html+=`<div class="grow"><div class="rtrow"><div class="rtsyn"><code>${esc(c[0])}</code></div><div class="rtdesc">${esc(lang==='en'?c[2]:c[1])}</div></div></div>`; });
+    html+="</div>";
+  }
+  if(!srcs.length && !fields.length) html=dlIntro()+`<div class="empty">${lang==='en'?'No matches.':'該当なし'}</div>`;
+  g.innerHTML=html;
 }
 function scrKind(n){
   if(/Object$/.test(n)) return lang==='en'?"scene object":"シーンオブジェクト";
@@ -2957,7 +3013,7 @@ function exportBundle(selRecipes, selScripts){
   document.getElementById("tabRecipes").className="tab active";
   document.getElementById("tabGlossary").className="tab";
   document.getElementById("tabScrScene").className="tab"; document.getElementById("tabScrExt").className="tab"; document.getElementById("tabScrDict").className="tab";
-  document.getElementById("tabBuilder").className="tab"; const trt=document.getElementById("tabRossTalk"); if(trt)trt.className="tab"; const tdm=document.getElementById("tabDynMat"); if(tdm)tdm.className="tab"; document.getElementById("q").style.display="";
+  document.getElementById("tabBuilder").className="tab"; const trt=document.getElementById("tabRossTalk"); if(trt)trt.className="tab"; const tdm=document.getElementById("tabDynMat"); if(tdm)tdm.className="tab"; const tdl=document.getElementById("tabDataLinq"); if(tdl)tdl.className="tab"; document.getElementById("q").style.display="";
   document.getElementById("modalBg").classList.remove("open");
   const fb=document.getElementById("favBtn"); if(fb) fb.classList.remove("primary");
   const json=JSON.stringify(merged).replace(/</g,"\\u003c");
@@ -3027,7 +3083,7 @@ fillCatSelect();
 nbFillCat();
 applyUI();
 render();
-(function(){var hv={"#builder":"builder","#scriptScene":"scriptScene","#scriptExt":"scriptExt","#scriptDict":"scriptDict","#rosstalk":"rosstalk","#dynmat":"dynmat","#glossary":"glossary","#recipes":"recipes"};if(hv[location.hash])setView(hv[location.hash]);})();
+(function(){var hv={"#builder":"builder","#scriptScene":"scriptScene","#scriptExt":"scriptExt","#scriptDict":"scriptDict","#rosstalk":"rosstalk","#dynmat":"dynmat","#datalinq":"datalinq","#glossary":"glossary","#recipes":"recipes"};if(hv[location.hash])setView(hv[location.hash]);})();
 </script>
 <footer class="orgfoot">
   <div class="orgrow">
