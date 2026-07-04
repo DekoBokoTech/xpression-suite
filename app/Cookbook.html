@@ -58,8 +58,8 @@
   .exrow input[type=checkbox]{width:22px;height:22px;min-width:22px;padding:0;margin:0;flex:none;accent-color:var(--accent);cursor:pointer}
   .ioimp{border-top:1px solid var(--line);margin-top:12px;padding-top:10px}
   .ioimp .lbl{font-size:12px;color:var(--muted);margin-bottom:6px}
-  .tabs{display:flex;gap:6px;margin-bottom:10px;align-items:center}
-  .tab{padding:7px 14px;border-radius:8px;cursor:pointer;border:1px solid var(--line);background:var(--panel2);color:var(--muted);font-size:13.5px;user-select:none}
+  .tabs{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px;align-items:center}
+  .tab{padding:7px 14px;border-radius:8px;cursor:pointer;border:1px solid var(--line);background:var(--panel2);color:var(--muted);font-size:13.5px;white-space:nowrap;user-select:none}
   .tab.active{background:var(--accent2);border-color:var(--accent);color:#fff}
   .gcat{margin-top:16px}
   .gcat-h{display:flex;align-items:center;gap:8px;font-weight:600;font-size:15px;border-bottom:1px solid var(--line);padding-bottom:6px;margin-bottom:4px}
@@ -2581,55 +2581,132 @@ function renderDynMat(){
 }
 /* ===== DataLinq: 対応ソース一覧 & 主要項目の使い方 ===== */
 const DL_SOURCES=[
- ["ASCII / Text（CSV・区切りテキスト）","カンマ・タブ等で区切ったテキスト。CSVはこのソースで読む。単純で追いやすいデータ向き。先頭行を列名（＝キー）にできる。","Delimited text (comma/tab). Read CSV via this source. Best for simple, traceable data; the first row can be the header (column names = keys).",false],
- ["ADODB（Excel・データベース）","OLEDB/ODBCプロバイダ経由。Excel（XLSX/XLS）やSQLite等。ExcelはMicrosoft ACE/Jetプロバイダが必要（32bitに注意）。接続文字列＋Data Sourceで指定。","Via OLEDB/ODBC providers. Excel (XLSX/XLS), SQLite, etc. Excel needs the Microsoft ACE/Jet provider (mind 32-bit). Set connection string + Data Source.",false],
- ["JSON","構造化データ。外部システム連携向き。読みたい値のキー階層を指定して取り込む。","Structured data, good for external integration. Point at the key path of the value you want.",false],
- ["XML","XML形式のデータ。要素・属性を指定して参照する。","XML data; reference by element/attribute.",true],
- ["RSS（RSSフィード）","ニュース等のRSSフィードを取り込む。","Pull in RSS feeds (news, etc.).",true],
- ["ODBC（データベース）","ODBCドライバ経由で SQL Server / MySQL / Access / SQLite 等のデータベースに接続。","Connect to databases (SQL Server / MySQL / Access / SQLite …) via ODBC drivers.",true],
- ["Scoreboard（スコアボード・計時連携）","競技用スコアボード／計時システムのベンダー別ソース。対応ベンダーは版により異なる。","Vendor-specific scoreboard/clock sources; supported vendors vary by version.",true],
- ["競技データ（NFL GSIS 等）","特定競技のデータ形式（例：NFL GSIS）。","Specific sports data formats (e.g., NFL GSIS).",true]
+ ["ADODB DataLinq Source","ADODBデータソース内の全テーブルにアクセス。補足：OLEDB/ODBC経由でExcel（XLSX/XLS）やAccess・SQLite等のDBを読む定番。ExcelはACE/Jetプロバイダが必要（32bitに注意）。","Access all tables within an ADODB datasource. Note: the standard way to read Excel (XLSX/XLS) or databases (Access/SQLite) via OLEDB/ODBC; Excel needs the ACE/Jet provider (mind 32-bit).","file"],
+ ["Amtote DataLinq Source","Amtote（トータリゼータ）データにアクセス。補足：競馬など賭式データのベンダー連携。専用フィード/契約が必要。","Access Amtote data sources. Note: vendor feed for pari-mutuel/racing data; requires the specific feed/contract.","feed"],
+ ["ANC DataLinq Source","ANC Stat Serverのデータにアクセス。補足：ANCの統計サーバー連携。対応環境が必要。","Access data from an ANC Stat Server. Note: integration with ANC's stat server; requires that environment.","feed"],
+ ["ASCII DataLinq Source","ストリーム配信のASCIIデータにアクセス。補足：機器等から流れるASCII文字列を受ける汎用ソース。","Access streamed ASCII data sources. Note: general source for ASCII strings streamed from a device/service.","net"],
+ ["Bodet Scorepad DataLinq Source","Bodet Scorepadのデータにアクセス。補足：Bodet製スコアボード/計時連携。対応機材が必要。","Access Bodet Scorepad data sources. Note: Bodet scoreboard/timing integration; requires that hardware.","board"],
+ ["Captioning DataLinq Source","ストリーム配信のキャプション（字幕）データにアクセス。補足：字幕データの取り込み。","Access streamed caption data sources. Note: ingests caption/subtitle data.","feed"],
+ ["Colorado Time Systems Scoreboards DataLinq Source","Colorado Time Systemsスコアボードのデータにアクセス。補足：CTS製スコアボード/計時連携。対応機材が必要。","Access Colorado Time Systems scoreboards data sources. Note: CTS scoreboard/timing integration; requires that hardware.","board"],
+ ["Daktronics DataLinq Source","Daktronicsのデータにアクセス。補足：Daktronics製スコアボード連携。対応機材が必要。","Access Daktronics data sources. Note: Daktronics scoreboard integration; requires that hardware.","board"],
+ ["Daktronics RTD DataLinq Source","ストリーム配信のDaktronics RTDデータにアクセス。補足：Daktronics RTD（リアルタイムデータ）連携。","Access streamed Daktronics RTD data sources. Note: Daktronics RTD (real-time data) integration.","board"],
+ ["DashBoard DataLinq Source","DashBoardサーバーのデータにアクセス。補足：Ross DashBoard経由の値連携。","Access data from a DashBoard Server. Note: value integration via Ross DashBoard.","feed"],
+ ["Electro-Mech Scoreboards DataLinq Source","Electro-Mechスコアボードのデータにアクセス。補足：Electro-Mech製スコアボード連携。対応機材が必要。","Access Electro-Mech scoreboards data sources. Note: Electro-Mech scoreboard integration; requires that hardware.","board"],
+ ["FairPlay DataLinq Source","FairPlayのデータにアクセス。補足：FairPlay製スコアボード連携。対応機材が必要。","Access FairPlay data source. Note: FairPlay scoreboard integration; requires that hardware.","board"],
+ ["Genius Live Stream DataLinq Source","Genius API Sports Live Streamにアクセス。補足：Genius Sportsのライブ配信データ。契約/APIが必要。","Access Genius API Sports Live Stream. Note: Genius Sports live data; requires contract/API.","feed"],
+ ["Genius Sports InArena DataLinq Source","Genius Sports InArenaデータにTCPでアクセス。補足：会場内のGeniusデータをTCP受信。","Access Genius Sports InArena data over TCP. Note: receives in-venue Genius data over TCP.","feed"],
+ ["GSIS DataLinq Source","GSISネットワークのデータにアクセス。補足：NFL GSISスタッツ連携。対応ネットワーク/契約が必要。","Access data from the GSIS network. Note: NFL GSIS stats; requires that network/contract.","feed"],
+ ["JSON DataLinq Source","JSONデータファイルにアクセス。補足：構造化データを読む汎用ソース。キー階層を指定。サンプルあり。","Access JSON data files. Note: general source for structured data; specify the key path. Sample provided.","file"],
+ ["NBA NGSS DataLinq Source","NBA NGSSスタッツにアクセス。補足：NBAの公式統計連携。契約/対応環境が必要。","Access NBA NGSS stats. Note: NBA official stats; requires contract/environment.","feed"],
+ ["NHL Hits DataLinq Source","ストリーム配信のNHL Hitsデータにアクセス。補足：NHLのヒットデータ連携。","Access streamed NHL Hits data sources. Note: NHL hits data integration.","feed"],
+ ["OES Scoreboards DataLinq Source","OESスコアボードのデータにアクセス。補足：OES製スコアボード連携。対応機材が必要。","Access OES scoreboards data sources. Note: OES scoreboard integration; requires that hardware.","board"],
+ ["RSS / HTTP DataLinq Source","RSSフィードやHTTPデータにアクセス。補足：ニュース等のRSS、または任意のHTTPエンドポイント。サンプル（RSS）あり。","Access RSS feeds or HTTP data sources. Note: news RSS or any HTTP endpoint. Sample (RSS) provided.","net"],
+ ["SMT Tennis Umpire Clock DataLinq","SMT Tennis Umpire Clockにアクセス。補足：テニスの主審クロック連携。対応機材が必要。","Access SMT Tennis Umpire Clock. Note: tennis umpire clock integration; requires that hardware.","board"],
+ ["Sportech DataLinq Source","Sportechのデータにアクセス。補足：Sportech連携。対応環境/契約が必要。","Access Sportech data sources. Note: Sportech integration; requires environment/contract.","feed"],
+ ["Stats Perform API DataLinq Source","Stats Performのデータにアクセス。補足：Stats Perform（Opta等）API連携。契約/APIが必要。","Access Stats Perform data sources. Note: Stats Perform (Opta, etc.) API; requires contract/API.","feed"],
+ ["Stats Perform DataLinq Source","Stats PerformのOut of Town Scoresにアクセス。補足：他会場スコアの取り込み。契約が必要。","Access Stats Perform Out of Town Scores. Note: other-venue scores; requires contract.","feed"],
+ ["Swiss Timing Scoreboards DataLinq Source","Swiss Timingスコアボードのデータにアクセス。補足：Swiss Timing製スコアボード/計時連携。対応機材が必要。","Access Swiss Timing scoreboards data sources. Note: Swiss Timing scoreboard/timing integration; requires that hardware.","board"],
+ ["Teletimer DataLinq Source","Teletimerソースにアクセス。補足：Teletimer計時連携。対応機材が必要。","Access Teletimer sources. Note: Teletimer timing integration; requires that hardware.","board"],
+ ["Teleview DataLinq Source","Teleview（International Sound）ソースにアクセス。補足：Teleview連携。対応環境が必要。","Access Teleview (International Sound) sources. Note: Teleview integration; requires that environment.","feed"],
+ ["Text DataLinq Source","構造化テキストファイル内のフィールドにアクセス。補足：CSV等の区切りテキストを読む汎用ソース。サンプル（CSV）あり。","Access fields within a structured text file. Note: general source for CSV/delimited text. Sample (CSV) provided.","file"],
+ ["WebSocket DataLinq Source","WebSocket経由のデータにアクセス。補足：リアルタイム双方向のWebSocket受信。","Access data over WebSocket. Note: real-time bidirectional WebSocket data.","net"],
+ ["White Way DataLinq Source","White Wayのデータにアクセス。補足：White Way製スコアボード連携。対応機材が必要。","Access White Way data sources. Note: White Way scoreboard integration; requires that hardware.","board"],
+ ["XML DataLinq Source","XMLデータファイルにアクセス。補足：XMLを要素・属性で参照する汎用ソース。サンプルあり。","Access XML data files. Note: general source; reference by element/attribute. Sample provided.","file"],
+ ["XML/JSON TCP DataLinq","XML/JSONデータにTCPでアクセス。補足：TCP経由でXML/JSONを受信。","Access XML/JSON data over TCP. Note: receives XML/JSON over TCP.","net"]
 ];
-const DL_FIELDS=[
- ["Live Update","データ変化時に自動で表示を更新。便利だが全項目で使うものではない（負荷・意図しない更新に注意）。","Auto-refresh when data changes. Handy, but not for every field — watch load and unintended updates."],
- ["Poll every（取得間隔）","データを取りに行く間隔。短ければよいわけではない（頻度が高すぎると負荷・ちらつき）。","How often to fetch. Shorter isn't always better — too frequent causes load/flicker."],
- ["Return Empty on Failure","取得失敗時に空を返す。前の値を残すか空にするか＝失敗時の見え方が決まる。必ず一度確認する。","Return empty on failure. Decides whether the old value stays or goes blank — always test this."],
- ["Prepend / Append","取得データの前後に固定行を足す。便利だが空データ時の挙動に注意。","Add fixed rows before/after fetched data. Useful, but mind behavior when data is empty."],
- ["Header（HDR＝先頭行を列名に）","先頭行を列名（キー）として扱うか。CSV/Excelで重要。ExcelのHDR=Yesに相当。","Treat the first row as column names (keys). Key for CSV/Excel; equals Excel HDR=Yes."],
- ["区切り・文字コード（CSV/ASCII）","区切り文字（, / tab 等）と文字コード（UTF-8推奨）を実データに合わせる。","Match delimiter (comma/tab…) and encoding (UTF-8 recommended) to the actual data."],
- ["キー階層（JSON/XML）","読みたい値のキー階層／要素・属性を指定する。","Specify the key path / element-attribute of the value you want."],
- ["Connection String / Data Source（ADODB/ODBC）","プロバイダ＋Data Source（ファイルパス/DSN/URL）。Test Connectionで接続確認。失敗時はData Source値とプロバイダ導入を確認。","Provider + Data Source (file path/DSN/URL). Use Test Connection; on failure check the Data Source value and provider install."],
- ["Load / Save / Append（ソース構成）","ソースの設定を保存・読み込み・追記して使い回す。","Save/load/append the source configuration to reuse it."]
+const DL_CFG=[
+ ["File Path / Filename","読み込むファイルのパス（JSON=File Path、XML=XML Filename、Text=Filename）。相対/絶対。右の … で選択。","The file to read (JSON File Path, XML Filename, Text Filename); relative/absolute. Pick with the … button."],
+ ["Wait for file change events","ファイルの変更を検知して更新。ネットワークドライブでは非推奨（Poll推奨）。","Update on file-change events. Not recommended on network drives (use Poll)."],
+ ["Poll every ___ seconds","指定秒ごとに読み直す。ネットワーク/共有ファイル向け。短すぎ注意。","Re-read every N seconds; for network/shared files. Don't set too short."],
+ ["Encoding","文字コード。<automatic> か明示（ASCII等）。日本語は実ファイルに合わせUTF-8等。","Text encoding: <automatic> or explicit (ASCII…). Match the real file (UTF-8 for JP)."],
+ ["Ignore empty files (0 bytes)","0バイトの空ファイルを無視（XML/Text）。書き出し途中の空読みを防ぐ。","Ignore 0-byte files (XML/Text); avoids reading mid-write."],
+ ["Allow reading files being written","他アプリが書き込み中のファイルも読む（Text）。","Read files currently being written by other apps (Text)."],
+ ["Strip blank lines from file","空行を除去してから解析（Text）。","Strip blank lines before parsing (Text)."],
+ ["Text File has Header Row","先頭行を見出し（列名＝キー）として扱う（Text/CSV）。","Treat the first row as header (column names = keys) (Text/CSV)."],
+ ["Delimiter","区切り文字（Comma 等）。実データに合わせる（Text）。","Field delimiter (Comma…); match the data (Text)."],
+ ["New Line","改行の扱い（None 等）（Text）。","How new lines are handled (None…) (Text)."],
+ ["Text quotation / Escape quotes","引用符（\" 等）と、そのエスケープ方式（二重引用符／バックスラッシュ）（Text）。","Quotation char and escape style (two quotes / backslash) (Text)."],
+ ["Wrap Indices","インデックスの折り返し設定。挙動は実機で確認。","Wrap Indices option; verify behavior on your system."],
+ ["Enable Table Presets","テーブルのプリセットを使う。","Use table presets."],
+ ["Enable Logging","ログ出力（デバッグ用）。常用は避ける。","Enable logging (debug only)."],
+ ["Clear Data","保持しているデータをクリアする。","Clear cached/held data."]
 ];
-function dlBadge(){ return lang==='en'
-  ? `<span style="display:inline-block;font-size:11px;padding:1px 7px;border-radius:8px;background:#FFF3E8;color:#8a4a10;border:1px solid #F2B183;margin-left:6px;white-space:nowrap">verify on system</span>`
-  : `<span style="display:inline-block;font-size:11px;padding:1px 7px;border-radius:8px;background:#FFF3E8;color:#8a4a10;border:1px solid #F2B183;margin-left:6px;white-space:nowrap">要実機確認</span>`; }
+const DL_TCP=[
+ ["TCP Server / TCP Client / UDP","受信方式。ServerはXPが待受、Clientは接続しに行く、UDPも選択可。","Transport: Server listens, Client connects out, or UDP."],
+ ["TCP Port（既定 7327）","待受/接続ポート。既定は 7327。","Listen/connect port; default 7327."],
+ ["IP Address","Client時などの接続先IP。","Target IP (e.g., for Client mode)."],
+ ["Format: XML / JSON","受信データの形式を指定。","Data format over the socket: XML or JSON."],
+ ["NULL文字終端","各送信データは NULL 文字で終端する必要がある。","Each transmission must be terminated with a NULL character."],
+ ["Enable Command Parsing","コマンド解析を有効化。","Enable command parsing."],
+ ["XSLT File","受信XMLを変換するXSLT（任意）。","Optional XSLT to transform received XML."]
+];
+const DL_ADODB=[
+ ["Connection String","接続文字列。Select Template から雛形を選べる。","Connection string; start from Select Template."],
+ ["Select Template（雛形）","Access / Excel / Excel(XLSX) / MS SQL Server / MySQL / Oracle / Sybase / DB2 等の雛形。","Templates for Access / Excel / Excel(XLSX) / MS SQL Server / MySQL / Oracle / Sybase / DB2, etc."],
+ ["Test Connection","接続テスト。失敗時はData Source値とプロバイダ導入を確認。","Test the connection; on failure check the Data Source value and provider install."],
+ ["Refresh Every ___ seconds","再取得間隔（0＝自動更新しない）。","Re-fetch interval (0 = no auto refresh)."],
+ ["Table Sorting","テーブルごとに Sort Field と Order で並べ替え。","Sort each table by Sort Field and Order."],
+ ["Fixed Tables / SQL Query","固定テーブルを強制（XPの選択を上書き）、または SQL（SELECT * FROM [TableName]）で取得。","Force a fixed table (overrides XPression) or fetch via SQL (SELECT * FROM [TableName])."],
+ ["Compatibility","MS SQL(Access/Excel) / MySQL / Standard SQL から選ぶ。","Choose MS SQL (Access/Excel) / MySQL / Standard SQL."],
+ ["Record Limiting（TOP/LIMIT）","取得件数を制限（TOP/LIMIT）。負荷対策。カスタムクエリ最適化も可。","Limit rows (TOP/LIMIT) for performance; can optimize custom queries."],
+ ["Use a persistent connection","接続を保持する。","Keep a persistent connection."],
+ ["Include System Tables","システムテーブルも含める。","Include system tables."],
+ ["Log SQL Queries","SQLをログ出力（デバッグ用）。","Log SQL queries (debug only)."],
+ ["Maximum Records to Display in Browser","ブラウザ表示の最大件数（既定 200）。","Max records shown in the browser (default 200)."]
+];
+const DL_BIND=[
+ ["Static Text / DataLinq / Widget","Data Sourceの種類。外部データは DataLinq を選ぶ。","Data source kind; pick DataLinq for external data."],
+ ["DataLinq（ソース選択）＋ Enabled","使うDataLinqソースを選び、Enabledで有効化。","Pick the DataLinq source and enable it."],
+ ["Column / Row / Table","表示する値の場所。Column=列/キー、Row=行、Table=テーブル。Browseで選べる。","Where the value is: Column (column/key), Row, Table. Use Browse."],
+ ["対応マクロ（Column/Row/Table）","%datalinqkey% / @TextObject@ / @TextObject.Column@ が使える。","Supported macros: %datalinqkey% / @TextObject@ / @TextObject.Column@."],
+ ["<n> Increment","行番号の増分（連番・複数行表示に）。","Row increment (sequential/multi-row display)."],
+ ["Live Update","データ変化で自動更新。","Auto-update when data changes."],
+ ["Entity Decoding","&amp; などのHTMLエンティティをデコードして表示。","Decode HTML entities (&amp;…) for display."],
+ ["Return Empty on Failure","取得失敗時に空を返す（前の値を残さない）。","Return empty on failure (don't keep the old value)."],
+ ["Disable Font Tag Parser","データ内のフォントタグ解析を無効化。","Disable parsing of font tags in the data."],
+ ["Requery scene DataLinqs on data change","データ変化時にシーンのDataLinqを再取得。","Re-query the scene's DataLinqs when data changes."],
+ ["Prepend / Append","値の前後に固定文字を付加。","Prepend/append fixed text to the value."],
+ ["Apply fields even when data is empty","データが空でもフィールドを適用する。","Apply fields even when the data is empty."]
+];
+function dlSec(tja,ten,arr,mt){
+  const list=arr.filter(c=>mt(c[0]+" "+c[1]+" "+c[2]));
+  if(!list.length) return "";
+  let h=`<div class="gcat"><div class="gcat-h"><b>${lang==='en'?ten:tja}</b> <span class="gcount">${list.length}</span></div>`;
+  list.forEach(c=>{ h+=`<div class="grow"><div class="rtrow"><div class="rtsyn"><code>${esc(c[0])}</code></div><div class="rtdesc">${esc(lang==='en'?c[2]:c[1])}</div></div></div>`; });
+  return h+"</div>";
+}
+function dlTag(cat){
+  const m={file:["汎用・ファイル","File","#E8F3EC","#1f7a44","#BFE3CC"],
+           net:["汎用・ネットワーク","Network","#E8F0FB","#1e5ac8","#C3D6F2"],
+           board:["スコアボード・計時","Scoreboard/clock","#FFF3E8","#8a4a10","#F2B183"],
+           feed:["スポーツデータ連携","Sports feed","#F3EAF7","#6b2f8a","#D9C0E6"]};
+  const t=m[cat]||m.file; const label=lang==='en'?t[1]:t[0];
+  return `<span style="display:inline-block;font-size:11px;padding:1px 7px;border-radius:8px;background:${t[2]};color:${t[3]};border:1px solid ${t[4]};margin-left:6px;white-space:nowrap">${label}</span>`;
+}
 function dlIntro(){
   if(lang==='en') return `<div class="card"><h3 style="margin:0 0 8px">DataLinq — sources & main settings</h3>`
-    +`<div class="rtdesc">DataLinq brings external data (tables, databases, feeds) into XPression and feeds it to text objects and materials. The actual source types are listed below (ADODB / ASCII / Text / JSON / XML / RSS / ODBC / Scoreboard …). <b>Read CSV via the ASCII/Text source and Excel via the ADODB source.</b> The common shape is: source → key (column/field) → display target.</div>`
-    +`<div class="gotcha" style="margin-top:8px">Items marked <b>verify on system</b> are beyond this book's scope. Available source types and field names vary by XPression version and DataLinq Server setup — confirm on your machine.</div></div>`;
-  return `<div class="card"><h3 style="margin:0 0 8px">DataLinq — 対応ソースと主要項目</h3>`
-    +`<div class="rtdesc">外部データ（表・DB・フィード）をXPressionに取り込み、Text ObjectやMaterialに流し込む仕組み。実際の「ソース種別」は下の一覧（ADODB / ASCII / Text / JSON / XML / RSS / ODBC / Scoreboard 等）。<b>CSVはASCII/Textソース、ExcelはADODBソース</b>で読む。共通構造は「ソース → キー（列/項目）→ 表示先」。</div>`
-    +`<div class="gotcha" style="margin-top:8px"><b>要実機確認</b>付きは本書（第5巻）の範囲外。利用可能な種別・項目名はXPressionのバージョンやDataLinq Server構成で異なるため、実機で確認してください。</div></div>`;
+    +`<div class="rtdesc">DataLinq brings external data into XPression and feeds it to text objects and materials. The common shape is: source → key (column/field) → display target. Below are all 32 source types from the "Add DataLinq Source" dialog, tagged by category.</div>`
+    +`<div class="gotcha" style="margin-top:8px"><b>Category tags</b> — <b>File</b>/<b>Network</b>: general sources where you supply the data (Excel/CSV/JSON/XML/RSS/WebSocket…); sample data is provided for these. <b>Scoreboard/clock</b> and <b>Sports feed</b>: vendor/league integrations that need the specific hardware, feed, or contract — availability varies by version, verify on your system. Read CSV via ASCII/Text, Excel via ADODB.</div></div>`;
+  return `<div class="card"><h3 style="margin:0 0 8px">DataLinq — ソース一覧と主要項目</h3>`
+    +`<div class="rtdesc">外部データをXPressionに取り込み、Text ObjectやMaterialに流し込む仕組み。共通構造は「ソース → キー（列/項目）→ 表示先」。下は「Add DataLinq Source」ダイアログの全32ソースを、カテゴリ別に整理したものです。</div>`
+    +`<div class="gotcha" style="margin-top:8px"><b>カテゴリの見方</b> — <b>汎用・ファイル</b>／<b>汎用・ネットワーク</b>：自分でデータを用意する汎用ソース（Excel/CSV/JSON/XML/RSS/WebSocket等）。これらはサンプルデータ同梱。<b>スコアボード・計時</b>／<b>スポーツデータ連携</b>：専用の機材・フィード・契約が必要なベンダー/リーグ連携で、対応可否は版により異なる（要実機確認）。CSVはASCII/Text、ExcelはADODBで読む。</div></div>`;
 }
 function renderDataLinq(){
   const g=document.getElementById("script");
   const q=(query||"").toLowerCase().split(/\s+/).filter(Boolean);
   const mt=s=>q.every(t=>(s||"").toLowerCase().includes(t));
   let html=dlIntro();
-  const srcs=DL_SOURCES.filter(c=>mt(c[0]+" "+c[1]+" "+c[2]));
+  const srcs=DL_SOURCES.filter(c=>mt(c[0]+" "+c[1]+" "+c[2]+" "+(c[3]||"")));
   if(srcs.length){
-    html+=`<div class="gcat"><div class="gcat-h"><b>${lang==='en'?'Supported source types':'対応ソース種別'}</b> <span class="gcount">${srcs.length}</span></div>`;
-    srcs.forEach(c=>{ html+=`<div class="grow"><div class="rtrow"><div class="rtsyn"><code>${esc(c[0])}</code></div><div class="rtdesc">${esc(lang==='en'?c[2]:c[1])}${c[3]?dlBadge():""}</div></div></div>`; });
+    html+=`<div class="gcat"><div class="gcat-h"><b>${lang==='en'?'DataLinq Sources (all 32)':'DataLinq ソース（全32種）'}</b> <span class="gcount">${srcs.length}</span></div>`;
+    srcs.forEach(c=>{ const de=lang==='en'?c[2]:c[1]; html+=`<div class="grow"><div class="rtrow"><div class="rtsyn"><code>${esc(c[0])}</code></div><div class="rtdesc">${esc(de)}${dlTag(c[3])}</div></div></div>`; });
     html+="</div>";
   }
-  const fields=DL_FIELDS.filter(c=>mt(c[0]+" "+c[1]+" "+c[2]));
-  if(fields.length){
-    html+=`<div class="gcat"><div class="gcat-h"><b>${lang==='en'?'Main settings & how to use them':'主要項目の使い方'}</b> <span class="gcount">${fields.length}</span></div>`;
-    fields.forEach(c=>{ html+=`<div class="grow"><div class="rtrow"><div class="rtsyn"><code>${esc(c[0])}</code></div><div class="rtdesc">${esc(lang==='en'?c[2]:c[1])}</div></div></div>`; });
-    html+="</div>";
-  }
-  if(!srcs.length && !fields.length) html=dlIntro()+`<div class="empty">${lang==='en'?'No matches.':'該当なし'}</div>`;
+  html+=dlSec("ソース設定：共通・ファイル系（JSON / XML / Text）","Source config: common & file (JSON / XML / Text)",DL_CFG,mt);
+  html+=dlSec("ソース設定：XML/JSON TCP（ソケット受信）","Source config: XML/JSON TCP (socket)",DL_TCP,mt);
+  html+=dlSec("ソース設定：ADODB（Excel・データベース）","Source config: ADODB (Excel / database)",DL_ADODB,mt);
+  html+=dlSec("表示につなぐ：Set DataLinq Properties","Bind to display: Set DataLinq Properties",DL_BIND,mt);
+  if(!/gcat-h/.test(html)) html=dlIntro()+`<div class="empty">${lang==='en'?'No matches.':'該当なし'}</div>`;
   g.innerHTML=html;
 }
 function scrKind(n){
