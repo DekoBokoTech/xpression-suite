@@ -816,7 +816,7 @@ function openTutorial(id){
     return `<div class="tstep ${done?'done':''}">
       <div class="tstep-h"><span class="tnum">${i+1}</span><span class="tt">${esc(st.h)}</span></div>
       ${st.img?`<img class="tstep-img" loading="lazy" src="${galImg(st.img)}" onclick="lbTut('${id}',${i})">`:''}
-      <p>${esc(st.body)}</p>
+      <p>${esc(st.body).replace(/\n/g,'<br>')}</p>
       ${st.tip?`<div class="tip">💡 <b>${tr('tip_label')}</b> ${esc(st.tip)}</div>`:''}
       <button class="${done?'primary':'ghost'} tdone" onclick="toggleStep('${id}',${i})">${done?('✓ '+tr('hands_done_step')):tr('hands_done_step')}</button>
     </div>`;}).join('');
