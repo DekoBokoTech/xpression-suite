@@ -101,7 +101,7 @@ window.TUTORIALS = [
       },
       {
         "h": "動きをネイティブで付ける",
-        "body": "登場と退場は Scene Director と Transition でなめらかに、順序は Sequencer で管理する。スコアが入った瞬間の強調は、変わった数字を軽く光らせる・弾ませる（常時の細かな動きは Continuous Animation）。「スコアが変わったこと」をVisual Logicで検知し、その瞬間に強調を出す組み方もできる（変化の検知は Timers / Counters の考え方）。値が動く瞬間に表示が破綻しないか必ず確認する。\n\n✅ 確認：スコアを変えた瞬間に強調が出て、表示が崩れない。"
+        "body": "登場と退場は Scene Director と Transition でなめらかに、順序は Sequencer で管理する。\nスコアが入った瞬間の強調は、変わった数字を軽く光らせる・弾ませる（常時の細かな動きは Continuous Animation）。\n「スコアが変わったこと」をVisual Logicで検知し、その瞬間に強調を出す組み方もできる（変化の検知は Timers / Counters の考え方）。\n値が動く瞬間に表示が破綻しないか、必ず確認する。\n\n✅ 確認：スコアを変えた瞬間に強調が出て、表示が崩れない。"
       },
       {
         "h": "発展：スコアに比例したバーを作る（任意）",
@@ -227,7 +227,7 @@ window.TUTORIALS = [
       },
       {
         "h": "Text ObjectのData SourceにWidgetをつなぐ",
-        "body": "Clock_Textを選び、Text Objectの Data Source タブを開く。Data SourceとしてWidgetを選び、一覧から GameClock_Timer を選ぶ。これでClock_Textにタイマーの値が表示される。直接『12:00』と打ちっぱなしにしない（それは固定表示）。表示されないときは、対象Text選択・Data SourceでWidget選択・正しいWidget指定・Format・Font/Material/位置を順に確認。\n\n✅ 確認：Clock_Text にWidgetの値（12:00）が表示されている。",
+        "body": "Clock_Textを選び、Text Objectの Data Source タブを開く。\nData SourceとしてWidgetを選び、一覧から GameClock_Timer を選ぶ。これでClock_Textにタイマーの値が表示される。\n直接「12:00」と打ちっぱなしにしない（それは固定表示）。\n表示されないときの確認順：\n・対象のTextを選択しているか\n・Data SourceでWidgetを選んだか\n・正しいWidget（GameClock_Timer）を指定したか\n・Formatは意図通りか\n・Font／Material／位置に問題はないか\n\n✅ 確認：Clock_Text にWidgetの値（12:00）が表示されている。",
         "img": "v4_14_009.jpg"
       },
       {
@@ -236,11 +236,11 @@ window.TUTORIALS = [
       },
       {
         "h": "Widget側のManual操作でStart→Stop→Reset",
-        "body": "Widget側の操作でStartし、12:00 → 11:59 → 11:58 と減れば表示接続は成功。動かないときはText Objectのデザインより先に『WidgetがStartしているか／MethodがManualか／Start操作を実行したか／Start At・Directionが意図通りか』を確認。次にStopで保持、Resetで開始値へ戻るかを確認。Resetは強力（本番中の誤操作で意図しない値に戻る）。『いつ／誰がResetしてよいか』『自動Reset（Reset on timer 等）が有効になっていないか』まで確認する。\n\n✅ 確認：Startで減り始め、Stopで止まり、Resetで12:00に戻る。"
+        "body": "Widget側の操作でStartし、12:00 → 11:59 → 11:58 と減れば表示接続は成功。\n動かないときは、Text Objectのデザインより先に次を確認：\n・WidgetがStartしているか\n・MethodがManualになっているか\n・Start操作を実行したか\n・Start At・Directionが意図通りか\n次にStopで保持、Resetで開始値へ戻るかを確認する。\nResetは強力（本番中の誤操作で意図しない値に戻る）。「いつ／誰がResetしてよいか」「自動Reset（Reset on timer 等）が有効になっていないか」まで確認する。\n\n✅ 確認：Startで減り始め、Stopで止まり、Resetで12:00に戻る。"
       },
       {
         "h": "OnlineにしてTake/Offline/再Takeを確認する",
-        "body": "Layoutで確認できたらSceneをOnlineにして送出時の挙動を見る。Main Viewportで動いても送出時に同じとは限らない。確認：Onlineにしたとき時計は止まっているか／Manual Startまで動かないか／Offlineで止まる・保持・Resetのどれになるか／再Take時に意図しないReset・再Startが起きないか。再Take時の値保持/ResetはScene属性やSequencer・Widgetの設定に依存するので必ず実機で確認し、Operatorが説明できる状態にしておく。",
+        "body": "Layoutで確認できたらSceneをOnlineにして、送出時の挙動を見る。Main Viewportで動いても、送出時に同じとは限らない。\n確認すること：\n・Onlineにしたとき時計は止まっているか\n・Manual Startまで動かないか\n・Offlineで止まる・保持・Resetのどれになるか\n・再Take時に意図しないReset・再Startが起きないか\n再Take時の値保持/ResetはScene属性やSequencer・Widgetの設定に依存するので必ず実機で確認し、Operatorが説明できる状態にしておく。",
         "img": "v4_14_010.jpg"
       }
     ],
@@ -654,7 +654,7 @@ window.TUTORIALS = [
     "steps": [
       {
         "h": "素材になる情報Sceneを用意する",
-        "body": "表示したい情報（例：スコア表示や選手カード）を、独立したSceneとして作る。名前は SRC_ScorePanel のように「部品」であることが分かる名前にする。文字が読める大きさで作り、背景は透過か単色にしておくと、貼ったときに扱いやすい。\n\n✅ 確認：素材Sceneが単体で正しく表示される。"
+        "body": "表示したい情報（例：スコア表示や選手カード）を、独立したSceneとして作る。名前は SRC_ScorePanel のように「部品」であることが分かる名前にする。文字が読める大きさで作り、背景は透過か単色にしておくと、貼ったときに扱いやすい。\n\n✅ 確認：素材Sceneが単体で正しく表示される。演出側のSceneと同じ名前にしない（同名だとどちらが素材か分からなくなる。例：素材=SRC_ScorePanel／演出=RV_Monitor）。"
       },
       {
         "h": "演出Scene側に貼り先のQuadを置く",
@@ -663,11 +663,11 @@ window.TUTORIALS = [
       {
         "h": "MaterialにRender View Shaderを追加する",
         "body": "Material Editorで新しいMaterialを作り、Add Shader > Render View を選ぶ。Scene / Camera Source で素材Sceneと使用するカメラを指定し、このMaterialをQuadに割り当てる。\n\n✅ 確認：Quadの面に素材Sceneの絵が表示される。",
-        "tip": "表示されないときは、素材Sceneの指定→カメラの指定→Materialの割り当て先、の順に確認する。"
+        "tip": "表示されないときは、素材Sceneの指定→カメラの指定→Materialの割り当て先、の順に確認する。素材側のCameraはOrtho Cameraを選ぶと、パネルの文字が歪まず「読ませる画面」になる（第3巻のCamera選びの実践）。"
       },
       {
         "h": "Resolutionを使うサイズから決める",
-        "body": "Render ViewのResolution（Width / Height）を、最終的に画面でどの大きさに見えるかから決める。小窓なら控えめに、大きく見せて文字を読ませるなら高めに。高すぎると描画負荷、低すぎると文字がぼける。\n\n✅ 確認：文字が読める解像度で、プレビューがカクつかない。"
+        "body": "Render ViewのResolution（Width / Height）を、最終的に画面でどの大きさに見えるかから決める。実機での目安（1920×1080のパネルを大画面LEDに貼った場合）：100×100＝明確にぼけて読めない／480×270＝やや甘い／1920×1080＝鮮明。高すぎると描画負荷、低すぎると文字がぼける。\n\n✅ 確認：一度100×100まで落としてぼけを体感し、文字が読める解像度に戻す。"
       },
       {
         "h": "Texture Coordinatesで収まりを調整する",
@@ -675,7 +675,7 @@ window.TUTORIALS = [
       },
       {
         "h": "更新と参照関係を確認する",
-        "body": "素材Scene側の文字や色を変更し、演出Scene側の仮想モニターに反映されることを確認する。最後に「どのSceneが、どのMaterialで、どのObjectに使われているか」を説明できる状態にしておく。\n\n✅ 確認：素材側の変更が仮想モニターに反映される。",
+        "body": "素材Scene側の文字や色を変更し、演出Scene側の仮想モニターに反映されることを確認する。\n【実機確認済み】素材Sceneをリネームしても、Render View MaterialのScene参照は自動で追従する（名前の文字列ではなく内部参照。リネームで壊れない）。ただし削除は別なので、素材Sceneを消す前は使用先を必ず確認する。\n最後に「どのSceneが、どのMaterialで、どのObjectに使われているか」を説明できる状態にしておく。\n\n✅ 確認：素材側の変更が仮想モニターに反映される。リネームしても表示が維持される。",
         "tip": "Render Viewの多用は参照関係を複雑にする。「部品化する理由」を言えるものだけに使う。"
       }
     ],
@@ -695,48 +695,56 @@ window.TUTORIALS = [
     "srcVol": 5,
     "srcChap": "第3章",
     "level": "中級",
-    "minutes": 35,
-    "goal": "選手リストのJSONをDataLinqで読み込み、Table Presetsで階層を指定して選手名・背番号をTextに表示する。データの差し替えと、欠損時の挙動まで確認する。",
-    "overview": "「サンプルJSONを用意」「JSON DataLinq Sourceを追加」「Table Presetsで階層指定」「Textに割り当て」「行を切り替え」「更新を確認」「壊れたデータで挙動を見る」の順です。",
+    "minutes": 40,
+    "goal": "選手リストのJSONをDataLinqで読み込み、選手名・背番号・ポジションをTextに表示する。さらにDataLinq Keyを使って「キーを1つ変えると行全体（名前・番号・ポジション）が連動して切り替わる」現場運用の形まで作る。素材は 13_JSON_PlayerList フォルダの players.json 一式を使用。",
+    "overview": "「JSONを用意」「DataLinq ServerでSource追加（Encoding=UTF-8が重要）」「ツリーからTextに割り当て」「Table Presets（任意）」「DataLinq Keyで行連動」「Sequencer/外部からKey変更」「更新確認」「壊れたデータ確認」の順です。",
     "steps": [
       {
         "h": "サンプルJSONを用意する",
-        "body": "選手の配列を持つJSONをUTF-8で作る。例：\n{\"team\":\"Tokyo\",\n \"players\":[\n  {\"name\":\"Sato\",\"number\":1},\n  {\"name\":\"Suzuki\",\"number\":7},\n  {\"name\":\"Takahashi\",\"number\":11}\n ]}\nファイル名は players.json など分かりやすく。\n\n✅ 確認：エディタで開けて、構造（team > players > name / number）を説明できる。"
+        "body": "素材フォルダ 13_JSON_PlayerList の players.json を使う（UTF-8・BOMなし）。構造は team > players[] > name / name_en / number / position。6人目はわざと超長い名前にしてあり、幅崩れの確認に使える。\n\n✅ 確認：エディタで開けて、構造（players配列の中に選手オブジェクト）を説明できる。"
       },
       {
-        "h": "JSON DataLinq Sourceを追加する",
-        "body": "DataLinq ManagerでJSON DataLinq Sourceを追加し、Filename / File Path に用意したファイルを指定する。Encoding（文字コード）も確認する。\n\n✅ 確認：Sourceがエラーなく追加されている。",
-        "tip": "ローカルファイルのJSONと、XML/JSON TCP（通信で受ける方式）は別物。今回はローカルファイルを使う。"
+        "h": "DataLinq ServerでJSON Sourceを追加する",
+        "body": "XPression DataLinq Server（XPression本体とは別ウィンドウ）で Add DataLinq Source →一覧から「JSON DataLinq Source」（Provides access to JSON data files）を選びOK。\nJSON Linq - Configuration で：\n・File Path：players.json を指定\n・Encoding：ASCII（既定）→ UTF-8 に必ず変更（ASCIIのままだと日本語が文字化けする）\n・更新方式：ローカルファイルなら Wait for file change events（画面注記どおりネットワークドライブでは非推奨）、または Poll every 秒指定\n\n✅ 確認：Sourceがエラーなく追加され、EncodingがUTF-8になっている。",
+        "tip": "Enable Loggingを入れておくと、後でトラブルを追いやすい。"
       },
       {
-        "h": "Table Presetsで階層を指定する",
-        "body": "Enable Table Presets を有効にし、Name（例 Players）とPath（players配列を指す階層）を設定する。JSONのどの部分を「表」として扱うかをここで固定する。\n\n✅ 確認：プリセットPlayersで、選手の一覧が表として見えている。"
+        "h": "Table Presetsで「表（ファイル）」を登録する",
+        "body": "Textに割り当てる前に先にやっておく（後の行連動でTable指定が正しくないと動かないため実質必須）。Table Presetsは「JSON内の階層を指定する」ものではなく、複数のJSONファイルをName＋File Pathで登録しておき、データ参照時のTable一覧で切り替えられるようにする仕組み（設定画面の説明にも「browsing for dataのTablesドロップダウンに出るTableの一覧」とある）。\n手順：\n① Settingsタブで Enable Table Presets にチェック → Table Presets タブを開く\n② Add → Name列に名前、File Path列の「…」でJSONファイルを指定\n③ 同梱サンプルなら次の4つを登録する（→の右はファイル名。File Pathには「…」で選んだ絶対パスが入る。相対パスは前提にしない）：\nPlayers_Player → players.json\nPlayers_Short → players_short.json\nPlayers_MissingName → players_missing_name.json\nPlayers_Empty → players_empty.json\n「共通プレフィックス（Players_）＋差分名」で揃えるのがコツ。あとでKeyによるTable切替（手順5の発展）が綺麗に組める。\n④ OKで保存 → TextのBrowse（Select DataLinq Field）のTable一覧に4つが並び、選ぶだけで参照ファイルが切り替わる\n\n✅ 確認：TableをPlayers_Emptyに切り替えると表示が空になり、Players_Playerに戻すと選手が復帰する。",
+        "tip": "Name列だけ入れてFile Pathが空だと機能しない。File Pathは絶対パスになるため、別PCへ移すと崩れる。本番では全マシン共通の固定フォルダ（例 C:\\XPression_Data\\）にデータを置いて、そのパスで登録するのが定石（第6巻「納品で崩れない」参照）。"
       },
       {
-        "h": "Text Objectに割り当てる",
-        "body": "選手名用Text ObjectのDataLinq（Data Source）設定で、Sourceにこ��JSONを、参照キーにname列を指定する。背番号用Textにはnumber列を割り当てる。\n\n✅ 確認：1人目の選手名と背番号が表示される。"
+        "h": "Textに割り当てる（Tableを選んでツリーから指定）",
+        "body": "XPression側で選手名用のText Objectを選び、Object Inspectorの Data Source タブ → DataLinq を選択 → Set。\nSet DataLinq Properties で Enabled にチェック → DataLinq一覧からこのJSONソースを選び → Browse。\nSelect DataLinq Field で、まず Table のドロップダウンで Players を選び、ツリーで players の中の name を選ぶ（上部Selectionに Column: players / Row: name / Table: Players と表示される）→ OK。\n背番号用Textには number、ポジション用には position を同様に割り当てる。\n\n✅ 確認：「佐藤 大輝」「1」「GK」が文字化けせずに表示され、Table欄がPlayersになっている。",
+        "tip": "化けたときは手順2のEncoding（UTF-8か）を最初に疑う。Tableが違うと後のKey連動が動かないので、ここで必ず確認。"
       },
       {
-        "h": "行（選手）を切り替える",
-        "body": "表示する行を切り替えて、2人目・3人目の選手が出ることを確認する。行の指定方法（キー指定・行番号・Take Item側の設定など）は環境により画面が異なるので、実機で確認する。\n\n✅ 確認：選手を切り替えると、名前と背番号が連動して変わる。"
+        "h": "DataLinq Keyで行をまとめて切り替える（ここが肝・実機検証済み）",
+        "body": "目的：キーを1つ変えるだけで、名前・背番号・ポジションが同じ選手の行にそろって切り替わる。\n【確定事項（実機検証済み）】行指定は山かっこ＋1始まりの行番号（2人目＝players<2>）。値検索の書式（players<number=7>など）は通らない。players<%PlayerNo%> が正解。Table欄が正しく（Players）設定されていないと動かない。\n① Object ManagerでSceneを選択 → Object Inspectorの DataLinq Keys タブ → Add。Name に PlayerNo（Published にチェック、Value に初期値 2）。\n② 各Text（name / number / position）の Set DataLinq Properties を開き、Column欄を players<%PlayerNo%> にする（%で囲む）。RowとTableはそのまま。\n③ KeyのValueを変えて反映を確認する。反映タイミングは：プレビュー＝即時／オンエア中のScene＝一度Offlineにして再TAKEした時（テキスト差し替えと同じ鉄則）。\n\n✅ 確認：Key値を2→3に変えると、プレビューが即時に高橋 悠人／11／FWへ連動して切り替わる。オンエア反映は再TAKEで。",
+        "tip": "範囲外の行番号（例 99）の挙動はWrap Indicesの設定で変わる（ON＝有効な行に巻き戻る／OFF＝欠損扱い）。【発展・実機検証済み】Table欄を Players_%TeamTable% の形にし、DataLinq Keysに TeamTable（値は Player / Short / Empty などの差分だけ）を追加すると、参照ファイルもKeyで切り替えられる。行のPlayerNoと合わせ、Key2つで「どの表の何行目」を完全制御できる。"
+      },
+      {
+        "h": "Sequencerと外部（RossTalk）からKeyを変える",
+        "body": "PublishedにしたKeyはSequencer（Take InspectorのTemplate Data）に公開され、オペレーターはそこに行番号を入れるだけで選手が切り替わる。\n外部制御からはRossTalkの DATALINQKEY コマンドで同じことができる。\n書式：DATALINQKEY [takeid]:[キー名]:[値]\n\n実機検証済みの確実なシーケンス（Take ID 0002 を3行目の選手＝高橋 悠人に差し替えて送出）：\nDATALINQKEY 0002:PlayerNo:3　←①中身を高橋に差し替える\nCUE 0002　←②新しい値でTake Itemをキュー（積み込み）\n（200ms程度待つ）　←③キュー完了を待つ\nTAKE 2　←④画面に出す（送出）\n\n値を変えた直後にいきなりTAKEすると反映が間に合わないことがあるため、CUEと短いPauseを挟むのが確実。キー名は公開した名前と完全一致させる。\n\n✅ 確認：Take InspectorでKey値を変えると表示が切り替わる。上のシーケンスを外部から送ると、新しい選手で確実に送出される。",
+        "tip": "Keyの値はTake Item単位で保持される。同じSceneから複数のTake Itemを作れば、選手A用・B用として別々の行番号を持たせられる（外部システム連携の放送定番構成）。Stream Deck系ツール（Companion等）ならこの4手順を1ボタンに登録できる。"
       },
       {
         "h": "データ更新を確認する",
-        "body": "JSONの値（名前や背番号）を書き換えて保存し、表示への反映を確認する。反映されないときは Wait for file change events / Poll every の設定を確認する。\n\n✅ 確認：保存後、想定したタイミングで表示が変わる。"
+        "body": "players.json の値（名前や背番号）を書き換えて保存し、表示への反映を確認する。反映されないときは手順2の更新方式（Wait for file change events / Poll every）を確認する。\n\n✅ 確認：保存後、想定したタイミングで表示が変わる。"
       },
       {
-        "h": "壊れたデータで挙動を見る",
-        "body": "「選手を減らす」「nameの項目を消す」「空配列にする」の3パターンで表示がどうなるかを確認し、Return Empty on Failure の設定と合わせて「欠損時の見え方」を決めておく。\n\n✅ 確認：欠損時に画面が大きく破綻しない（空になる等、想定どおりの見え方）。",
-        "tip": "原因を追うときは Enable Logging / Data Logger を見る。XPression側の画面だけで悩まない。"
+        "h": "壊れたデータで挙動を見る（Return Empty on Failureが鍵）",
+        "body": "手順3でTable Presetsに登録した Players_Short（選手が減った）／Players_MissingName（nameが無い選手）／Players_Empty（空配列）にTableを切り替えて、表示を確認する。\n【実機で確認された危険な挙動】各Textの Return Empty on Failure がOFFのままだと、行やデータが見つからないとき、Keyに入れた数字など意図しない値がそのまま画面に出る。\n対策：DataLinqリンクした各Textの Set DataLinq Properties で Return Empty on Failure にチェック（ON）→ 欠損時は空欄になる。\nWrap Indicesとの関係も整理しておく：ON＝範囲外の行番号を有効な行に巻き戻す（何かしら表示される）／OFF＝範囲外は欠損扱い。「絶対に間違った選手を出したくない」ならWrap Indices OFF＋Return Empty ONの組み合わせが安全側。\n\n✅ 確認：Return Empty on Failure をONにすると、欠損時に変な値ではなく空欄になる。",
+        "tip": "空欄になったときにレイアウトが破綻しないか（座布団だけ残る等）も見ておく。原因調査には Enable Logging / Data Logger を使う。"
       }
     ],
     "checklist": [
-      "Table PresetsのName / Pathが固定され、意味が分かる名前か",
-      "文字コードがUTF-8で統一されているか",
+      "EncodingがUTF-8になっているか（既定ASCIIのままにしない）",
+      "DataLinq Key名（PlayerNo等）が意味の分かる名前でPublishされているか",
+      "Table Presets（Name＋File Path）の切替がTable一覧で機能するか",
       "空データ・項目欠落時の表示を確認したか",
       "更新方式（file change / Poll）を本番機で確認したか",
-      "項目名や階層の変更ルールを外部システム側と合意しているか",
-      "ログ（Data Logger）の見方を確認したか"
+      "項目名や階層の変更ルールを外部システム側と合意しているか"
     ]
   },
   {
@@ -748,21 +756,21 @@ window.TUTORIALS = [
     "level": "中級",
     "minutes": 30,
     "goal": "Smart GPI / RossTalkをTCPで受けられるようにし、外部からTAKE / SEQI / SEQOなどのコマンドでTake Itemを出し入れする。外部制御の基本動作と消し方の違いを体験する。",
-    "overview": "「受け口を有効化」「Take Itemを用意」「TCPで接続」「TAKEで出す」「SEQI/SEQOを試す」「片付け系コマンド」「GPIコマンド（任意）」の順です。※同一ネットワークのPC（または同じPC）からTCP接続できる環境が必要です。",
+    "overview": "「受け口を有効化」「Take Itemを用意」「TCPで接続」「TAKEで出す」「SEQI/SEQOを試す」「片付け系コマンド」「GPIコマンド（任意）」の順です。※同一PC（localhost）でも検証可。素材フォルダ 14_RossTalk に実機検証済みのDashBoardサンプルパネル（.grid）を同梱しています。",
     "steps": [
       {
         "h": "Hardware SetupでRossTalkを有効化する",
-        "body": "Hardware SetupのGPI Boardsで Smart GPI / RossTalk を追加・選択し、StateをEnable、ModeをTCPにして、受信ポート番号を控える。\n\n✅ 確認：State=Enabled・Mode=TCP になっていて、ポート番号をメモした。",
-        "tip": "本番機ではWindowsファイアウォールの受信許可も確認する。"
+        "body": "メニューの Edit → Hardware Setup を開き、「GPI / Tally Boards」タブで Add → Brand一覧から Smart GPI / RossTalk を選ぶ（一覧にはPBus / Serial GPI (CTS/DSR) / TSL Tallyも並ぶ）。\nSmart GPI / RossTalk Setup で State を Enabled、Mode を TCP にし、Incoming Network Settings の TCP Port（例 7788）を控える。設定後、一覧の State が Active になればOK。\n\n✅ 確認：State=Active・Mode=TCP・ポート番号をメモした。",
+        "tip": "本番機ではWindowsファイアウォールの受信許可も確認する。Keyboard / GPI Mappingも同じEditメニューにある。"
       },
       {
         "h": "送出対象のTake Itemを用意する",
         "body": "Sequencerにテスト用SceneのTake Itemを置き、Take IDを決める（例 0001）。出し先のフレームバッファとレイヤーも確認しておく。\n\n✅ 確認：手動のTake（テンキー＋）で正しく出る状態になっている。"
       },
       {
-        "h": "外部からTCP接続する",
-        "body": "同一ネットワークのPCから、ターミナルソフト（PuTTYのRaw接続など）でXPressionのIPアドレス：ポート番号へTCP接続する。\n\n✅ 確認：接続がエラーなく確立する。",
-        "tip": "コマンドはCR/LF（改行）で終端する。改行が送られないとコマンドは実行されない。"
+        "h": "外部からTCP接続する（DashBoardが実戦的）",
+        "body": "送信側はRoss公式の無料ツール DashBoard のCustomPanelが実戦的：ボタンを作り、TaskにRossTalkを選ぶ→Connection=Custom、Host=XPressionのIPアドレス（同一PCならlocalhost）、Port=手順1のポート番号。CommandはドロップダウンにTAKE / CUE / SEQI…が用意されており、Take IDなどを入れるだけ。\nターミナルソフト（PuTTYのRaw接続等）で直接コマンドを打つ方法もある（その場合はCR/LF終端に注意）。\n\n✅ 確認：ボタン実行（または接続）がエラーなく通る。",
+        "tip": "DashBoardならPause（待ち時間）もタスクとして挟めるので、「DATALINQKEY→CUE→Pause 200ms→TAKE」のような複数コマンドを1ボタンに登録できる。素材フォルダ 14_RossTalk の検証済みサンプルパネルを開けば、Host/Portを直すだけで全ボタンを試せる。"
       },
       {
         "h": "TAKEで出す",
@@ -778,8 +786,8 @@ window.TUTORIALS = [
         "tip": "CLRAは全部消える強いコマンド。本番での使いどころ（使わないという判断も含めて）を決めておく。"
       },
       {
-        "h": "GPIコマンドで機能を呼ぶ（任意）",
-        "body": "「GPI 1」を送信し、Keyboard / GPI MappingでシミュレートGPI入力1に機能（例：Sequencerの選択を進める）を割り当てて、外部から実行できることを確認する。\n\n✅ 確認：GPIコマンドで、割り当てた機能が実行される。"
+        "h": "GPIコマンドで機能を呼ぶ（任意・物理機器は不要）",
+        "body": "RossTalkの「GPI 1」はソフト的にGPI入力を叩くシミュレートコマンドで、物理的なGPI機器は不要。\n① Edit → Keyboard / GPI Mapping で、シミュレートGPI入力1に機能（例：Sequencerの選択を進める）を割り当てる\n② DashBoardのRossTalkタスク（またはターミナル）から GPI 1 を送信\n\n✅ 確認：GPIコマンドで、割り当てた機能が実行される。"
       }
     ],
     "checklist": [

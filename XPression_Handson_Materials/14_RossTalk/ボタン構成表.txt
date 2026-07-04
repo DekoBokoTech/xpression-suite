@@ -1,0 +1,42 @@
+DashBoard TESTパネル ボタン構成表（Take ID 0002／Port 7788／players.json 6選手 前提）
+共通設定：Connection=Custom／Host=localhost（別PCならXPression機のIP）／Port=7788
+════════════════════════════════════════════════════════════
+
+【基本送出】
+  TAKE 2    : TAKE 2                … 送出（フォーカス不動）
+  SEQI 2    : SEQI 2                … フォーカス移動して送出（TAKEとの違い）
+  SEQO 2    : SEQO 2                … オフエア（下げる）
+  CUE 2     : CUE 0002              … キュー（積み込み）のみ
+
+【消し方の違い】
+  LAYEROFF 0:1 : LAYEROFF 0:1       … Out付きで消える（例=FB0のLayer1。自環境に合わせ、ボタン名とコマンドを一致させる）
+  CLFB      : CLFB 0000             … FBを即クリア
+  CLRA      : CLRA                  … 全FB即クリア ※強力。ボタンは端に離して配置
+  補足：CUEの代わりに TAKE→Pause→TAKE でも安定動作を確認済み（自環境のリハで最終判断）
+
+【選手切替（13_JSON_PlayerListと連動・4タスク連続）】
+  P1 佐藤 〜 P6 WESSELFELDT：
+    ① RossTalk: DATALINQKEY 0002:PlayerNo:N   （N=1〜6）
+    ② RossTalk: CUE 0002
+    ③ Pause   : 200ms
+    ④ RossTalk: TAKE 2
+  P99 欠損テスト： 同上で N=99
+    （Wrap Indices OFF＋Return Empty on Failure ONなら空欄になる確認用）
+
+【Table切替（%TeamTable%方式・実機検証済み）】
+  前提：各TextのTable欄= Players_%TeamTable% ／ Table Presets名= Players_Player / Players_Short / Players_MissingName / Players_Empty
+  DATA 通常 : DATALINQKEY 0002:TeamTable:Player → CUE 0002 → Pause 200ms → TAKE 2
+  DATA 空   : DATALINQKEY 0002:TeamTable:Empty  → 同上
+  ※Key値は差分（Player/Empty等）だけを入れる
+
+【シーケンサ操作】
+  NEXT      : NEXT                  … 選択行をオンエアして次へ
+  UP / DOWN : UP / DOWN             … 選択行の移動
+
+【GPI（物理機器不要）】
+  GPI 1     : GPI 1                 … Keyboard/GPI Mappingの割当先が動く
+
+レイアウト推奨：上段=P1〜P6（最頻用）／中段=基本送出／下段=消し方系。
+CLRAは誤爆防止のため右端に離す。
+完成したら File > Save As で XPression_Handson_RossTalk.grid として
+このフォルダに保存してください。
