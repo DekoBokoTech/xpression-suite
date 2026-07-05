@@ -33,7 +33,7 @@ window.TUTORIALS = [
     "steps": [
       {
         "h": "器を作る（背景とText Objectの親子）",
-        "body": "新しいSceneを作り、名前用のText Objectを置き、その最初の子（First Child）として背景を持たせる。この親子関係が後のAuto Scaleで効く。背景はMaterialで色を持たせる（色は見た目ではなく値として持たせると、チームカラーへの差し替えが楽）。肩書き用のText Objectも置き、名前は Name、肩書きは Title のように役割が分かる名前を付けておく。\n\n✅ 確認：Object Managerで、名前Textの子（First Child）に背景がぶら下がっている。名前がName、肩書きがTitleなど役割が分かる名前になっている。",
+        "body": "この作例の器は「名前Text＋その子の背景」と「肩書きText」。\n① Object Library の Text をSceneにドラッグし、名前用Textを作って Object Manager で Name_TXT に改名\n② 背景用オブジェクト（QuadやBackground）を追加し、Object Manager上で Name_TXT の子（First Child）になる位置へドラッグして親子化（この親子関係が後のAuto Scaleで効く）\n③ 肩書き用Textを追加して Title_TXT に。仮の名前・肩書きを入れておく\n④ 背景の色はMaterialで持たせる（色を「値」として持つと、後でチームカラー差し替えが楽）\n\n✅ 確認：Object Managerで Name_TXT の子に背景がぶら下がり、名前だけで役割が分かる。",
         "img": "v4_12_002.jpg"
       },
       {
@@ -44,17 +44,17 @@ window.TUTORIALS = [
       },
       {
         "h": "Visual Logicの出番①：肩書きが空なら、行を出さない",
-        "body": "比較と Not の考え方で「肩書きが空ではないときだけ肩書きの行を表示する」という条件を作り、肩書きText Object の Visible につなぐ。空のときは隠す。名前を中央に寄せたいときは、名前Text Object の Position（X / Y / Z）につないで動かす。オペレーターが毎回手で直さなくても、テンプレートが整えてくれる。\n\n✅ 確認：肩書きを空にすると肩書きの行が消え、入れると再表示される。",
+        "body": "「肩書きが空なら行ごと隠す」をVisual Logicで作る。\n① Sceneを選択し、Visual Logic（Visual Logic Editor）を開く\n② 左のObjectsから Title_TXT を展開し、Text（値）をキャンバスへドラッグ\n③ Function Blocks の Strings から String Length、Logic から Greater Than をドラッグ\n④ 接続：Title_TXT.Text → String Length.In ／ String Length.Out → Greater Than.Base（しきい値0＝「1文字以上あるか」）\n⑤ Greater Than の出力を、肩書き行（Title_TXTと背景をまとめたGroup）の Visible に接続\n空なら0で非表示、入っていれば1で表示になる。名前を中央に寄せたいときは、同じ判定を名前Textの Position(Y) にもつなぐ。\n\n✅ 確認：肩書きを空にすると肩書きの行が消え、入れると再表示される。",
         "img": "v4_12_004.jpg"
       },
       {
         "h": "設計の判断：読めなくなる手前で切り替える（Visual Logicの出番②）",
-        "body": "Width Only の横詰めは便利だが、詰めすぎると文字が縦長になり、ある所から急に読みにくくなる（「収まる」と「読める」は別）。名前の長さをVisual Logicで見て、決めたしきい値を超えたら二行折り返しなどに切り替える。折り返しそのものはネイティブの Word Wrap が担当し、Visual Logicは「どこで切り替えるか」の判断だけを持つ。\n\n✅ 確認：しきい値を超える長い名前で折り返し（切替）が発動し、読める状態を保っている。",
+        "body": "実機検証済みの構成をそのまま組む：\n① Visual Logicで Name_TXT の Text → Strings の String Length に接続\n② Math の Value を置き、しきい値の文字数を入力（実機例 43）\n③ String Length.Out → Logic の Greater Than.Base、Value → しきい値側に接続\n④ Greater Than の出力 → Name_TXT の WordWrap.Enabled に接続（しきい値超えで折り返しON）\n⑤ Strings の String Value（実機例 1520）→ WordWrap.Width に接続して折り返し幅を固定\n折り返しそのものはネイティブの Word Wrap が担当し、Visual Logicは「いつ切り替えるか」の判断だけを持つ。\n\n✅ 確認：しきい値を超える長い名前だけ2行に折り返され、読める状態を保つ。",
         "tip": "切り替えのしきい値は文字数で近似する。解像度・セーフティゾーン・フォント依存なので実機で決める。"
       },
       {
         "h": "出す・隠すを整える",
-        "body": "ローワーサードをScene単位で扱う。送出は Take（テンキーの + キー、または RossTalk の TAKE）、消すときは Offline（テンキーの − キー、または SEQO）。短い名前・長い名前・極端に長い名前・肩書き無しの各パターンをリハで実際に出し、どの状態でも崩れず読めるか確認する。差し替えたら、まずプレビューで Auto Squeeze と背景の追従が崩れていないかを確認し、問題なければ再TAKEで送出に反映する。"
+        "body": "① SequencerにSceneをドラッグしてTake Item化し、Template Linksで公開した名前・肩書きを差し替えて「短い名前」「長い名前」「限界超え」「肩書きなし」の4パターンのTake Itemを用意\n② 送出は Take（テンキー＋、RossTalkならTAKE）、消すのは Offline（テンキー−、SEQO）\n③ 4パターンを順番に出して、どれも崩れず読めるかをリハで確認\n④ 差し替えたら、プレビュー確認→再TAKEで送出に反映（鉄則）\n\n✅ 確認：全パターンで背景が追従し、安全エリアからはみ出さない。"
       }
     ],
     "checklist": [
@@ -80,32 +80,32 @@ window.TUTORIALS = [
     "steps": [
       {
         "h": "器を作る（スコアボードのオブジェクト構成）",
-        "body": "新しいSceneに部品を並べる。チーム名・スコアの数字・背景パネル・リードマーカー（グローや矢印）を、ホーム側とアウェイ側で左右対称に持つ。HomeName / HomeScore / AwayName / AwayScore、リードマーカーは HomeLead / AwayLead のように、左右と役割が一目で分かる名前を付けると結線で迷わない。\n\n✅ 確認：Home/Awayの各部品が左右対称に置かれ、名前だけで役割が分かる。",
+        "body": "① 新しいSceneに、Text×4（HomeName_TXT／HomeScore_TXT／AwayName_TXT／AwayScore_TXT）、背景パネル、リードマーカー（HomeLead／AwayLead：グローや矢印）を左右対称に置く\n② ピリオド用 Period_TXT、クロック用 Timer_TXT も配置\n③ Object Managerで、左右と役割が一目で分かる名前に統一する（あとの結線で迷わないための投資）\n\n✅ 確認：Home/Awayの各部品が左右対称に置かれ、名前だけで役割が分かる。",
         "img": "v4_13_002.jpg"
       },
       {
         "h": "スコアを表示用に整える",
-        "body": "スコアは数値だが、画面に出すときは見せ方を整える（1桁を「7」と出すか「07」と出すか、3桁で桁あふれしないか）。第4・6章の Format の実物応用。数値はそのまま出さず、Format で表示用の形に整えてから表示につなぐ。「外部データほど、表示の直前で型を整える」をそのまま適用する。\n\n✅ 確認：スコアに1桁・3桁を入れても表示形式（07など）が意図通り。",
+        "body": "実機検証済みの構成（NumFormatタブ）：\n① Visual Logic Editorでタブを追加し NumFormat と命名（機能ごとにタブを分けると後から読める）\n② Strings の Format String を2つ置く\n③ 接続：スコアの元値 → Format String.Param → SB_HomeScore_TXT.Text（Away側も同様）\n④ 「07」のような桁揃えはFormat側の書式で決める。数値はそのまま出さず、表示の直前で整える\n\n✅ 確認：スコアに1桁・3桁を入れても表示形式が意図通り。",
         "tip": "桁数の想定（最大何点まで）とゼロ詰めの有無は競技・運用で決め、実機で桁あふれの挙動を確認する。"
       },
       {
         "h": "Visual Logicの出番①：リードを強調する",
-        "body": "この章の中心。Greater Than でホームとアウェイのスコアを比較し、大きい側のマーカーを Visible / Color で強調する（勝っている側を明るいチームカラー、負けている側を落ち着いた色に）。ネイティブは「どちらが大きいか」を判断できないので、ここはVisual Logicの仕事。そして同点の分岐を最初から入れる（放っておくと「両方が勝っている」ように見える事故になる）。\n\n✅ 確認：ホーム優勢・アウェイ優勢・同点の3状態すべてで強調が正しく出る（同点で両方光らない）。",
+        "body": "① Logic の Greater Than でホームとアウェイのスコアを比較\n② 結果を HomeLead／AwayLead の Visible に接続（勝っている側だけ表示）\n③ 同点分岐を最初から入れる：Equal To で同点を判定し、両マーカーを消す（または同点用の表示に切替）。放置すると「両方勝ち」に見える事故になる\n④ 色の強弱も付けるなら、判定結果を Colors 系ブロック経由でMaterialへ\n\n✅ 確認：ホーム優勢・アウェイ優勢・同点の3状態すべてで強調が正しく出る。",
         "img": "v4_13_003.jpg",
         "tip": "比較・色切り替え・同点判定の具体的なFunction Blocks結線は、実機で組んだものを正とする。"
       },
       {
         "h": "Visual Logicの出番②：チームカラーを出し分ける",
-        "body": "対戦カードごとにチームが変わり、色も変わる。色を値として持たせておけば、チームの選択を入力にして対応するチームカラーを背景やマーカーに流し込める（Selectorsの考え方）。「どの色にするか」を決めるのがVisual Logic、「その色で表示する」のがネイティブ（Material）。\n\n✅ 確認：チーム選択を切り替えると、背景とマーカーの色が対応するチームカラーに変わる。",
+        "body": "① チーム選択（WidgetのText Listや公開Text）を入力にして、Selectors の Input Selector で対応するチームカラーを選ぶ\n② 選ばれた色を、背景・マーカーの Material（Colors.Diffuse）に接続\n「どの色にするか」を決めるのがVisual Logic、「その色で表示する」のがネイティブ（Material）という分担。\n\n✅ 確認：チーム選択を切り替えると、背景とマーカーの色が対応チームカラーに変わる。",
         "img": "v4_13_004.jpg"
       },
       {
         "h": "動きをネイティブで付ける",
-        "body": "登場と退場は Scene Director と Transition でなめらかに、順序は Sequencer で管理する。\nスコアが入った瞬間の強調は、変わった数字を軽く光らせる・弾ませる（常時の細かな動きは Continuous Animation）。\n「スコアが変わったこと」をVisual Logicで検知し、その瞬間に強調を出す組み方もできる（変化の検知は Timers / Counters の考え方）。\n値が動く瞬間に表示が破綻しないか、必ず確認する。\n\n✅ 確認：スコアを変えた瞬間に強調が出て、表示が崩れない。"
+        "body": "実機検証済みの構成：\n① 登場・退場は Scene Director にIn/Outの動きを作り、SequencerのTransition In/Out列と組み合わせる。順序はSequencerで管理\n② スコア強調用に、Scene Director に ScoreMove（数字が軽く弾む短い動き）を作り、Event（Stop）で待機させる\n③ Visual Logic に PointMove タブを作り、SB_HomeScore_TXT の Events.OnSetText → Scene Director（ScoreMove）の Actions.Play に接続（Away側も同様）\nテキストが差し替わった瞬間に強調が自動再生される。値が動く瞬間に表示が破綻しないか必ず確認。\n\n✅ 確認：スコアを変えた瞬間に強調が出て、表示が崩れない。"
       },
       {
         "h": "発展：スコアに比例したバーを作る（任意）",
-        "body": "点差を視覚的に見せたいときは、スコアの値を入力にバーの長さや位置を計算する（Mathの応用）。ただし伸ばしっぱなしにせず、最大値で頭打ちにする（ローワーサードの幅と同じ考え方）。数字だけで足りる現場も多いので、必要なときに足す部品として捉える。\n\n✅ 確認：大差のスコアでもバーが最大値で頭打ちになり、はみ出さない。"
+        "body": "実機検証済みの構成（%BARタブ）：\n① HomeScore と AwayScore → Math の Add（合計）\n② HomeScore → Divide.Base、Add.Out → Divide.Divisor（ホーム側の比率 0〜1）\n③ 0対0対策：Add.Out → Equal To（==0）→ Input Selector で「合計0なら0.5、それ以外は比率」を選ぶ（0除算の定石）\n④ 選ばれた値 → Multiply（×バー最大幅 実機例1500）→ HomeBar_SHAPE.Width に接続\n比率は0〜1なので、最大幅で自然に頭打ちになる。\n\n✅ 確認：大差のスコアでもバーが最大値で止まり、はみ出さない。0対0でも半々で表示される。"
       }
     ],
     "checklist": [
@@ -136,7 +136,7 @@ window.TUTORIALS = [
       },
       {
         "h": "② 画像を表示するオブジェクトを用意する",
-        "body": "画像を映すためのオブジェクトを置きます。チームロゴやスポンサー画像なら、四角い面に画像を貼れる Quad Object が分かりやすいです。すでにロゴ枠などがある場合はそれを使ってOK。あとで指定しやすいよう、オブジェクトには「HomeLogo」など役割が分かる名前を付けておきましょう。\n\n✅ 確認：Quadが置かれ、HomeLogoなど役割が分かる名前が付いている。",
+        "body": "画像を映すためのオブジェクトを置きます。\n① Object Library の Primitives > Quad をSceneにドラッグ（チームロゴやスポンサー画像は四角い面のQuadが分かりやすい）\n② Object Managerで「HomeLogo」など役割が分かる名前を付ける\nすでにロゴ枠などがある場合はそれを使ってOK。\n\n✅ 確認：Quadが置かれ、HomeLogoなど役割が分かる名前が付いている。",
         "tip": "「画像を貼る面」を用意するイメージ。まだ固定の画像が入っていても大丈夫です（次で動的に切り替えます）。"
       },
       {
@@ -192,11 +192,11 @@ window.TUTORIALS = [
       },
       {
         "h": "テスト用Sceneを作る",
-        "body": "新規Sceneを作り、GameClock_Test など分かる名前を付ける。この段階では背景・装飾・ロゴ・スコアは入れない。まず確認したいのは見た目ではなく『時計が正しく表示され、Start / Stop / Resetできるか』。\n\n✅ 確認：GameClock_Test という空のSceneができている。"
+        "body": "① Scene Managerで新規Sceneを作成し、GameClock_Test など分かる名前を付ける\n② この段階では背景・装飾・ロゴ・スコアは入れない。まず確認したいのは見た目ではなく「時計が正しく表示され、Start / Stop / Resetできるか」\n\n✅ 確認：GameClock_Test という空のSceneができている。"
       },
       {
         "h": "表示先のText Objectを置く",
-        "body": "Scene上にText Objectを1つ置き、仮で「12:00」と入れる（位置・サイズ・Font・Materialの確認用）。名前は Clock_Text のように役割が分かる名前にする。重要：この仮文字を打っただけでは動くタイマーにはならない。Text Objectは時間を作る部品ではなく、時間の値を表示する表示先。\n\n✅ 確認：Clock_Text に仮の「12:00」が表示されている（まだ動かなくてよい）。",
+        "body": "① Object Library の Text をSceneにドラッグして1つ置き、仮で「12:00」と入れる（位置・サイズ・Font・Materialの確認用）\n② 名前は Clock_Text のように役割が分かる名前にする\n重要：この仮文字を打っただけでは動くタイマーにはならない。Text Objectは時間を作る部品ではなく、時間の値を表示する表示先。\n\n✅ 確認：Clock_Text に仮の「12:00」が表示されている（まだ動かなくてよい）。",
         "img": "v4_14_004.jpg"
       },
       {
@@ -272,13 +272,14 @@ window.TUTORIALS = [
       },
       {
         "h": "まずCSVで動かす",
-        "body": "単純で追いやすいデータはCSVが向く。同梱の サンプルデータ_チーム.csv（TeamName / Abbr / ColorHex / LogoFile）や サンプルデータ_名前と肩書き.csv（Name / Title）を使う。DataLinqでCSVをデータソースとして読み込み、列名（キー）をText ObjectのData Sourceに割り当てる。文字コード・区切り・ヘッダー行の有無でつまずきやすいので、まず1件表示して確認。\n\n✅ 確認：CSVの1件目（チーム名や名前）がText Objectに表示された。",
+        "body": "① XPression DataLinq Server で Add DataLinq Source → Text DataLinq Source を追加（CSV＝区切り文字付きテキストはこれ。一覧に実在確認済み）\n② File Pathに サンプルデータ_チーム.csv を指定し、Encoding（UTF-8）・区切り文字・ヘッダーの扱いを確認\n③ XPression側：Text Objectの Data Source タブ → DataLinq を選択 → Set → Sourceを選び Browse → 表から表示したいセルを選ぶ（Column=列番号／Row=行番号）\nまず1件表示して、文字化け・列ずれがないか確認する。\n\n✅ 確認：CSVの1件目（Row=2）のチーム名がText Objectに表示された。",
         "img": "v5_03_003.jpg",
         "tip": "CSVは半角英数字の列名・UTF-8がトラブりにくい。1行目（ヘッダー）がキーになる。"
       },
       {
         "h": "行を切り替えて表示を変える",
-        "body": "読み込んだ表の『どの行を表示するか』を切り替えると、名前やスコアが差し替わる。ローワーサードなら1件ずつ、スコアボードならHome/Awayの2件を割り当てる。表（CSV）側を書き換えて再読み込みし、表示が追従するか確認する。\n\n✅ 確認：行を切り替えると表示が差し替わり、CSVを書き換えて再読込すると追従する。"
+        "body": "読み込んだ表の「どの行を表示するか」を切り替えると、名前やスコアが差し替わる。\n【実機確認済みの行番号ルール】CSVでは Set DataLinq Properties の Row＝行番号、Column＝列番号。ただし1行目はヘッダー行（TeamName等の見出し）としてカウントされるため、データ1件目は Row=2 になる（例：Row=2でTokyoTeam、Row=3でOsakaTeam）。JSONの players<2>（ヘッダー概念なし）とは数え方が違う点に注意。\nローワーサードなら1件ずつ、スコアボードならHome/Awayの2件を行違いで割り当てる。表（CSV）側を書き換えて再読み込みし、表示が追従するか確認する。\n\n✅ 確認：Rowを2→3に変えると表示が次のチーム（人）に切り替わる。CSVを書き換えて再読込すると追従する。",
+        "tip": "行の切り替えを運用で楽にしたいときは、JSONハンズオンと同じDataLinq Key方式（Row欄に%キー名%）が使える。"
       },
       {
         "h": "編集しやすさが要るならExcel、構造化ならJSON",
@@ -293,7 +294,7 @@ window.TUTORIALS = [
       },
       {
         "h": "Widgetsで切り替えも足す（任意）",
-        "body": "手入力を減らす仕上げとしてWidgetsが使える。Text Listで選択肢を持つ、Counterでスコアを増減、Clock Timerで時刻。Widgetは作っただけでは表示に出ず、Text ObjectのData Sourceに割り当てて初めて効く。DataLinq（外部データ）とWidget（現場操作の値）は分けて考える。\n\n✅ 確認：Widgetの値がText Objectに表示され、切り替えで変わる。",
+        "body": "手入力を減らす仕上げとしてWidgetsが使える：\n① Display > Widgets を開き、New Widget から作る：Text List（選択肢の切替）／Counter（スコアの増減）／Clock Timer（時刻・タイマー）\n② Widgetは作っただけでは表示に出ない。Text Objectの Data Source タブ → Widget を選んで割り当てて初めて効く\nDataLinq（外部データ）とWidget（現場操作の値）は分けて考える。\n\n✅ 確認：Widgetの値がText Objectに表示され、切り替えで変わる。",
         "img": "v5_04_006.jpg"
       },
       {
@@ -325,33 +326,33 @@ window.TUTORIALS = [
     "steps": [
       {
         "h": "3ステップの流れを押さえる",
-        "body": "Stagger Animationは①アニメーションの設定を作る②その設定をScene Director上の対象オブジェクト（Text ObjectやGroup）へ配置する③再生して見え方を確認する、の3つ。Scene ManagerでSceneやScene Groupを選ぶのは、動かしたいオブジェクトを含むシーンを選ぶため。\n\n✅ 確認：「①設定を作る→②配置する→③再生する」の3ステップを言える。",
+        "body": "Stagger Animationは①アニメーションの設定を作る ②その設定をScene Director上の対象の行へ配置する ③再生して見え方を確認する、の3つ。\n設定は右ドックの Stagger Animations パネル（New…／Edit…）で作る（実機確認済み）。\n\n✅ 確認：「①設定を作る→②配置する→③再生する」の3ステップを言える。",
         "img": "v3_02_004.jpg"
       },
       {
         "h": "対象と名前を決める",
-        "body": "動かすText ObjectをScene Directorに追加する。NameとDescriptionは現場運用のために使う（後から見て何の動きか分かるように）。リアルタイムでは、きれいさだけでなく『あとから見ても分かる状態』が大事。\n\n✅ 確認：対象TextがScene Directorに載り、Name/Descriptionで用途が分かる。",
+        "body": "動かすText ObjectをSceneに置く。オブジェクトは作った時点でScene Directorに行（トラック）が自動で用意されるので、手動で追加する必要はない（実機確認済み）。手動でやるのは、作ったStagger Animationを対象Textの行に配置するほう。\nStagger AnimationのNameとDescriptionは現場運用のために使う（後から見て何の動きか分かるように）。リアルタイムでは、きれいさだけでなく「あとから見ても分かる状態」が大事。\n\n✅ 確認：Scene Directorに対象Textの行があり、Stagger AnimationのName/Descriptionで用途が分かる。",
         "img": "v3_02_003.jpg"
       },
       {
         "h": "Trackで『何を動かすか』を決める",
-        "body": "Trackは動かすプロパティ。Position.X/Y/Z（位置）、Rotation（回転）、Scale（拡大縮小）、Alpha（透明度）など。登場なら Alpha＋Position（フェードしながら少し動く）が定番。動かす対象だけTrackを持たせる。\n\n✅ 確認：動かすプロパティ（例 Alpha＋Position）だけにTrackがある。",
+        "body": "① Stagger Animations パネルで New… → できた StaggerAnimation1 を選んで Edit…\n② Edit Stagger Animation の Tracks で、動かすプロパティを追加（実機例 Position.X。登場演出なら Alpha＋Position が定番）\n動かす対象のプロパティだけTrackを持たせる。\n\n✅ 確認：Tracksに意図したプロパティ（例 Position.X）だけが並んでいる。",
         "img": "v3_02_005.jpg"
       },
       {
         "h": "Keyframeで動きの形を作る",
-        "body": "Keyframeは動きの形を決める。Clip Length（そのTrackの変化にかける長さ）とTotal Duration（全体尺）は分けて考える。尺を変えたら Recalculate Keyframe Positions で位置がずれていないか確認。\n\n✅ 確認：再生すると1つの塊として動く（まだ、ずれ無しでOK）。",
+        "body": "① 同じ Edit Stagger Animation の Track Animation で、変化のカーブを作る（例：Position.X を画面外から0へ）\n② Total Duration の Frames が全体尺（実機例 150）。1文字ぶんの変化の長さ（Clip Length）と全体尺は分けて考える\n尺を変えたら Recalculate Keyframe Positions で位置ずれがないか確認。\n\n✅ 確認：再生すると1つの塊として動く（まだ、ずれ無しでOK）。",
         "img": "v3_02_006.jpg",
         "tip": "Track Controlsは作業中の事故（誤って別Trackを動かす等）を減らすために使う。"
       },
       {
         "h": "Timing Offsetsでずれを作る（ここが中心）",
-        "body": "Stagger Animationの中心はTiming Offsets。Character（文字ごと）／Word（単語ごと）／Line（行ごと）／Paragraph（段落ごと）で、どの単位でずらすかを決める。日本語見出しなら Character や Word でのずれが読みやすいことが多い。PivotはScaleやRotationで特に効く（回転・拡大の中心）。\n\n✅ 確認：Character／Word単位で文字が順番に出てくる。",
+        "body": "① 同ダイアログの Timing Offsets に、ずらすフレーム数を入れる（実機例：Character 3.00／Word 6.00／Line 15.00／Paragraph 30.00）\n② Pivots の Mode（実機例 Baseline Center）は、ScaleやRotationを使うときの中心\n③ できたStagger Animationを、Scene Director の対象Textの行へドラッグして配置する\n日本語見出しなら Character か Word のずれが読みやすいことが多い。\n\n✅ 確認：Character／Word単位で文字が順番に出てくる。",
         "img": "v3_02_007.jpg"
       },
       {
         "h": "再生して読めるか確認する",
-        "body": "実際に再生し、演出として気持ちよいかだけでなく『読めるか』を確認する。速すぎると文字が追えない。文字数が変わる差し替え（長い名前・短い名前）でも破綻しないかを見る。"
+        "body": "① Scene Director の再生（または再生ヘッドのドラッグ）でプレビューを確認\n② 「演出として気持ちよいか」だけでなく「読めるか」を見る。速すぎると文字が追えない\n③ Template Linksで文字を差し替え、長い名前・短い名前でも破綻しないか確認\n\n✅ 確認：再生途中でも文字が読め、差し替えても崩れない。"
       }
     ],
     "checklist": [
@@ -382,22 +383,22 @@ window.TUTORIALS = [
       },
       {
         "h": "In / Out をまず作る",
-        "body": "Transition In / Out を設定する。Cut / Dissolve / Push / Distort などを用途で使い分ける。まずはInとOutの両方を必ず作る（Outを設計しないと本番で残り方が読みにくい）。\n\n✅ 確認：InとOutの両方が設定され、出して消すまでが成立している。",
+        "body": "設定場所は2つ（実機確認済み）：\n① Sequencer の Transition In / Out 列 — Take ItemごとにInとOutのエフェクト（Cut／Dissolve／Push など）を設定する。既定は Cut / Cut\n② 凝った出入りは Scene Director にIn/Outの動きとして作る（条件で使い分けるならObject InspectorのTransition Logicタブ）\nまずはInとOutの両方を必ず設定する（Outを設計しないと本番で残り方が読めない）。\n\n✅ 確認：InとOutの両方が設定され、出して消すまでが成立している。",
         "img": "v3_08_004.jpg"
       },
       {
         "h": "Durationは現場テンポで決める",
-        "body": "Durationは見た目の好みではなく現場テンポで決める。常駐テロップは自然にOut、緊急表示は即座に消せる経路、演出SceneはOutまで含めて見せ方を作る、スコア更新系は次の情報を邪魔しない長さに。\n\n✅ 確認：用途（常駐／緊急／演出）に合ったDurationになっている。",
+        "body": "① Sequencer の Transition In/Out 設定で長さを調整する\n② 判断基準は見た目の好みではなく現場テンポ：常駐テロップ=自然にOut／緊急表示=即時（Cut）で消せる経路／演出Scene=Outまで含めて見せ方を作る／スコア更新系=次の情報を邪魔しない長さ\n\n✅ 確認：用途（常駐／緊急／演出）に合ったDurationになっている。",
         "img": "v3_08_005.jpg"
       },
       {
         "h": "更新（Back-to-Back）を設計する",
-        "body": "同じSceneで内容が連続更新される（スコアや情報更新）なら、Back-to-Backで『更新の見え方』を設計する。毎回In/Outを打つのか、中身だけ差し替えるのかを決める。\n\n✅ 確認：連続更新したときの見え方が意図どおり（毎回In/Outか、差し替えか）。",
+        "body": "同じSceneで内容が連続更新される場合（スコアや情報更新）の見え方を決める：\n① 同じTake Itemの値を差し替えて再TAKEし、Back-to-Back（連続送出）でどう見えるかをリハで確認\n② 「毎回In/Outを打つ」か「中身だけ差し替える」かを決めて統一する\n\n✅ 確認：連続更新したときの見え方が意図どおり。",
         "img": "v3_08_009.jpg"
       },
       {
         "h": "Scene DirectorとTransition Logicを分ける",
-        "body": "Scene Directorは動きの中身を作る場所。Transition Logicは条件に応じてどのScene Directorを使うかを決める場所。単純なIn/Outで足りるならそれで済ませ、必要な複雑さに留める（作り込みすぎるとデータが読みにくくなる）。\n\n✅ 確認：どのScene Directorがいつ使われるかを説明できる。",
+        "body": "役割を分けて考える：Scene Director＝動きの中身を作る場所／Transition Logic（Object Inspector - Sceneのタブ）＝条件に応じてどのScene Directorを使うかを決める場所。\n単純なIn/Outで足りるならSequencer列だけで済ませ、必要な複雑さに留める（作り込みすぎると読めないデータになる）。\n\n✅ 確認：どのScene Directorがいつ使われるかを説明できる。",
         "img": "v3_08_010.jpg",
         "tip": "本番前修正・別担当・複製・Layer変更・外部制御変更が起きる前提で、必要以上に高度にしない。"
       },
@@ -444,28 +445,31 @@ window.TUTORIALS = [
         "img": "v3_09_006.jpg"
       },
       {
-        "h": "現場で分かる名前を付ける",
-        "body": "Scene Groupにも中のSceneにも、後から見て分かる名前を付ける（例：EndRoll_Staff）。名前が曖昧だと、修正・再利用の段階で誰も触れなくなる。\n\n✅ 確認：EndRoll_Staff など、後から見て分かる名前になっている。",
-        "img": "v3_10_005.jpg"
+        "h": "Scene Groupを作り、中に「ページ」を積む",
+        "body": "ロールの実体は「Scene Groupの中に積んだ子Scene」で作る（実機確認済みの構造）。\n① Scene ManagerでScene Groupを新規作成し、EndRoll_Staff のように後から見て分かる名前を付ける\n② そのグループの中に子Sceneを追加していく。子Scene1枚＝ロールの1ページ。Scene Managerで上から並んだ順番どおりに流れていく\n（例：1枚目=タイトルページ、2枚目=スタッフ名一覧、3枚目=スポンサー/締めページ）\n③ 各ページの中身は普通のSceneと同じ作り方（Textを置いて名前・役職を並べる）。1ページの高さ=Sceneの高さなので、長いスタッフ一覧はページを分けて積む\n④ 設定はグループ側に集約されている：Scene Groupを選択 → Object Inspectorの「Scene Group」タブが、Roll化・速度・余白・ループすべての入口\n\n✅ 確認：Scene ManagerでEndRoll_Staffの下に子Sceneがぶら下がり、順番が意図どおりに並んでいる。",
+        "img": "v3_92_010.jpg",
+        "tip": "グループ名が曖昧だと、修正・再利用の段階で誰も触れなくなる。ページの並び替えはScene Manager上の順番で決まる。"
       },
       {
         "h": "EffectでRoll（縦）かCrawl（横）を選ぶ",
-        "body": "縦に流すのがRoll、横に流すのがCrawl。スタッフロールはRoll。Effectで種類を選び、Directionで視線の流れ（下から上など）を決める。\n\n✅ 確認：Roll（縦）で、意図した方向に流れる。",
+        "body": "Scene Groupを選択し、Object Inspectorの Scene Group タブ → Group欄で設定する（実機確認済み）：\n・Effect：Roll（縦に流す）／Crawl（横に流す）。スタッフロールはRoll\n・Direction：Bottom To Top（下から上へ＝視線の流れ）\n\n✅ 確認：Effect=Roll・Direction=Bottom To Top になっている。",
         "img": "v3_10_003.jpg"
       },
       {
         "h": "Duration（速度・時間感）を決める",
-        "body": "まずSpeedやSeconds（秒）で大きな見え方を作り、必要に応じてFrames（フレーム）で詰める。速すぎると読めず、遅すぎると間延びする。読みやすさ優先で。\n\n✅ 確認：最後まで読める速度になっている。",
-        "tip": "最初はSpeed/Secondsでざっくり、そのあとFramesで微調整。"
+        "body": "手順3で開いた Scene Group タブの Duration 欄で決める（実機確認済み：Speed／Seconds／Framesのラジオ選択）：\n① まず Speed（実機例 2.000）で大きな見え方を作る\n② 秒数で管理したいなら Seconds、最後の詰めは Frames\n速すぎると読めず、遅すぎると間延びする。読みやすさ優先で。\n\n✅ 確認：最後まで読める速度になっている。",
+        "tip": "最初はSpeed/Secondsでざっくり、そのあとFramesで微調整。",
+        "img": "v3_92_008.jpg"
       },
       {
         "h": "Global Marginsで安全な範囲を保つ",
-        "body": "Global Marginsで、画面端に対して安全に見える範囲を作る。テロップが端で切れたり、はみ出したりしないための運用上の設定。\n\n✅ 確認：画面端で文字が切れず、安全な範囲に収まっている。",
+        "body": "同じ Scene Group タブの Global Margins 欄（Top／Bottom／Left／Right）で、画面端に対して安全に見える範囲を作る。\nテロップが端で切れたり、はみ出したりしないための運用上の設定。\n\n✅ 確認：画面端で文字が切れず、安全な範囲に収まっている。",
         "img": "v3_10_006.jpg"
       },
       {
         "h": "開始・終了の空白とLoopを設計する",
-        "body": "Blank Page on Start / End で始まりと終わりを整える（いきなり文字が入る／唐突に切れるのを防ぐ）。Loopは便利だが『止め方』まで設計する（本番でどう止めるか決めずにLoopしない）。Ease In / Outは気持ちよさより読みやすさで判断。\n\n✅ 確認：開始・終了が唐突でなく、Loopの止め方が決まっている。"
+        "body": "同じ Scene Group タブで設定する（実機確認済みの欄構成）：\n① Header / Footer 欄：Blank Page on Start / Blank Page on End にチェック（いきなり文字が入る／唐突に切れるのを防ぐ）\n② Loop 欄：Enable Looping と Number of shows per scene。Loopは便利だが「本番でどう止めるか」を決めてから使う\n③ Start / Stop 欄：Ease In / Out（Frames）は気持ちよさより読みやすさで判断\n\n✅ 確認：開始・終了が唐突でなく、Loopの止め方が決まっている。",
+        "img": "v3_92_009.jpg"
       },
       {
         "h": "本番前に確認する",
@@ -501,23 +505,23 @@ window.TUTORIALS = [
       },
       {
         "h": "Layer Objectで対象をまとめる",
-        "body": "Maskをかけたい複数のObjectを Layer Object でまとめると、まとめて範囲制御しやすい。まず対象をLayerに入れる。\n\n✅ 確認：対象ObjectがLayer Objectにまとまっている。",
+        "body": "① Object Library の Layers > Layer Object をSceneに追加\n② マスクを効かせたいObjectたちを、Object Manager上でLayer Objectの子になる位置へドラッグ\nLayerはMaskの効き先を区切る単位（公式ヘルプ確認済み：あるLayerの中だけをマスクし、他のオブジェクトやLayerに影響させない）。\n\n✅ 確認：対象ObjectがLayer Objectの子にまとまっている。",
         "img": "v2_14_006.jpg"
       },
       {
         "h": "Box Maskで四角い表示範囲を作る",
-        "body": "Box Maskで四角形の表示範囲を作る。範囲の内側だけが見える。ワイプや切り抜き表示の基本形。画像のアルファで抜きたい場合は Mask Material とアルファ素材を使う考え方もある。\n\n✅ 確認：Box Maskの内側だけが見えている。",
+        "body": "① Box Mask オブジェクトをSceneに追加し、Layer内に配置する（追加はObject Libraryから。環境により表記を確認）\n② 四角の内側＝見える範囲。Transform（Position／Scale）で範囲の位置と大きさを調整\n画像の形で抜きたい場合は、Mask Material＋アルファ素材の考え方を使う。\n\n✅ 確認：Box Maskの内側だけが見えている。",
         "img": "v2_14_007.jpg",
         "tip": "まずBox Maskで四角の範囲を確実に作ってから、必要ならアルファ素材の抜きへ進む。"
       },
       {
         "h": "Scene DirectorでMaskを動かす",
-        "body": "Scene Directorで、Maskの範囲や位置を時間で動かせる（ワイプイン等）。範囲が動くことで『見えてくる／隠れる』演出になる。\n\n✅ 確認：再生すると範囲が動き、ワイプとして見える。",
+        "body": "① Scene Director の Box Mask の行に、Position（またはScale）のアニメーションを作る（例：左から右へ広がるワイプイン）\n② 再生して「見えてくる／隠れる」動きになるか確認\n\n✅ 確認：再生すると範囲が動き、ワイプとして見える。",
         "img": "v2_14_009.jpg"
       },
       {
         "h": "調整が要る値だけPublishする",
-        "body": "本番で調整する値だけをSequencerにPublishする。判断基準：本番中に本当に調整するか／制作調整用の値を本番データに残していないか／運用者が意味を理解できる項目名か／触ってはいけない値まで公開していないか／初期値に戻せるか／Take Inspectorで分かりやすいか。\n\n✅ 確認：Publishした値だけがTake Inspectorに出て、意味が分かる名前になっている。",
+        "body": "① 本番で調整する値だけを、対象オブジェクトの Template Links タブでチェックして公開する\n② 公開した値はSequencerのTake Inspectorに並ぶ。運用者が意味を理解できる名前にしておく\n判断基準：本番中に本当に調整するか／制作用の値を残していないか／触ってはいけない値まで公開していないか／初期値に戻せるか\n\n✅ 確認：Publishした値だけがTake Inspectorに出て、意味が分かる名前になっている。",
         "img": "v2_14_010.jpg"
       },
       {
@@ -559,12 +563,12 @@ window.TUTORIALS = [
       },
       {
         "h": "4色で役割を持たせる",
-        "body": "4色は派手にするためではなく、明るさや色味の変化に役割を持たせるために使う。上下だけ明るさを変える、左右は同じにして縦方向の変化だけ作る、片側だけ暗くして文字置き場を作る、など。\n\n✅ 確認：4色それぞれの役割を説明できる。",
+        "body": "① Material Editor で新規Materialを作り、Add Shader > Gradient を選ぶ（メニュー実在確認済み）\n② 4色（四隅）それぞれに役割を持たせて色を設定する：上2色を明るく・下2色を暗く（縦方向の変化だけ作る）／片側だけ暗くして文字置き場を作る、など\n派手にするためではなく、明るさ・色味の変化に役割を持たせるのが目的。\n\n✅ 確認：4色それぞれの役割を説明できる。",
         "img": "v2_10_005.jpg"
       },
       {
         "h": "透明度で『なじませる』と『読ませる』を両立",
-        "body": "透明度にも役割を持たせる。端だけ透明にして映像になじませつつ、文字が載る部分は不透明寄りにして読ませる。角1か所だけ透明度を変えて抜け感を作る、といった使い方もできる。\n\n✅ 確認：端はなじみ、文字が載る部分は読める濃さになっている。",
+        "body": "① 各コーナーの色のアルファ（透明度）を調整する：外側の色だけアルファを下げて映像になじませる／文字が載る部分は不透明寄りを保つ\n② 角1か所だけ透明度を変えて抜け感を作る、という使い方もできる\n\n✅ 確認：端はなじみ、文字が載る部分は読める濃さになっている。",
         "img": "v2_10_006.jpg",
         "tip": "透明度は『なじませる』と『読ませる』のバランス。文字の下は読める濃さを確保する。"
       },
@@ -602,28 +606,28 @@ window.TUTORIALS = [
       },
       {
         "h": "ClockかDate Timeブロックかを切り分ける",
-        "body": "現在時刻や日付をそのまま出すだけならClockで足りる。『目標時刻との差（カウントダウン）』『日時を分解して曜日を出す』『指定した年月日から日時を作る』などはDate Time系ブロックが要る。\n\n✅ 確認：Clockだけで足りるか、Date Time系ブロックが要るか判断できた。",
+        "body": "現在時刻や日付をそのまま出すだけなら Clock で足りる。「目標時刻との差（カウントダウン）」「日時を分解して曜日を出す」「指定した年月日から日時を作る」には Date Time系ブロックが要る。\nどちらもVisual Logic Editorの Function Blocks > Date Time カテゴリにある（実機のブロック一覧で確認済み）。\n\n✅ 確認：Clockだけで足りるか、Date Time系ブロックが要るか判断できた。",
         "img": "v4_05_003.jpg"
       },
       {
         "h": "現在時刻をそのまま出す（Clock）",
-        "body": "まず現在時刻の表示から。Clockで現在時刻を取得し、Format（またはFormat Date Time）で見やすい文字列に整えてText Objectに出す。時・分・秒のうち必要な桁だけ出す。\n\n✅ 確認：現在時刻がTextに表示され、秒が進んでいる。",
+        "body": "① SceneのVisual Logic Editorを開く\n② Function Blocks > Date Time から Clock をドラッグ\n③ Clockの出力 → Format Date Time（表示用の文字列に整形）→ 表示用Textの Text に接続\n④ 時・分・秒のうち必要な桁だけ出す書式にする\n\n✅ 確認：現在時刻がTextに表示され、秒が進んでいる。",
         "img": "v4_05_004.jpg"
       },
       {
         "h": "目標時刻を作る（Encode Date Time）",
-        "body": "カウントダウンには目標時刻が要る。Encode Date Timeで、年・月・日・時・分・秒から試合開始時刻などの目標日時を組み立てる。\n\n✅ 確認：Encode Date Timeから目標日時が出力されている。",
+        "body": "① Date Time の Encode Date Time をドラッグ\n② 年・月・日・時・分・秒を入力（Math の Value ブロックで与える）して、試合開始時刻などの目標日時を組み立てる\n\n✅ 確認：Encode Date Timeから目標日時が出力されている。",
         "img": "v4_05_009.jpg",
         "tip": "月末±1か月のような境界（1/31の1か月後など）は期待通りになるか実機で確認。"
       },
       {
         "h": "差を計算して残り時間を出す（Time Delta）",
-        "body": "Clockで取った現在時刻と、Encodeで作った目標時刻を Time Delta に渡して差を計算する。Days / Hours / Minutes / Seconds を使って残り時間を表示すれば、開始までのカウントダウンになる。\n\n✅ 確認：残り時間（目標−現在）が表示され、1秒ごとに減っていく。",
+        "body": "① Date Time の Time Delta をドラッグ\n② Clock（現在時刻）と Encode Date Time（目標時刻）を Time Delta に接続して差を計算\n③ 出力の Days／Hours／Minutes／Seconds を使って残り時間を表示につなぐ\n\n✅ 確認：残り時間（目標−現在）が表示され、1秒ごとに減っていく。",
         "img": "v4_05_012.jpg"
       },
       {
         "h": "表示用に整える（Format Date Time）",
-        "body": "Format Date TimeでDate Timeを表示用の文字列に整える。曜日が要るなら Day of the Week で取り出す。桁数が変わると幅が動くので、Text Objectの幅と揃えを確認する。\n\n✅ 確認：表示形式が意図どおりで、桁が変わっても幅が崩れない。",
+        "body": "① Format Date Time で表示用の文字列に整える。曜日が要るなら Day of the Week で取り出す\n② 桁数が変わると幅が動くので、Text Objectの幅と揃えを確認（数字はFontのMonospace Numbersが安定）\n\n✅ 確認：表示形式が意図どおりで、桁が変わっても幅が崩れない。",
         "img": "v4_05_010.jpg"
       },
       {
@@ -658,20 +662,23 @@ window.TUTORIALS = [
       },
       {
         "h": "演出Scene側に貼り先のQuadを置く",
-        "body": "仮想モニターとして使うQuad Objectを演出Sceneに置き、Monitor_Main など役割が分かる名前を付ける。少し角度を付けて置くと「画面の中のモニター」らしく見える。\n\n✅ 確認：Quadが意図した位置・角度で置かれている。"
+        "body": "① Object Library の Primitives > Quad を演出Sceneにドラッグ\n② Object Managerで Monitor_Main など役割が分かる名前を付ける\n③ 少し角度を付けて置くと「画面の中のモニター」らしく見える\n\n✅ 確認：Quadが意図した位置・角度で置かれている。"
       },
       {
         "h": "MaterialにRender View Shaderを追加する",
         "body": "Material Editorで新しいMaterialを作り、Add Shader > Render View を選ぶ。Scene / Camera Source で素材Sceneと使用するカメラを指定し、このMaterialをQuadに割り当てる。\n\n✅ 確認：Quadの面に素材Sceneの絵が表示される。",
-        "tip": "表示されないときは、素材Sceneの指定→カメラの指定→Materialの割り当て先、の順に確認する。素材側のCameraはOrtho Cameraを選ぶと、パネルの文字が歪まず「読ませる画面」になる（第3巻のCamera選びの実践）。"
+        "tip": "表示されないときは、素材Sceneの指定→カメラの指定→Materialの割り当て先、の順に確認する。素材側のCameraはOrtho Cameraを選ぶと、パネルの文字が歪まず「読ませる画面」になる（第3巻のCamera選びの実践）。",
+        "img": "v2_90_002.jpg"
       },
       {
         "h": "Resolutionを使うサイズから決める",
-        "body": "Render ViewのResolution（Width / Height）を、最終的に画面でどの大きさに見えるかから決める。実機での目安（1920×1080のパネルを大画面LEDに貼った場合）：100×100＝明確にぼけて読めない／480×270＝やや甘い／1920×1080＝鮮明。高すぎると描画負荷、低すぎると文字がぼける。\n\n✅ 確認：一度100×100まで落としてぼけを体感し、文字が読める解像度に戻す。"
+        "body": "Render ViewのResolution（Width / Height）を、最終的に画面でどの大きさに見えるかから決める。実機での目安（1920×1080のパネルを大画面LEDに貼った場合）：100×100＝明確にぼけて読めない／480×270＝やや甘い／1920×1080＝鮮明。高すぎると描画負荷、低すぎると文字がぼける。\n\n✅ 確認：一度100×100まで落としてぼけを体感し、文字が読める解像度に戻す。",
+        "img": "v2_90_003.jpg"
       },
       {
         "h": "Texture Coordinatesで収まりを調整する",
-        "body": "貼った絵の位置・スケールをTexture Coordinatesで整え、パネルからのはみ出しや余白を調整する。\n\n✅ 確認：素材の端がQuadに正しく収まっている。"
+        "body": "貼った絵の位置・スケールをTexture Coordinatesで整え、パネルからのはみ出しや余白を調整する。\n\n✅ 確認：素材の端がQuadに正しく収まっている。",
+        "img": "v2_90_004.jpg"
       },
       {
         "h": "更新と参照関係を確認する",
@@ -686,7 +693,8 @@ window.TUTORIALS = [
       "演出Scene全体の負荷に問題がないか",
       "本番中に触る値と制作時に固定する値が分かれているか",
       "素材Sceneを消したり改名したときの影響範囲を把握しているか"
-    ]
+    ],
+    "goalImg": "v2_90_001.jpg"
   },
   {
     "id": "json-playerlist",
@@ -706,27 +714,32 @@ window.TUTORIALS = [
       {
         "h": "DataLinq ServerでJSON Sourceを追加する",
         "body": "XPression DataLinq Server（XPression本体とは別ウィンドウ）で Add DataLinq Source →一覧から「JSON DataLinq Source」（Provides access to JSON data files）を選びOK。\nJSON Linq - Configuration で：\n・File Path：players.json を指定\n・Encoding：ASCII（既定）→ UTF-8 に必ず変更（ASCIIのままだと日本語が文字化けする）\n・更新方式：ローカルファイルなら Wait for file change events（画面注記どおりネットワークドライブでは非推奨）、または Poll every 秒指定\n\n✅ 確認：Sourceがエラーなく追加され、EncodingがUTF-8になっている。",
-        "tip": "Enable Loggingを入れておくと、後でトラブルを追いやすい。"
+        "tip": "Enable Loggingを入れておくと、後でトラブルを追いやすい。",
+        "img": "v5_90_002.jpg"
       },
       {
         "h": "Table Presetsで「表（ファイル）」を登録する",
         "body": "Textに割り当てる前に先にやっておく（後の行連動でTable指定が正しくないと動かないため実質必須）。Table Presetsは「JSON内の階層を指定する」ものではなく、複数のJSONファイルをName＋File Pathで登録しておき、データ参照時のTable一覧で切り替えられるようにする仕組み（設定画面の説明にも「browsing for dataのTablesドロップダウンに出るTableの一覧」とある）。\n手順：\n① Settingsタブで Enable Table Presets にチェック → Table Presets タブを開く\n② Add → Name列に名前、File Path列の「…」でJSONファイルを指定\n③ 同梱サンプルなら次の4つを登録する（→の右はファイル名。File Pathには「…」で選んだ絶対パスが入る。相対パスは前提にしない）：\nPlayers_Player → players.json\nPlayers_Short → players_short.json\nPlayers_MissingName → players_missing_name.json\nPlayers_Empty → players_empty.json\n「共通プレフィックス（Players_）＋差分名」で揃えるのがコツ。あとでKeyによるTable切替（手順5の発展）が綺麗に組める。\n④ OKで保存 → TextのBrowse（Select DataLinq Field）のTable一覧に4つが並び、選ぶだけで参照ファイルが切り替わる\n\n✅ 確認：TableをPlayers_Emptyに切り替えると表示が空になり、Players_Playerに戻すと選手が復帰する。",
-        "tip": "Name列だけ入れてFile Pathが空だと機能しない。File Pathは絶対パスになるため、別PCへ移すと崩れる。本番では全マシン共通の固定フォルダ（例 C:\\XPression_Data\\）にデータを置いて、そのパスで登録するのが定石（第6巻「納品で崩れない」参照）。"
+        "tip": "Name列だけ入れてFile Pathが空だと機能しない。File Pathは絶対パスになるため、別PCへ移すと崩れる。本番では全マシン共通の固定フォルダ（例 C:\\XPression_Data\\）にデータを置いて、そのパスで登録するのが定石（第6巻「納品で崩れない」参照）。",
+        "img": "v5_90_003.jpg"
       },
       {
         "h": "Textに割り当てる（Tableを選んでツリーから指定）",
         "body": "XPression側で選手名用のText Objectを選び、Object Inspectorの Data Source タブ → DataLinq を選択 → Set。\nSet DataLinq Properties で Enabled にチェック → DataLinq一覧からこのJSONソースを選び → Browse。\nSelect DataLinq Field で、まず Table のドロップダウンで Players を選び、ツリーで players の中の name を選ぶ（上部Selectionに Column: players / Row: name / Table: Players と表示される）→ OK。\n背番号用Textには number、ポジション用には position を同様に割り当てる。\n\n✅ 確認：「佐藤 大輝」「1」「GK」が文字化けせずに表示され、Table欄がPlayersになっている。",
-        "tip": "化けたときは手順2のEncoding（UTF-8か）を最初に疑う。Tableが違うと後のKey連動が動かないので、ここで必ず確認。"
+        "tip": "化けたときは手順2のEncoding（UTF-8か）を最初に疑う。Tableが違うと後のKey連動が動かないので、ここで必ず確認。",
+        "img": "v5_90_005.jpg"
       },
       {
         "h": "DataLinq Keyで行をまとめて切り替える（ここが肝・実機検証済み）",
         "body": "目的：キーを1つ変えるだけで、名前・背番号・ポジションが同じ選手の行にそろって切り替わる。\n【確定事項（実機検証済み）】行指定は山かっこ＋1始まりの行番号（2人目＝players<2>）。値検索の書式（players<number=7>など）は通らない。players<%PlayerNo%> が正解。Table欄が正しく（Players）設定されていないと動かない。\n① Object ManagerでSceneを選択 → Object Inspectorの DataLinq Keys タブ → Add。Name に PlayerNo（Published にチェック、Value に初期値 2）。\n② 各Text（name / number / position）の Set DataLinq Properties を開き、Column欄を players<%PlayerNo%> にする（%で囲む）。RowとTableはそのまま。\n③ KeyのValueを変えて反映を確認する。反映タイミングは：プレビュー＝即時／オンエア中のScene＝一度Offlineにして再TAKEした時（テキスト差し替えと同じ鉄則）。\n\n✅ 確認：Key値を2→3に変えると、プレビューが即時に高橋 悠人／11／FWへ連動して切り替わる。オンエア反映は再TAKEで。",
-        "tip": "範囲外の行番号（例 99）の挙動はWrap Indicesの設定で変わる（ON＝有効な行に巻き戻る／OFF＝欠損扱い）。【発展・実機検証済み】Table欄を Players_%TeamTable% の形にし、DataLinq Keysに TeamTable（値は Player / Short / Empty などの差分だけ）を追加すると、参照ファイルもKeyで切り替えられる。行のPlayerNoと合わせ、Key2つで「どの表の何行目」を完全制御できる。"
+        "tip": "範囲外の行番号（例 99）の挙動はWrap Indicesの設定で変わる（ON＝有効な行に巻き戻る／OFF＝欠損扱い）。【発展・実機検証済み】Table欄を Players_%TeamTable% の形にし、DataLinq Keysに TeamTable（値は Player / Short / Empty などの差分だけ）を追加すると、参照ファイルもKeyで切り替えられる。行のPlayerNoと合わせ、Key2つで「どの表の何行目」を完全制御できる。",
+        "img": "v5_90_004.jpg"
       },
       {
         "h": "Sequencerと外部（RossTalk）からKeyを変える",
         "body": "PublishedにしたKeyはSequencer（Take InspectorのTemplate Data）に公開され、オペレーターはそこに行番号を入れるだけで選手が切り替わる。\n外部制御からはRossTalkの DATALINQKEY コマンドで同じことができる。\n書式：DATALINQKEY [takeid]:[キー名]:[値]\n\n実機検証済みの確実なシーケンス（Take ID 0002 を3行目の選手＝高橋 悠人に差し替えて送出）：\nDATALINQKEY 0002:PlayerNo:3　←①中身を高橋に差し替える\nCUE 0002　←②新しい値でTake Itemをキュー（積み込み）\n（200ms程度待つ）　←③キュー完了を待つ\nTAKE 2　←④画面に出す（送出）\n\n値を変えた直後にいきなりTAKEすると反映が間に合わないことがあるため、CUEと短いPauseを挟むのが確実。キー名は公開した名前と完全一致させる。\n\n✅ 確認：Take InspectorでKey値を変えると表示が切り替わる。上のシーケンスを外部から送ると、新しい選手で確実に送出される。",
-        "tip": "Keyの値はTake Item単位で保持される。同じSceneから複数のTake Itemを作れば、選手A用・B用として別々の行番号を持たせられる（外部システム連携の放送定番構成）。Stream Deck系ツール（Companion等）ならこの4手順を1ボタンに登録できる。"
+        "tip": "Keyの値はTake Item単位で保持される。同じSceneから複数のTake Itemを作れば、選手A用・B用として別々の行番号を持たせられる（外部システム連携の放送定番構成）。Stream Deck系ツール（Companion等）ならこの4手順を1ボタンに登録できる。",
+        "img": "v5_91_003.jpg"
       },
       {
         "h": "データ更新を確認する",
@@ -745,7 +758,8 @@ window.TUTORIALS = [
       "空データ・項目欠落時の表示を確認したか",
       "更新方式（file change / Poll）を本番機で確認したか",
       "項目名や階層の変更ルールを外部システム側と合意しているか"
-    ]
+    ],
+    "goalImg": "v5_90_001.jpg"
   },
   {
     "id": "rosstalk-take",
@@ -761,16 +775,18 @@ window.TUTORIALS = [
       {
         "h": "Hardware SetupでRossTalkを有効化する",
         "body": "メニューの Edit → Hardware Setup を開き、「GPI / Tally Boards」タブで Add → Brand一覧から Smart GPI / RossTalk を選ぶ（一覧にはPBus / Serial GPI (CTS/DSR) / TSL Tallyも並ぶ）。\nSmart GPI / RossTalk Setup で State を Enabled、Mode を TCP にし、Incoming Network Settings の TCP Port（例 7788）を控える。設定後、一覧の State が Active になればOK。\n\n✅ 確認：State=Active・Mode=TCP・ポート番号をメモした。",
-        "tip": "本番機ではWindowsファイアウォールの受信許可も確認する。Keyboard / GPI Mappingも同じEditメニューにある。"
+        "tip": "本番機ではWindowsファイアウォールの受信許可も確認する。Keyboard / GPI Mappingも同じEditメニューにある。",
+        "img": "v5_91_001.jpg"
       },
       {
         "h": "送出対象のTake Itemを用意する",
-        "body": "Sequencerにテスト用SceneのTake Itemを置き、Take IDを決める（例 0001）。出し先のフレームバッファとレイヤーも確認しておく。\n\n✅ 確認：手動のTake（テンキー＋）で正しく出る状態になっている。"
+        "body": "① SequencerにテストSceneをドラッグしてTake Item化する\n② Take ID列で番号を確認・設定（例 0002）。出し先のフレームバッファとレイヤーも確認\n③ まず手動のTake（テンキー＋）で正しく出ることを確かめておく（外部制御の前に手動で動くこと）\n\n✅ 確認：手動のTake（テンキー＋）で正しく出る状態になっている。"
       },
       {
         "h": "外部からTCP接続する（DashBoardが実戦的）",
         "body": "送信側はRoss公式の無料ツール DashBoard のCustomPanelが実戦的：ボタンを作り、TaskにRossTalkを選ぶ→Connection=Custom、Host=XPressionのIPアドレス（同一PCならlocalhost）、Port=手順1のポート番号。CommandはドロップダウンにTAKE / CUE / SEQI…が用意されており、Take IDなどを入れるだけ。\nターミナルソフト（PuTTYのRaw接続等）で直接コマンドを打つ方法もある（その場合はCR/LF終端に注意）。\n\n✅ 確認：ボタン実行（または接続）がエラーなく通る。",
-        "tip": "DashBoardならPause（待ち時間）もタスクとして挟めるので、「DATALINQKEY→CUE→Pause 200ms→TAKE」のような複数コマンドを1ボタンに登録できる。素材フォルダ 14_RossTalk の検証済みサンプルパネルを開けば、Host/Portを直すだけで全ボタンを試せる。"
+        "tip": "DashBoardならPause（待ち時間）もタスクとして挟めるので、「DATALINQKEY→CUE→Pause 200ms→TAKE」のような複数コマンドを1ボタンに登録できる。素材フォルダ 14_RossTalk の検証済みサンプルパネルを開けば、Host/Portを直すだけで全ボタンを試せる。",
+        "img": "v5_91_002.jpg"
       },
       {
         "h": "TAKEで出す",
@@ -787,7 +803,8 @@ window.TUTORIALS = [
       },
       {
         "h": "GPIコマンドで機能を呼ぶ（任意・物理機器は不要）",
-        "body": "RossTalkの「GPI 1」はソフト的にGPI入力を叩くシミュレートコマンドで、物理的なGPI機器は不要。\n① Edit → Keyboard / GPI Mapping で、シミュレートGPI入力1に機能（例：Sequencerの選択を進める）を割り当てる\n② DashBoardのRossTalkタスク（またはターミナル）から GPI 1 を送信\n\n✅ 確認：GPIコマンドで、割り当てた機能が実行される。"
+        "body": "RossTalkの「GPI 1」はソフト的にGPI入力を叩くシミュレートコマンドで、物理的なGPI機器は不要。\n① Edit → Keyboard / GPI Mapping で、シミュレートGPI入力1に機能（例：Sequencerの選択を進める）を割り当てる\n② DashBoardのRossTalkタスク（またはターミナル）から GPI 1 を送信\n\n✅ 確認：GPIコマンドで、割り当てた機能が実行される。",
+        "img": "v5_91_004.jpg"
       }
     ],
     "checklist": [
@@ -797,6 +814,7 @@ window.TUTORIALS = [
       "TAKEとSEQIのフォーカス挙動の違いを運用者が説明できるか",
       "本番中に接続が切れたことに気づける手順があるか",
       "誤送信時のリカバリ（SEQO / LAYEROFF）を確認したか"
-    ]
+    ],
+    "goalImg": "v5_91_003.jpg"
   }
 ];
