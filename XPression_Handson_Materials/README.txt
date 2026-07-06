@@ -3,13 +3,14 @@ XPression Handson Materials / XPression 実務ハンズオン素材
 
 XPression実務ノート（全6巻）の内容を、手を動かして学ぶための
 ハンズオン素材一式です。手順書を読みながら、各フォルダの素材を
-使って進めてください。全11ハンズオン収録。
+使って進めてください。全14ハンズオン収録。
 
 ──────────────────────────────
 Folders
 ──────────────────────────────
 Handbook/
-  XPression_Handson_Handbook.pdf … 全11ハンズオンの手順まとめ（まずこれを開く）
+  XPression_Handson_Handbook_JA.pdf … 全14ハンズオンの手順まとめ・日本語版（まずこれを開く）
+  XPression_Handson_Handbook_EN.pdf … 同・英語版 / English edition
 
 01_LowerThird        … 名前＋肩書きの2段テロップ（壊れない設計）
 02_Scoreboard        … 2チームのスコア表示（ロゴ・チームカラー）
@@ -22,6 +23,8 @@ Handbook/
 09_Mask              … 見せる範囲を作る（ワイプ／切り抜き）
 10_Gradient          … 読みやすい色面（座布団・なじませ）
 11_Clock_Countdown   … Date Timeで現在時刻・残り時間
+13_JSON_PlayerList   … JSONの選手リストをKeyで行切り替え
+14_RossTalk          … 外部からTake（RossTalk・検証済みサンプルパネル同梱）
 
 Projects_xprj/
   作ったXPressionプロジェクト（.xprj）の保存先（使い方は中のREADMEを参照）

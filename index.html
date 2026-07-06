@@ -83,7 +83,7 @@ footer{margin-top:38px;color:var(--sub);font-size:12px;text-align:center}
     <div class="tags" id="tags3"><span class="tag">Script</span><span class="tag">API</span><span class="tag">サンプル</span></div>
     <span class="go" id="g3">ひらく →</span>
   </a>
-  <a class="card" style="--cc:var(--c4)" href="XPression_Handson_Materials/Handbook/XPression_Handson_Handbook.pdf" target="_blank" rel="noopener">
+  <a class="card" id="cardHandbook" style="--cc:var(--c4)" href="XPression_Handson_Materials/Handbook/XPression_Handson_Handbook_JA.pdf" target="_blank" rel="noopener">
     <div class="ic">🧰</div>
     <h2 id="t4">ハンズオン素材</h2>
     <p id="d4">手順書PDF＋全11作例のプロジェクト（.xprj）。素材は同梱の XPression_Handson_Materials フォルダに。</p>
@@ -99,7 +99,7 @@ footer{margin-top:38px;color:var(--sub);font-size:12px;text-align:center}
     </a>
     <a class="orglink" id="lk_site" href="https://dekobokotech.com/" target="_blank" rel="noopener">公式サイト ↗</a>
     <a class="orglink" id="lk_shop" href="https://dbtps.dekobokotech.com/" target="_blank" rel="noopener">オンラインショップ ↗</a>
-    <a class="orglink" href="info.html">情報</a>
+    <a class="orglink" id="lk_info" href="info.html">情報</a>
   </div>
   <span id="foot">オフライン動作 · データ内蔵 · DBT XPression Learning Suite</span>
 </footer>
@@ -113,9 +113,9 @@ const T={
   tags2:['Visual Logic','RossTalk','Dynamic Material','Builder'],
   t3:'Script Reference',d3:'XPressionスクリプトのリファレンス。書きながら引く実装辞典。',g3:'ひらく →',
   tags3:['Script','API','サンプル'],
-  t4:'ハンズオン素材',d4:'手順書PDF＋全11作例のプロジェクト（.xprj）。素材は同梱の XPression_Handson_Materials フォルダに。',g4:'手順書をひらく →',
+  t4:'ハンズオン素材',d4:'手順書PDF（日本語版・英語版）＋作例プロジェクト（.xprj）。素材は同梱の XPression_Handson_Materials フォルダに。',g4:'手順書をひらく（日本語）→',
   tags4:['手順書PDF','.xprj ×11','実機練習'],
-  foot:'オフライン動作 · データ内蔵 · DBT XPression Learning Suite',lk_site:'公式サイト ↗',lk_shop:'オンラインショップ ↗',lang:'EN'},
+  foot:'オフライン動作 · データ内蔵 · DBT XPression Learning Suite',lk_site:'公式サイト ↗',lk_shop:'オンラインショップ ↗',lk_info:'情報',lang:'EN'},
  en:{brand:'DBT XPression',h1:'XPression Field Notes',lead:'A Study App to learn from, and a reverse-lookup Cookbook to reach for on the job. Pick one to start.',
   t1:'Study App',d1:'Master all 6 volumes: Read -> Try -> Memorize. Roadmap, quizzes, flashcards, images, stats.',g1:'Start →',
   tags1:['Roadmap','Quiz','Cards (SRS)','Images','Stats'],
@@ -123,15 +123,16 @@ const T={
   tags2:['Visual Logic','RossTalk','Dynamic Material','Builder'],
   t3:'Script Reference',d3:'XPression scripting reference — an implementation dictionary to keep open while you write.',g3:'Open →',
   tags3:['Script','API','Samples'],
-  t4:'Hands-on Materials',d4:'Step-by-step handbook PDF + 11 practice projects (.xprj). Files are in the bundled XPression_Handson_Materials folder.',g4:'Open handbook →',
+  t4:'Hands-on Materials',d4:'Step-by-step handbook PDF (Japanese & English editions) + practice projects (.xprj). Files are in the bundled XPression_Handson_Materials folder.',g4:'Open handbook (English) →',
   tags4:['Handbook PDF','.xprj ×11','Practice'],
-  foot:'Offline · Data embedded · DBT XPression Learning Suite',lk_site:'Website ↗',lk_shop:'Online shop ↗',lang:'日本語'}
+  foot:'Offline · Data embedded · DBT XPression Learning Suite',lk_site:'Website ↗',lk_shop:'Online shop ↗',lk_info:'Info',lang:'日本語'}
 };
 let LANG=localStorage.getItem('xpr_lang')||'ja';
 function apply(){
   const d=T[LANG];document.documentElement.lang=LANG;
-  for(const id of ['brand','h1','lead','t1','d1','g1','t2','d2','g2','t3','d3','g3','t4','d4','g4','foot','lk_site','lk_shop']){const e=document.getElementById(id);if(e)e.textContent=d[id];}
+  for(const id of ['brand','h1','lead','t1','d1','g1','t2','d2','g2','t3','d3','g3','t4','d4','g4','foot','lk_site','lk_shop','lk_info']){const e=document.getElementById(id);if(e)e.textContent=d[id];}
   document.getElementById('langBtn').textContent=d.lang;
+  const hb=document.getElementById('cardHandbook'); if(hb) hb.setAttribute('href','XPression_Handson_Materials/Handbook/XPression_Handson_Handbook_'+(LANG==='ja'?'JA':'EN')+'.pdf');
   const mk=arr=>arr.map(t=>`<span class="tag">${t}</span>`).join('');
   document.getElementById('tags1').innerHTML=mk(d.tags1);
   document.getElementById('tags2').innerHTML=mk(d.tags2);
