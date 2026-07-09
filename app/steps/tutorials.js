@@ -27,7 +27,7 @@ window.TUTORIALS = [
     "srcChap": "第12章",
     "level": "中級",
     "minutes": 30,
-    "goal": "名前と肩書きの2段ローワーサード。短い名前でも長い名前でも背景が文字に合わせて気持ちよく収まり、いくら長くても安全エリアからはみ出さない上限を持つ。肩書きが空のときは行を出さず名前だけできれいに見せ、Online / Offline / Take で安定して出し隠しできる。",
+    "goal": "名前と肩書きの2段ローワーサード。短い名前でも長い名前でも背景が文字に合わせて気持ちよく収まり、いくら長くても安全エリアからはみ出さない上限を持つ。肩書きが空のときは行を出さず名前だけできれいに見せ、Online / Offline / Take で安定して出し隠しできる。作例：Name_TXT＋Title_TXT の2段。Auto Squeeze（Max Width 1200・Width Only）＋Character Limits、Title の空判定は IsEmpty→Not→Title行の Visible。",
     "goalImg": "v4_90_001.jpg",
     "overview": "「器を作る」→「ネイティブで幅の土台を作る」→「Visual Logicで判断だけ足す」→「出す・隠すを整える」。ネイティブで土台ができた時点で見た目はもう壊れず、Visual Logicは最後の仕上げの判断だけを乗せる。",
     "steps": [
@@ -100,7 +100,7 @@ window.TUTORIALS = [
     "srcChap": "第13章",
     "level": "中級〜上級",
     "minutes": 40,
-    "goal": "2チームのスコアボード。ホームとアウェイのチーム名・色・スコア・ピリオド表示。勝っている側がひと目で分かるリード強調。スコアが動いたときは変わった数字が軽く強調され、登場と退場はなめらかに。",
+    "goal": "2チームのスコアボード。ホームとアウェイのチーム名・色・スコア・ピリオド表示。勝っている側がひと目で分かるリード強調。スコアが動いたときは変わった数字が軽く強調され、登場と退場はなめらかに。作例：HomeScore/AwayScore（Text）、リード強調は Greater Than＋Smaller Than（両方 Base=Home・比較側=Away、Smaller→HOME/Greater→AWAY、同点は両方0）、スコア更新の強調は OnSetText→Scene Director 再生。",
     "goalImg": "v4_91_001.jpg",
     "overview": "「器を作る」→「スコアを表示用に整える」→「Visual Logicで判断を足す」→「動きをネイティブで付ける」。Visual Logicは「値を見て何をどう見せるかを決める」担当、ネイティブは「決まったものを動かす・出し入れする」担当。",
     "steps": [
@@ -268,7 +268,7 @@ window.TUTORIALS = [
     "srcChap": "第14章",
     "level": "中級",
     "minutes": 30,
-    "goal": "12:00から00:00へ向かってカウントダウンする簡易ゲームクロック。Text Objectは表示先で、時間の値はClock Timer Widgetが持つ。Start / Stop / ResetをManualで確実に操作でき、Online・再Takeでも意図しないResetや再Startが起きないことを確認する。",
+    "goal": "12:00から00:00へ向かってカウントダウンする簡易ゲームクロック。Text Objectは表示先で、時間の値はClock Timer Widgetが持つ。Start / Stop / ResetをManualで確実に操作でき、Online・再Takeでも意図しないResetや再Startが起きないことを確認する。作例：Clock_TXT（表示）＋Clock Timer Widget（開始 12:00、Count Down、Manual の Start/Stop/Reset）。",
     "goalImg": "v4_92_001.jpg",
     "overview": "時計の作り方をまず3つ（簡易＝Clock Timer Widget／演出連動＝Visual Logic／公式時計＝DataLinq）に切り分け、ここでは最もシンプルなClock Timer Widgetで作る。器（Text Object）を置く→Widgetで時間を作る→つなぐ→Manualで動作確認、の順。",
     "steps": [
@@ -390,7 +390,7 @@ window.TUTORIALS = [
     "srcChap": "第3・4章",
     "level": "中級",
     "minutes": 35,
-    "goal": "外部の表（CSV/Excel）から選手名・スコア・チーム情報をText Objectへ流し込み、表を書き換えるだけで表示が変わる状態を作る。データソースは『誰が編集し、どう壊れるか』で選び、失敗時の見え方まで想定する。",
+    "goal": "外部の表（CSV/Excel）から選手名・スコア・チーム情報をText Objectへ流し込み、表を書き換えるだけで表示が変わる状態を作る。データソースは『誰が編集し、どう壊れるか』で選び、失敗時の見え方まで想定する。作例：players.csv（列 Name/Score/Team）を DataLinq で読み、Key（例 Team=Home の行）で対象行を選び、各 Text の DataLinq タブで列にバインド。UTF-8 保存・再Takeで反映を確認。",
     "goalImg": "v5_93_001.jpg",
     "overview": "DataLinqの共通構造（データソース→キー→表示先）を押さえ、まずCSVで動かす。編集頻度が高いならExcel、構造化・外部連携ならJSON。仕上げにWidgets（Text List等）で切り替えも足せる。同梱の teams.csv / names_and_titles.csv で試せる。",
     "steps": [
@@ -479,7 +479,7 @@ window.TUTORIALS = [
     "srcChap": "第2章",
     "level": "中級",
     "minutes": 25,
-    "goal": "文字が少しずつずれて登場する見出し。設定を作る→Scene Director上の対象へ配置→再生して確認、の3ステップで、Timing Offsetsで『文字ごと／単語ごと／行ごと』のずれを設計する。差し替わっても成立する演出にする。",
+    "goal": "文字が少しずつずれて登場する見出し。設定を作る→Scene Director上の対象へ配置→再生して確認、の3ステップで、Timing Offsetsで『文字ごと／単語ごと／行ごと』のずれを設計する。差し替わっても成立する演出にする。作例：見出しText（Headline_TXT）を左から1文字ずつ。Track=Position.X を -120→0、Total Duration 150、Character offset 3フレーム、30fps。",
     "goalImg": "v3_90_001.jpg",
     "overview": "Stagger Animationは『きれいに作る』だけでなく『情報が差し替わっても成立する』演出を設計する道具。Track（何を動かすか）とKeyframe（動きの形）とTiming Offsets（ずれの単位）を分けて考える。",
     "steps": [
@@ -506,12 +506,12 @@ window.TUTORIALS = [
       },
       {
         "h": "Keyframeで動きの形を作る",
-        "body": "① 同じ Edit Stagger Animation の Track Animation で、変化のカーブを作る（例：Position.X を画面外から0へ）\n② Total Duration の Frames が全体尺（実機例 150）。1文字ぶんの変化の長さ（Clip Length）と全体尺は分けて考える\n尺を変えたら Recalculate Keyframe Positions で位置ずれがないか確認。\n\n✅ 確認：再生すると1つの塊として動く（まだ、ずれ無しでOK）。",
+        "body": "① 同じ Edit Stagger Animation の Track Animation で、変化のカーブを作る（作例：frame 0 で Position.X=-120、終わりで Position.X=0 のキーフレーム。Alpha も 0→255 を足すと登場が締まる）\n② Total Duration の Frames が全体尺（実機例 150）。1文字ぶんの変化の長さ（Clip Length）と全体尺は分けて考える\n尺を変えたら Recalculate Keyframe Positions で位置ずれがないか確認。\n\n✅ 確認：再生すると1つの塊として -120→0 に動く（まだ、ずれ無しでOK）。",
         "img": "v3_90_005.jpg",
         "tip": "Track Controlsは作業中の事故（誤って別Trackを動かす等）を減らすために使う。",
         "tip_en": "Track Controls exist to reduce mid-work accidents (like moving the wrong Track by mistake).",
         "h_en": "Shape the motion with Keyframes",
-        "body_en": "① In the same Edit Stagger Animation's Track Animation, build the change curve (e.g. Position.X from off-screen to 0)\n② Total Duration's Frames is the overall length (verified example: 150). Think of one character's change length (Clip Length) separately from the overall length\nAfter changing the length, use Recalculate Keyframe Positions and confirm nothing shifted.\n\n✅ Check: Playing moves everything as one block (no offsets yet is fine)."
+        "body_en": "① In the same Edit Stagger Animation's Track Animation, build the change curve (example: at frame 0 Position.X=-120, at the end Position.X=0; adding Alpha 0→255 makes the entrance crisper)\n② Total Duration's Frames is the overall length (verified example: 150). Think of one character's change length (Clip Length) separately from the overall length\nAfter changing the length, use Recalculate Keyframe Positions and confirm nothing shifted.\n\n✅ Check: Playing moves everything as one block from -120→0 (no offsets yet is fine)."
       },
       {
         "h": "Timing Offsetsでずれを作る（ここが中心）",
@@ -552,86 +552,97 @@ window.TUTORIALS = [
   {
     "id": "transition",
     "title": "Transitionで出入りを設計する",
-    "subtitle": "正しく消えて、正しく更新できるSceneにする",
+    "subtitle": "Transition Logic（Scene Director＋Animation Controller）で出入りとback-to-backを作る",
     "srcVol": 3,
     "srcChap": "第8章",
     "level": "中級",
     "minutes": 25,
-    "goal": "Sceneの登場（In）だけでなく退場（Out）と更新（Back-to-Back）まで設計し、本番で残り方が読みにくくならないようにする。Layerと重なり順、外部制御での消え方まで想定する。",
+    "goal": "Transition Logic を使い、ローワーサード等を『左からスライドインして定位置で静止、Take Off で抜ける』ように実際に作る。Scene Director で Ctrl+K のキーフレームを打って In と Out を作り、Default Frame Marker（静止位置）と Preview Frame を設定。同じ Layer に並べれば back-to-back で自動入替。作った TL ルールは保存・再呼び出しでき、決めた尺＋Transition Out 付きで書き出せる。例は 1920×1080・30fps、frame 0→10（In）→10 静止→10→20（Out）。",
     "goalImg": "v3_91_001.jpg",
-    "overview": "Transitionは演出ではなく『送出状態の設計』。In/Out→Duration→用途ごとの判断、の順で整理し、『きれいに出るScene』ではなく『正しく消えるScene』を作る。Scene Director（動きの中身）とTransition Logic（条件でどのDirectorを使うか）を分けて考える。",
+    "overview": "Transition Logic（TL）は、複数のグラフィック（テロップ・ロゴ等）が独立して動いても互いに衝突しないよう自動制御し、表示順に関係なくシームレスに遷移させる仕組み（例：ロゴ表示中に下部テロップを出すとロゴが自動で上へ避け、テロップを消すと元へ戻る）。手動操作ではなくロジックに自動計算させるのが要点。基本の流れ：Scene Director を作る→Animation Controller を Track に用意（Track1は既定で1つ、2つ目以降は Add Clip で追加）→In（入る）/Out（出る）のアニメをキーフレームで作る→Default Frame Marker・Preview Frame を設定→back-to-back で連続送出→TLルールを保存・再呼び出し→決めた尺＋Transition Out で書き出す。",
     "steps": [
       {
-        "h": "Transitionが設計するものを理解する",
-        "body": "Transitionは単なるエフェクトではなく、Sceneの出入りを破綻させないための設計項目。In（出る）だけでなく Out（消える）・更新（連続で内容が変わる）まで含む。\n\n✅ 確認：In／Out／更新の3つを設計対象として言える。",
+        "h": "素材を用意して Scene Director を開く",
+        "body": "① まず動かす素材を用意する。例：ローワーサードのテキスト＋背景を Group『GR_Lower』に1つにまとめる（グループごと動かすと崩れにくい）\n② Animation メニュー > Scene Director を開く。Scene Director ウィンドウが開き、Track 1 に既定の Animation Controller が1つ入っている\n③ タイムラインの長さとフレームレートを確認する（この例では 0〜20フレーム／30fps。ここに In→静止→Out を1本で作る）\n\n✅ 確認：Scene Director が開き、Track 1 に Animation Controller が1つある。",
         "img": "v3_91_002.jpg",
-        "h_en": "Understand what Transition designs",
-        "body_en": "Transition isn't a mere effect — it's the design item that keeps Scene ins and outs from breaking. It covers In (appearing), Out (leaving), and updates (content changing back-to-back).\n\n✅ Check: You can name In / Out / update as the three design targets."
+        "h_en": "Prepare the asset and open the Scene Director",
+        "body_en": "① First prepare what will move. E.g. bundle the lower-third text + background into one Group 'GR_Lower' (moving the whole group is more robust)\n② Open Animation menu > Scene Director. The window opens with one default Animation Controller on Track 1\n③ Check the timeline length and frame rate (here 0–20 frames / 30fps; you'll build In→hold→Out on this one timeline)\n\n✅ Check: The Scene Director is open with one Animation Controller on Track 1."
       },
       {
-        "h": "In / Out をまず作る",
-        "body": "設定場所は2つ（実機確認済み）：\n① Sequencer の Transition In / Out 列 — Take ItemごとにInとOutのエフェクト（Cut／Dissolve／Push など）を設定する。既定は Cut / Cut\n② 凝った出入りは Scene Director にIn/Outの動きとして作る（条件で使い分けるならObject InspectorのTransition Logicタブ）\nまずはInとOutの両方を必ず設定する（Outを設計しないと本番で残り方が読めない）。\n\n✅ 確認：InとOutの両方が設定され、出して消すまでが成立している。",
+        "h": "Animation Controller を Track に用意する（既定＋追加は Add Clip）",
+        "body": "① Scene Director を新規作成すると Track 1 には既定の Animation Controller が1つ入っている。今回は1系統なのでこの Track 1 をそのまま使う\n② 別々に動かす系統が増えたら Add Track で空トラックを足し、右クリック→Add Clip > Animation Controller で手動で載せる（★空トラックには自動では入らない）\n③ 1つの Track＝1グループのアニメ。動かす対象（GR_Lower）のキーフレーム（Ctrl+K）はこの Animation Controller に打つ\n\n✅ 確認：GR_Lower を動かす Animation Controller が Track 1 に載っている。",
         "img": "v3_91_003.jpg",
-        "h_en": "Build In and Out first",
-        "body_en": "Two places to set it (machine-verified):\n① The Sequencer's Transition In / Out columns — set In and Out effects (Cut / Dissolve / Push etc.) per Take Item. Default is Cut / Cut\n② For elaborate ins/outs, build them as In/Out moves in the Scene Director (for conditional use, the Object Inspector's Transition Logic tab)\nAlways set both In and Out first (without a designed Out, how things linger on air is unpredictable).\n\n✅ Check: Both In and Out are set; show-then-remove works end to end."
+        "h_en": "Set up Animation Controllers on the Scene Director tracks (default + Add Clip)",
+        "body_en": "① A newly created Scene Director already has one default Animation Controller on Track 1\n② For more motion, Add Track (empty) and right-click → Add Clip > Animation Controller to place one (★empty tracks don't get one automatically)\n③ One Track = one group of animation; keyframe (Ctrl+K) the objects on this Animation Controller\n\n✅ Check: You have the Animation Controllers you need on the Scene Director's tracks."
       },
       {
-        "h": "Durationは現場テンポで決める",
-        "body": "① Sequencer の Transition In/Out 設定で長さを調整する\n② 判断基準は見た目の好みではなく現場テンポ：常駐テロップ=自然にOut／緊急表示=即時（Cut）で消せる経路／演出Scene=Outまで含めて見せ方を作る／スコア更新系=次の情報を邪魔しない長さ\n\n✅ 確認：用途（常駐／緊急／演出）に合ったDurationになっている。",
+        "h": "In（入り）をキーフレームで作る（frame 0→10）",
+        "body": "① 再生スライダー（Playout Slider）を frame 0 に置く。GR_Lower を画面外へ動かす（例 Position.X = -1920 ＝左の外）。Ctrl+K → Set Keyframe ダイアログで Position にチェック → Set & Close\n② スライダーを frame 10 に進める。GR_Lower を定位置（例 Position.X = 0）に戻す。もう一度 Ctrl+K で Position キーを打つ\n③ Scene Director の再生で 0→10 に左からスライドインするか確認\n※値は解像度・レイアウト依存。X移動の代わりに Alpha 0→255 のフェード、Scale 0→1 で出す等も同じ手順（Set Keyframe で対応する属性にチェック）\n\n✅ 確認：frame 0→10 で GR_Lower が画面内へ入ってくる。",
         "img": "v3_91_004.jpg",
-        "h_en": "Decide Duration by on-air tempo",
-        "body_en": "① Adjust lengths in the Sequencer's Transition In/Out settings\n② The criterion is on-air tempo, not visual taste: persistent straps = natural Out / emergency displays = a path to instant (Cut) removal / staging Scenes = design through the Out / score updates = short enough not to block the next info\n\n✅ Check: Duration fits the purpose (persistent / emergency / staging)."
+        "h_en": "Keyframe the In (frame 0→10)",
+        "body_en": "① Put the Playout Slider at frame 0. Move GR_Lower off-screen (e.g. Position.X = -1920, off the left). Ctrl+K → in the Set Keyframe dialog check Position → Set & Close\n② Advance the slider to frame 10. Return GR_Lower to its rest position (e.g. Position.X = 0). Ctrl+K again for a Position key\n③ Play in the Scene Director to check the left slide-in over 0→10\n※Values depend on resolution/layout. Instead of X, an Alpha 0→255 fade or Scale 0→1 works the same way (check the matching attribute in Set Keyframe)\n\n✅ Check: GR_Lower enters the frame over frame 0→10."
       },
       {
-        "h": "更新（Back-to-Back）を設計する",
-        "body": "同じSceneで内容が連続更新される場合（スコアや情報更新）の見え方を決める：\n① 同じTake Itemの値を差し替えて再TAKEし、Back-to-Back（連続送出）でどう見えるかをリハで確認\n② 「毎回In/Outを打つ」か「中身だけ差し替える」かを決めて統一する\n\n✅ 確認：連続更新したときの見え方が意図どおり。",
+        "h": "Default Frame Marker と Preview Frame を設定する",
+        "body": "① 定位置フレーム（この例では frame 10）に Default Frame Marker を置く。Take するとアニメがここまで再生されて静止＝オンエア状態になる\n② Preview Frame を、プレビューに出したいフレーム（同じく frame 10 の完成形）に設定する\n③ これで『Take すると In が再生され、Default Frame Marker で止まる』という登場の動きが確定する\n\n✅ 確認：Take で frame 10（定位置）に止まり、プレビューが完成形を映す。",
         "img": "v3_91_005.jpg",
-        "h_en": "Design updates (back-to-back)",
-        "body_en": "Decide how continuous updates of the same Scene look (scores, info updates):\n① Swap the same Take Item's values and re-TAKE; rehearse how back-to-back playout looks\n② Decide and standardize: \"full In/Out every time\" or \"swap contents only\"\n\n✅ Check: Continuous updates look as intended."
+        "tip": "Default Frame Marker＝オンエアの静止フレーム（Take はここで止まる）、Preview Frame＝プレビュー用フレーム。In の終わり＝定位置に Default Frame Marker を置くのが基本。",
+        "tip_en": "Default Frame Marker = the on-air resting frame (a Take stops here); Preview Frame = the frame for preview. Put the Default Frame Marker at the end of the In (the rest position).",
+        "h_en": "Set the Default Frame Marker and Preview Frame",
+        "body_en": "① Put the Default Frame Marker at the rest frame (here frame 10). A Take plays the animation up to here and holds = the on-air state\n② Set the Preview Frame to the frame you want in preview (also the finished look at frame 10)\n③ This locks in the entrance: 'a Take plays the In and stops at the Default Frame Marker'\n\n✅ Check: A Take rests at frame 10 and preview shows the finished look."
       },
       {
-        "h": "Scene DirectorとTransition Logicを分ける",
-        "body": "役割を分けて考える：Scene Director＝動きの中身を作る場所／Transition Logic（Object Inspector - Sceneのタブ）＝条件に応じてどのScene Directorを使うかを決める場所。\n単純なIn/Outで足りるならSequencer列だけで済ませ、必要な複雑さに留める（作り込みすぎると読めないデータになる）。\n\n✅ 確認：どのScene Directorがいつ使われるかを説明できる。",
+        "h": "Out（抜け）を作る（frame 10→20）",
+        "body": "① スライダーを定位置（frame 10）に置く（ここは既にキーがある）。次にスライダーを frame 20 へ進め、GR_Lower を画面外へ（例 Position.X = 1920 で右へ抜ける／または -1920 で来た方へ戻す）。Ctrl+K で Position キーを打つ\n② これで 0→10（In）→10 静止→10→20（Out）が1本のタイムラインに揃う。Take On で In＋静止、Take Off（または次を Take）で Default Frame Marker から先＝Out が再生される\n\n✅ 確認：In → 定位置 → Out が1本でつながって再生できる。",
         "img": "v3_91_006.jpg",
-        "tip": "本番前修正・別担当・複製・Layer変更・外部制御変更が起きる前提で、必要以上に高度にしない。",
-        "tip_en": "Assume pre-show fixes, different operators, duplication, Layer changes, and external-control changes — don't make it more sophisticated than needed.",
-        "h_en": "Separate Scene Director and Transition Logic",
-        "body_en": "Split the roles: Scene Director = where motion content is built / Transition Logic (Object Inspector - Scene tab) = where conditions pick which Scene Director runs.\nIf simple In/Out suffices, stick to the Sequencer columns and keep complexity to what's needed (overbuilt logic becomes unreadable data).\n\n✅ Check: You can explain which Scene Director runs when."
+        "tip": "Out を作らないと本番で消え方が読めない。定位置（Default Frame Marker）を境に In と Out を対で用意する。左から入れて左へ戻す／右へ抜く は演出で選ぶ。",
+        "tip_en": "Without an Out, on-air removal is unpredictable. Build In and Out as a pair around the rest (Default Frame Marker). Return the way it came, or exit the other side — your call.",
+        "h_en": "Build the Out (frame 10→20)",
+        "body_en": "① Put the slider at the rest frame (frame 10; a key is already here). Advance to frame 20 and move GR_Lower off-screen (e.g. Position.X = 1920 to exit right, or -1920 to return the way it came). Ctrl+K for a Position key\n② Now one timeline holds 0→10 (In) → 10 hold → 10→20 (Out). Take On plays In + hold; Take Off (or taking the next) plays from the Default Frame Marker onward = the Out\n\n✅ Check: In → rest → Out plays through on one timeline."
       },
       {
-        "h": "LayerとFramebuffer・外部制御まで見る",
-        "body": "動きだけでなく重なり順（Layer / Framebuffer）まで見る。別Layerの状態に反応させるならScene Triggersを検討。外部制御（GPI / RossTalk / PBus等）で消す場合は、Transitionの想定と実際の消え方が一致しているか確認。\n\n✅ 確認：重なり順と、外部制御で消したときの動きが想定どおり。",
+        "h": "Back-to-Back（連続送出）にする",
+        "body": "① 入れ替えたいシーン同士を同じ Layer（同じ Framebuffer）に割り当てる。Sequencer に Take Item として並べ、順に Take していく\n② 同じ Layer 上で次の Scene を Take すると、現在の Scene が自動で Out、新しい Scene が In する＝Transition Logic による back-to-back（手前で In/Out を手打ちしなくてよい）\n③ TLの要点は『衝突回避の自動計算』：例えばロゴ表示中に下部テロップを Take するとロゴが自動で上へ避け、テロップを消すとロゴが元位置へ戻る。表示順に関係なく破綻しない\n④ スコアや情報の連続更新でも毎回きれいに入れ替わる。重なり順（Layer／Framebuffer）を揃えておく\n\n✅ 確認：Sequencer で連続 Take すると前が抜けて次が入り、共存時は互いに避け合う。",
         "img": "v3_91_007.jpg",
-        "h_en": "Look at Layers, Framebuffers, and external control",
-        "body_en": "Look beyond motion to stacking order (Layer / Framebuffer). To react to another Layer's state, consider Scene Triggers. If external control (GPI / RossTalk / PBus etc.) removes the Scene, confirm the actual removal matches the Transition's assumptions.\n\n✅ Check: Stacking order and externally-triggered removal behave as expected."
+        "h_en": "Make it back-to-back (continuous playout)",
+        "body_en": "① Assign the scenes you want to swap to the same Layer (same Framebuffer). Line them up as Take Items in the Sequencer and Take them in turn\n② On that same Layer, taking the next Scene makes the current one Out and the new one In automatically — back-to-back via Transition Logic (no need to hand-key In/Out at the point of use)\n③ The core of TL is auto-calculated collision avoidance: e.g. with a logo up, taking a lower-third makes the logo move up to make room, and removing the lower-third returns it — no breakage regardless of order\n④ Continuous score/info updates swap cleanly each time; keep the stacking order (Layer / Framebuffer) aligned\n\n✅ Check: Consecutive Takes in the Sequencer swap in/out, and coexisting graphics move aside for each other."
       },
       {
-        "h": "本番前の確認順序",
-        "body": "In だけを見ず、更新・Out・Layer・外部制御まで含めて確認する。確認：出たあと正しく消えるか／連続更新が破綻しないか／重なり順が意図通りか／外部制御で消したとき想定通りか。",
+        "h": "TLルールを保存・再呼び出しする（Save & Recall）",
+        "body": "作った Transition Logic は保存でき、別 Scene へ再呼び出しして同じ挙動を使い回せる（XPression 10.0以降）。\n① ルール設定済みの Scene を Object Manager で開く\n② Transition Logic タブの「保存（フロッピーディスク）」アイコンをクリックし、名前を付けてロジックファイルとして保存\n③ 適用したい別 Scene（未設定）を選択し、「Load transition logic from file」で保存ファイルを読み込むと全ルールが即反映\n\n✅ 確認：保存した TL ルールが別 Scene に適用できる。",
         "img": "v3_91_008.jpg",
-        "h_en": "Pre-show check order",
-        "body_en": "Don't check only the In — include updates, Out, Layers, and external control. Confirm: does it leave correctly after showing / do continuous updates hold / is stacking order right / does external removal behave as expected?"
+        "tip": "番組テンプレートで出入りを統一したいときに有効。XPression 10.0以降の機能。",
+        "tip_en": "Handy for standardizing ins/outs across a show template. A 10.0+ feature.",
+        "h_en": "Save and recall TL rules",
+        "body_en": "Transition Logic can be saved and recalled onto another Scene to reuse the same behavior (XPression 10.0+).\n① Open the Scene that already has rules in the Object Manager\n② In the Transition Logic tab, click the Save (floppy disk) icon and save it as a named logic file\n③ Select the target Scene (without rules) and click \"Load transition logic from file\" to load the saved file — all rules apply instantly\n\n✅ Check: Saved TL rules apply to another Scene."
+      },
+      {
+        "h": "決めた尺で Transition Out 付きに書き出す＋本番前チェック",
+        "body": "オフライン編集用に、指定フレーム数でイン／アウトを完結させた動画を書き出せる。\n① Sequencer で書き出したいアイテム（テロップ等）を右クリック\n② 「Export take item to video」を選択\n③ 書き出しファイル名を指定\n④ 編集者の要求に合わせて必要なフレーム数（デュレーション）を指定\n⑤ TL に基づくアウト・トランジションが自動計算されるので、そのまま Export でレンダリング\n本番前チェック：In→定位置→Out がつながるか／back-to-back で破綻しないか／重なり順（Layer／Framebuffer）が意図どおりか\n\n✅ 確認：指定尺＋Out付きの動画が書き出せ、出入りが破綻しない。",
+        "img": "v3_91_009.jpg",
+        "h_en": "Export with a transition out at a set duration + pre-show check",
+        "body_en": "For offline editing, export a video that completes its in/out within a set frame count.\n① Right-click the item to export (e.g. a lower-third) in the Sequencer\n② Choose \"Export take item to video\"\n③ Specify the output filename\n④ Specify the frame count (duration) the editor requires\n⑤ The out-transition is auto-calculated from TL, so click Export to render\nPre-show check: In → rest → Out connects / back-to-back holds / stacking order (Layer/Framebuffer) is right\n\n✅ Check: A set-duration video with the out exports and the ins/outs don't break."
       }
     ],
     "checklist": [
-      "In と Out の両方を作った（Outを設計している）",
-      "Durationを現場テンポ・用途で決めた",
-      "連続更新があるならBack-to-Backを設計した",
-      "Scene DirectorとTransition Logicの役割を分けている",
-      "Layer/Framebufferの重なり順を確認した",
-      "外部制御での消え方が想定と一致することを確認した"
+      "Scene Director を作り、Animation Controller を作って Track に載せた",
+      "In（フレームバッファへ入る）と Out（出る）のアニメを作った",
+      "Default Frame Marker と Preview Frame を設定した",
+      "back-to-back で連続送出できる（重なり順を揃えた）",
+      "TLルールを保存・再呼び出しできる",
+      "決めた尺＋Transition Out で書き出せる"
     ],
     "title_en": "Design Ins and Outs with Transition",
-    "subtitle_en": "Scenes that leave correctly and update correctly",
-    "goal_en": "Design not just the Scene's entrance (In) but its exit (Out) and updates (back-to-back), so how things linger is never unpredictable on air. Account for Layers, stacking order, and removal via external control.",
-    "overview_en": "Transition is playout-state design, not decoration. Organize In/Out → Duration → per-purpose decisions, building a Scene that leaves correctly rather than one that merely enters prettily. Keep Scene Director (the motion content) separate from Transition Logic (which Director gets used under which condition).",
+    "subtitle_en": "Build ins/outs and back-to-back with Transition Logic (Scene Director + Animation Controllers)",
+    "goal_en": "Use Transition Logic to actually build a lower third that slides in from the left, rests in place, and exits on Take Off. Keyframe In and Out in the Scene Director with Ctrl+K, and set the Default Frame Marker (rest position) and Preview Frame. Lay scenes on the same Layer for back-to-back auto-swaps. The TL rules can be saved/recalled, and scenes exported at a defined duration with a transition out. Example: 1920×1080, 30fps, frame 0→10 (In) → 10 hold → 10→20 (Out).",
+    "overview_en": "Transition Logic (TL) automatically keeps independently-animating graphics (lower-thirds, logos, etc.) from colliding, so they transition seamlessly regardless of show order (e.g. with a logo up, taking a lower-third makes the logo move up to make room, and removing the lower-third returns it). The point is letting logic auto-calculate instead of manual operation. Flow: create a Scene Director → set up Animation Controllers on tracks (Track 1 has a default one; add more with Add Clip) → keyframe the In (enter) and Out (leave) animations → set the Default Frame Marker and Preview Frame → play back-to-back → save/recall the TL rules → export at a defined duration with a transition out.",
     "checklist_en": [
-      "Built both In and Out (the Out is designed)",
-      "Decided Duration by on-air tempo and purpose",
-      "Designed back-to-back if continuous updates exist",
-      "Kept Scene Director and Transition Logic roles separate",
-      "Checked Layer/Framebuffer stacking order",
-      "Confirmed externally-controlled removal matches expectations"
+      "Created a Scene Director and placed an Animation Controller on a Track",
+      "Built the In (into the frame buffer) and Out animations",
+      "Set the Default Frame Marker and Preview Frame",
+      "Back-to-back continuous playout works (stacking order aligned)",
+      "Can save and recall the TL rules",
+      "Can export at a defined duration with a transition out"
     ]
   },
   {
@@ -642,7 +653,7 @@ window.TUTORIALS = [
     "srcChap": "第9・10章",
     "level": "中級",
     "minutes": 30,
-    "goal": "スタッフ名・役職が縦に流れるエンドロール。『どう動かすか』より『どう直すか・どう運用するか』を先に決め、Global Marginsで安全に見える範囲を保ち、Loopの止め方まで設計する。",
+    "goal": "スタッフ名・役職が縦に流れるエンドロール。『どう動かすか』より『どう直すか・どう運用するか』を先に決め、Global Marginsで安全に見える範囲を保ち、Loopの止め方まで設計する。作例：Scene Group『EndRoll_Staff』に子Scene 3枚（タイトル→スタッフ一覧→締め）、Effect=Roll・Direction=Bottom To Top・Speed 2.000、Global Marginsで端を確保、Blank Page on Start/End＋Loopの止め方まで。",
     "goalImg": "v3_92_001.jpg",
     "overview": "Roll/Crawlは『動き』ではなく『運用』で考える。Scene Groupから作る（デザインのまとまり優先）かSequence側で作る（変更が多い運用向き）かをまず選ぶ。ここではScene Groupで縦Rollを作り、Direction・速度・余白・開始終了の空白・Loopを整える。",
     "steps": [
@@ -717,7 +728,7 @@ window.TUTORIALS = [
     ],
     "title_en": "Build a Staff Roll (Roll)",
     "subtitle_en": "Designing Roll/Crawl with a Scene Group",
-    "goal_en": "An end roll where staff names and titles scroll vertically. Decide how it will be fixed and operated before how it moves, keep a safe visible area with Global Margins, and design how the Loop stops.",
+    "goal_en": "An end roll where staff names and titles scroll vertically. Decide how it will be fixed and operated before how it moves, keep a safe visible area with Global Margins, and design how the Loop stops. Example: a Scene Group 'EndRoll_Staff' with 3 child Scenes (title → staff list → closing), Effect=Roll, Direction=Bottom To Top, Speed 2.000, Global Margins for the safe area, Blank Page on Start/End, and a defined Loop stop.",
     "overview_en": "Think of Roll/Crawl as operations, not motion. First choose whether to build from a Scene Group (design cohesion first) or on the Sequence side (suits frequent changes). Here we build a vertical Roll with a Scene Group and tune Direction, speed, margins, leading/trailing blanks, and Loop.",
     "checklist_en": [
       "Decided how to fix/operate before how to move",
@@ -736,9 +747,9 @@ window.TUTORIALS = [
     "srcChap": "第14章",
     "level": "中級",
     "minutes": 25,
-    "goal": "四角い表示範囲（ワイプ／切り抜き）を作り、その範囲を動かせるようにする。『消す』ではなく『見せる範囲を決める』考え方で、本番で調整が要る値だけをPublishして運用を壊さない。",
+    "goal": "四角い表示範囲（ワイプ／切り抜き）を作り、その範囲を動かせるようにする。『消す』ではなく『見せる範囲を決める』考え方で、本番で調整が要る値だけをPublishして運用を壊さない。作例：背景動画に合わせてテキストをリビール。対象を Layer Object にまとめ、Blending=Alpha Mask のマテリアルを適用した Quad を Scene Director で frame 0→15、Position.X=-800→0 に動かす（Ctrl+K）。単純な矩形／端フェードなら Box Mask エフェクト（Left/Right Edge＋Feather）が最短。",
     "goalImg": "v2_91_001.jpg",
-    "overview": "Maskは消す機能ではなく『見せる範囲を決める』考え方。Layer Objectでまとめる→Box Maskで四角い範囲→Scene Directorで動かす→調整が要る値だけSequencerにPublish、の順。",
+    "overview": "Maskは消す機能ではなく『見せる範囲を決める』考え方。『Box Mask』オブジェクトは無いが、Box Mask エフェクト（Effect＞Left/Right Edge＋Feather）はあり、単純な矩形／端フェードはこれが最短（Gradient の淵透明もこれ＝Gradient 単体では不可）。形状・アニメで抜くときは Material の Blending＝Alpha Mask を Quad に割り当てる。対象をLayer Objectでまとめる→Alpha Maskマテリアルを作りQuadに割り当てる→Scene Directorでキーフレーム（Ctrl+K）→Animation Controllerで補間をTCB Spline化して動きを合わせる→必要ならFeather（子Quad）で境界をぼかす→調整が要る値だけSequencerにPublish、の順。",
     "steps": [
       {
         "h": "Maskの考え方を押さえる",
@@ -749,26 +760,39 @@ window.TUTORIALS = [
       },
       {
         "h": "Layer Objectで対象をまとめる",
-        "body": "① Object Library の Layers > Layer Object をSceneに追加\n② マスクを効かせたいObjectたちを、Object Manager上でLayer Objectの子になる位置へドラッグ\nLayerはMaskの効き先を区切る単位（公式ヘルプ確認済み：あるLayerの中だけをマスクし、他のオブジェクトやLayerに影響させない）。\n\n✅ 確認：対象ObjectがLayer Objectの子にまとまっている。",
+        "body": "① Object Library の Layers > Layer Object をSceneに追加\n② マスクを効かせたいObjectたちを、Object Manager上でLayer Objectの子になる位置へドラッグ\nLayerはMaskの効き先を区切る単位（公式ヘルプ確認済み：あるLayerの中だけをマスクし、他のオブジェクトやLayerに影響させない）。\n※Layer Objectは Transform を持たない。まとめた範囲ごと位置・スケールを動かしたいときは Group に格納する（GroupはTransformを持つ）。\n\n✅ 確認：対象がまとまっている（動かすならTransformを持つGroupに入れている）。",
         "img": "v2_91_003.jpg",
-        "h_en": "Group the targets with a Layer Object",
-        "body_en": "① Add Layers > Layer Object from the Object Library to the Scene\n② Drag the objects to be masked so they become children of the Layer Object in the Object Manager\nThe Layer delimits where the Mask applies (confirmed in official help: mask only within one Layer without affecting other objects or Layers).\n\n✅ Check: Target objects are gathered under the Layer Object."
+        "tip": "Layer ObjectはTransformを持たないので、まとめて動かすならGroupに格納する。※Groupにする前にGroupの各Pos（X/Y/Z）を0に設定してから子を格納すると、位置がずれない。",
+        "tip_en": "A Layer Object has no Transform, so nest it in a Group to move it as a whole. Set the Group's Pos (X/Y/Z) to 0 before nesting the children so nothing shifts.",
+        "h_en": "Group the targets with a Layer / Group",
+        "body_en": "① Add Layers > Layer Object from the Object Library to the Scene\n② Drag the objects to be masked so they become children of the Layer Object in the Object Manager\nThe Layer delimits where the Mask applies (confirmed in official help: mask only within one Layer without affecting other objects or Layers).\nNote: a Layer Object has no Transform. To move/scale the grouped area as a whole, put it inside a Group (a Group has a Transform).\n\n✅ Check: Targets are grouped (inside a Group with a Transform if they need to move)."
       },
       {
-        "h": "Box Maskで四角い表示範囲を作る",
-        "body": "① Box Mask オブジェクトをSceneに追加し、Layer内に配置する（追加はObject Libraryから。環境により表記を確認）\n② 四角の内側＝見える範囲。Transform（Position／Scale）で範囲の位置と大きさを調整\n画像の形で抜きたい場合は、Mask Material＋アルファ素材の考え方を使う。\n\n✅ 確認：Box Maskの内側だけが見えている。",
+        "h": "マスクは Box Mask エフェクト か Alpha Mask マテリアルで作る",
+        "body": "XPression に『Box Mask』という“オブジェクト”は無いが、“Box Mask エフェクト”（対象の Effect プロパティから追加）はある。用途で使い分ける：\n・単純な矩形マスクや端フェード（例：Gradient の淵だけを透明にする）＝ Box Mask エフェクト（Effect＞Left/Right（Top/Bottom）Edge で範囲を絞り、Feather で端を透明化）が最短。Gradient 単体では淵を透明にできない\n・形状で抜く／アニメでリビールする＝マスクを Material で作って Quad に割り当てる（以降この手順）\n① Material を新規作成し、Blending オプションを『Alpha Mask』に変更する\n② Quad を作成してこのマテリアルを適用し、マスクしたいテキスト等を覆うサイズにする。この Quad も（対象と同じ）Layer Object の中に入れる\n③ ※テキストがマスクで隠れてしまう場合は、テキストのレンダリング優先度（Rendering Priority）を『Normal』に変更する\n\n✅ 確認：目的に合わせて Box Mask エフェクト／Alpha Mask を選び、見せたい範囲だけが見えている。",
         "img": "v2_91_004.jpg",
-        "tip": "まずBox Maskで四角の範囲を確実に作ってから、必要ならアルファ素材の抜きへ進む。",
-        "tip_en": "First get a solid rectangular region with a Box Mask, then move on to alpha-asset cutouts if needed.",
-        "h_en": "Create the rectangular area with Box Mask",
-        "body_en": "① Add a Box Mask object to the Scene and place it inside the Layer (added from the Object Library; check the label in your environment)\n② Inside the rectangle = visible. Adjust the area's position and size via Transform (Position / Scale)\nTo cut out with an image shape, use the Mask Material + alpha asset approach.\n\n✅ Check: Only the inside of the Box Mask is visible."
+        "tip": "矩形・端フェードは Box Mask エフェクト（Left/Right Edge＋Feather）が最短。Gradient の淵だけを透明にするのも Box Mask（Gradient 単体では不可）。形状/アニメ抜きは Material の Blending=Alpha Mask。テキストが隠れたら Rendering Priority を Normal に。",
+        "tip_en": "For rectangles and edge fades, the Box Mask effect (Left/Right Edge + Feather) is quickest — including making only a Gradient's edges transparent (a Gradient alone can't). For shaped/animated cutouts, use a Material with Blending = Alpha Mask. If text disappears, set Rendering Priority to Normal.",
+        "h_en": "Build the mask as a Box Mask effect or an Alpha Mask material",
+        "body_en": "XPression has no \"Box Mask\" *object*, but a *Box Mask effect* does exist (added on the target's Effect property). Choose by use:\n・For a simple rectangular mask or edge fade (e.g. making only a Gradient's edges transparent) = the Box Mask effect (Effect > Left/Right (Top/Bottom) Edge to narrow the range, Feather to fade the edges) is quickest. A Gradient alone can't make its edges transparent\n・For shaped cutouts or animated reveals = build the mask as a Material and assign it to a Quad (steps below)\n① Create a new Material and change its Blending option to \"Alpha Mask\"\n② Create a Quad, apply this material, and size it to cover the text (etc.). Put this Quad inside the same Layer Object as the target\n③ Note: if the text gets hidden by the mask, change the text's Rendering Priority to \"Normal\"\n\n✅ Check: You picked Box Mask effect vs Alpha Mask by purpose, and only the intended area shows."
       },
       {
-        "h": "Scene DirectorでMaskを動かす",
-        "body": "① Scene Director の Box Mask の行に、Position（またはScale）のアニメーションを作る（例：左から右へ広がるワイプイン）\n② 再生して「見えてくる／隠れる」動きになるか確認\n\n✅ 確認：再生すると範囲が動き、ワイプとして見える。",
+        "h": "Animation Controller でキーフレームを打ち、補間を整える",
+        "body": "① キーフレーム（Ctrl+K）は Animation Controller に打つ（画面下部のタイムライン）。Scene Director を新規作成すると Track 1 に既定の Animation Controller が1つある。2つ目以降は空トラックを Add Track し、右クリック→Add Clip > Animation Controller で載せる\n② Ctrl+K の前に、再生スライダー（Playout Slider）を目的のフレームへ。0フレームで Quad を初期位置に置き Ctrl+K → スライダーを進めて移動させ再度 Ctrl+K\n③ 直線補間だと滑らかな背景とズレる。Animation Controller で補間を『TCB Spline』にし、Tension で背景にカーブを合わせる\n\n✅ 確認：スライダー位置を確認しながらキーを打ち、プレビューで動画とズレなく動く。",
         "img": "v2_91_005.jpg",
-        "h_en": "Animate the Mask in the Scene Director",
-        "body_en": "① On the Box Mask's row in the Scene Director, build a Position (or Scale) animation (e.g. a wipe-in expanding left to right)\n② Play and confirm the reveal/conceal motion\n\n✅ Check: Playback moves the area and it reads as a wipe."
+        "tip": "キーフレームは Animation Controller に Ctrl+K。打つ前に再生スライダーの位置を確認。イージングは TCB Spline＋Tension。★『矢印が伸びる』等の“境界を切る”表現は、Quad の X座標移動より Quad に Box Mask エフェクトを掛けて Right Edge をアニメする方が滑らかな場合がある。",
+        "tip_en": "Keyframe on the Animation Controller with Ctrl+K. Check the playout slider position first. Ease with TCB Spline + Tension. ★For a 'cutting' effect like an extending arrow, animating a Box Mask effect's Right Edge on the Quad can be smoother than moving the Quad's X.",
+        "h_en": "Keyframe on the Animation Controller and refine interpolation",
+        "body_en": "① Keyframes (Ctrl+K) go on the Animation Controller (the timeline at the bottom). A newly created Scene Director already has one default Animation Controller on Track 1. For more, Add Track (empty) and right-click → Add Clip > Animation Controller\n② Before Ctrl+K, move the Playout Slider to the target frame. Place the Quad at its start position at frame 0 and Ctrl+K → advance the slider, move the Quad, and Ctrl+K again\n③ Linear interpolation drifts from the smooth background. Set interpolation to \"TCB Spline\" on the Animation Controller and use Tension to match the curve\n\n✅ Check: Keyframe while watching the slider position; in the preview it moves in step with the video."
+      },
+      {
+        "h": "Feather（境界のぼかし）を子Quadで足す",
+        "body": "境界を柔らかく出したいとき（フェザー）：\n① 別の Alpha Mask マテリアルを作り、両端のアルファを0（透明）にした Gradient（グラデーション）を設定する\n② これを新しい Quad に適用し、メインマスクQuadの『子オブジェクト』として配置する\n③ 子にすると親マスクの動きに自動追従しながら、境界が柔らかく（フェザー）出現する\n\n✅ 確認：境界がぼけて、親マスクの動きに追従している。",
+        "img": "v2_91_008.jpg",
+        "tip": "Featherは『別のAlpha Mask＋両端アルファ0のGradient』を子Quadに。親子にすると動きを継承できる。",
+        "tip_en": "Feather = a second Alpha Mask with a both-ends-alpha-0 Gradient on a child Quad. Parenting inherits the motion.",
+        "h_en": "Add a feather (soft edge) with a child Quad",
+        "body_en": "For a soft edge (feather):\n① Create another Alpha Mask material and set a Gradient with both ends at alpha 0 (transparent)\n② Apply it to a new Quad and place it as a child object of the main mask Quad\n③ As a child it auto-follows the parent mask's motion while softening the boundary (feather)\n\n✅ Check: The edge is soft and follows the parent mask's motion."
       },
       {
         "h": "調整が要る値だけPublishする",
@@ -787,21 +811,23 @@ window.TUTORIALS = [
     ],
     "checklist": [
       "『消す』ではなく『見せる範囲を決める』で設計している",
-      "対象をLayer Objectでまとめた",
-      "Box Maskで四角い表示範囲を作れた",
-      "Scene Directorで範囲を動かせる",
+      "対象をLayer Objectでまとめた（動かすならTransformを持つGroup）",
+      "Alpha Maskマテリアル（Blending=Alpha Mask）を作りQuadに割り当てた",
+      "Scene Directorでキーフレーム（Ctrl+K）、Animation Controllerで補間をTCB Splineに整えた",
+      "必要ならFeather（子Quad＋両端アルファ0のGradient）で境界をぼかした",
       "本番で調整する値だけをPublishし、触らせたくない値は隠した",
       "初期値へ戻せる／項目名が運用者に分かる"
     ],
     "title_en": "Create a Visible Area with Mask",
     "subtitle_en": "Designing what to hide, cut out, and show",
-    "goal_en": "Create a rectangular display area (wipe / cutout) and make it movable. Think \"decide what's visible\" rather than \"erase\", and Publish only the values that need live adjustment so operations don't break.",
-    "overview_en": "Mask isn't an eraser — it decides the visible area. Order: group with a Layer Object → rectangular area with Box Mask → animate in the Scene Director → Publish only the values needing adjustment to the Sequencer.",
+    "goal_en": "Create a rectangular display area (wipe / cutout) and make it movable. Think \"decide what's visible\" rather than \"erase\", and Publish only the values that need live adjustment so operations don't break. Example: reveal text in sync with a background video — group the target in a Layer Object, apply a Blending = Alpha Mask material to a Quad, and animate it in the Scene Director frame 0→15, Position.X = -800→0 (Ctrl+K). For a simple rectangle or edge fade, the Box Mask effect (Left/Right Edge + Feather) is quickest.",
+    "overview_en": "Mask isn't an eraser — it decides the visible area. There's no \"Box Mask\" object, but a Box Mask effect exists (Effect > Left/Right Edge + Feather) and is quickest for a simple rectangle or edge fade (including making a Gradient's edges transparent — a Gradient alone can't). For shaped/animated cutouts, assign a Material with Blending = Alpha Mask to a Quad. Order: group with a Layer Object → build an Alpha Mask material and assign it to a Quad → keyframe in the Scene Director (Ctrl+K) → set the Animation Controller interpolation to TCB Spline to match the motion → optionally feather the edge with a child Quad → Publish only the values needing adjustment to the Sequencer.",
     "checklist_en": [
       "Designed as \"decide the visible area\", not \"erase\"",
-      "Grouped the targets with a Layer Object",
-      "Built the rectangular display area with Box Mask",
-      "The area can be animated in the Scene Director",
+      "Grouped the targets with a Layer Object (a Group with a Transform if it must move)",
+      "Built an Alpha Mask material (Blending = Alpha Mask) and assigned it to a Quad",
+      "Keyframed in the Scene Director (Ctrl+K); set interpolation to TCB Spline in the Animation Controller",
+      "Feathered the edge with a child Quad (a second Alpha Mask + both-ends-alpha-0 Gradient) if needed",
       "Published only live-adjusted values; hid untouchable ones",
       "Defaults are restorable / item names make sense to operators"
     ]
@@ -814,9 +840,9 @@ window.TUTORIALS = [
     "srcChap": "第10章",
     "level": "初級",
     "minutes": 20,
-    "goal": "文字が載る部分を少し暗くした『読ませるための座布団』や、端に向かって透明にして映像になじむパネルを作る。派手さではなく、コントロールできる色面を目的から設計する。",
+    "goal": "文字が載る部分を少し暗くした『読ませるための座布団』や、端に向かって透明にして映像になじむパネルを作る。派手さではなく、コントロールできる色面を目的から設計する。作例：ローワーサードの座布団。Material Editor＞Add Shader＞Gradient で上2色を明・下2色を暗（下側アルファ高め）にし、文字の下を濃く。両端だけ透明にしたいときは Box Mask エフェクト（Left/Right Edge＋Feather）を併用（Gradient 単体では不可）。",
     "goalImg": "v2_92_001.jpg",
-    "overview": "Gradientは4色のリニアグラデーション（透明度も扱える）。『きれいな背景』ではなく『情報が読みやすい色面』として使う。目的を決める→文字の載る場所を先に置く→色と透明度に役割を持たせる→少しずつ調整、の順。",
+    "overview": "Gradientは4色のリニアグラデーション（透明度も扱える）。『きれいな背景』ではなく『情報が読みやすい色面』として使う。目的を決める→文字の載る場所を先に置く→色と透明度に役割を持たせる→少しずつ調整、の順。※4色＝四隅のみなので『片側フェード』は可だが『両端透明（中央濃・淵だけ透明）』は1つのGradientでは不可→Box Mask エフェクト（Effect＞Left/Right Edge＋Feather）を併用する。",
     "steps": [
       {
         "h": "目的を先に決める",
@@ -840,13 +866,13 @@ window.TUTORIALS = [
         "body_en": "① Create a new Material in the Material Editor and choose Add Shader > Gradient (menu confirmed to exist)\n② Set each of the four corner colors with a role: two top colors bright, two bottom dark (variation in one direction only) / darken one side as a text area, etc.\nThe aim is giving brightness and hue changes a role, not making it flashy.\n\n✅ Check: You can explain each corner's role."
       },
       {
-        "h": "透明度で『なじませる』と『読ませる』を両立",
-        "body": "① 各コーナーの色のアルファ（透明度）を調整する：外側の色だけアルファを下げて映像になじませる／文字が載る部分は不透明寄りを保つ\n② 角1か所だけ透明度を変えて抜け感を作る、という使い方もできる\n\n✅ 確認：端はなじみ、文字が載る部分は読める濃さになっている。",
+        "h": "透明度で『なじませる』と『読ませる』を両立（両端透明は Box Mask）",
+        "body": "① 各コーナーの色のアルファ（透明度）を調整する：外側の色だけアルファを下げて映像になじませる／文字が載る部分は不透明寄りを保つ\n② 角1か所だけ透明度を変えて抜け感を作る、という使い方もできる\n③ ★4色リニアの限界：透明度は四隅にしか置けない。『片側だけ透明』はできるが、『中央だけ濃く両端を透明（透明→不透明→透明の3段階）』は1つの Gradient では作れない\n④ 両端（淵）を透明にしたいときは Box Mask エフェクトを併用する：対象（Quad/Slab等）の Effect プロパティに Box Mask を追加 → Left/Right（またはTop/Bottom）Edge で表示範囲を中央に絞り、Feather を大きくして端を滑らかに透明化。複数まとめるなら Layer Object に Box Mask。アルファ付きPNG（両端透明のグラデ）を Texture Material で読む手もある（Alpha Channel Interpretation を確認）\n\n✅ 確認：端はなじみ、文字の下は読める濃さ。両端透明が要るときは Box Mask を併用している。",
         "img": "v2_92_005.jpg",
-        "tip": "透明度は『なじませる』と『読ませる』のバランス。文字の下は読める濃さを確保する。",
-        "tip_en": "Opacity is the balance between blending and readability. Keep what sits under text dark enough to read.",
-        "h_en": "Balance \"blending\" and \"reading\" with opacity",
-        "body_en": "① Adjust each corner color's alpha: lower only the outer colors to blend into video / keep the text area near-opaque\n② You can also lower just one corner's opacity for an airy touch\n\n✅ Check: Edges blend, and the text area stays dense enough to read."
+        "tip": "★Gradient だけでは『両端透明（中央濃・淵だけ透明）』は作れない（4色＝四隅のみ）。両端フェードは Box Mask エフェクト（Left/Right Edge＋Feather）が現場の定石。",
+        "tip_en": "★A Gradient alone can't do 'both ends transparent, center opaque' (4 colors = corners only). Fade both edges with the Box Mask effect (Left/Right Edge + Feather).",
+        "h_en": "Balance \"blending\" and \"reading\" with opacity (both ends transparent = Box Mask)",
+        "body_en": "① Adjust each corner color's alpha: lower only the outer colors to blend into video / keep the text area near-opaque\n② You can also lower just one corner's opacity for an airy touch\n③ ★Limit of the 4-color linear gradient: alpha lives only at the four corners. 'Fade one side' works, but 'center opaque with both ends transparent (transparent→opaque→transparent, 3 stages)' can't be made in a single Gradient\n④ To make both edges transparent, combine the Box Mask effect: add Box Mask on the target's (Quad/Slab, etc.) Effect property → narrow the visible range with Left/Right (or Top/Bottom) Edge, and raise Feather to fade the edges smoothly. For several objects at once, put a Box Mask on a Layer Object. You can also load an alpha PNG (a gradient transparent at both ends) as a Texture Material (check Alpha Channel Interpretation)\n\n✅ Check: Edges blend and the text stays readable; use Box Mask when both ends must be transparent."
       },
       {
         "h": "少しずつ変えて確認する",
@@ -861,18 +887,20 @@ window.TUTORIALS = [
       "文字・数字の載る場所を先に置いてから色を作った",
       "4色に役割を持たせた（変化の方向を絞った）",
       "透明度で『なじませる』と『読ませる』を両立できている",
+      "両端透明が必要なときは Box Mask エフェクトを併用した（Gradient だけでは不可）",
       "文字の下が読める濃さになっている",
       "派手さより、コントロールできる色面になっている"
     ],
     "title_en": "Build Readable Color Fields with Gradient",
     "subtitle_en": "Designing usable color fields, not decoration",
-    "goal_en": "Build a \"reading cushion\" that slightly darkens the area under text, or a panel fading to transparent at the edge to blend with video. Design controllable color fields from the purpose, not for flash.",
-    "overview_en": "Gradient is a four-color linear gradient (with opacity). Use it as a color field that keeps information readable, not a pretty background. Order: decide the purpose → place the text area first → give colors and opacity roles → adjust in small steps.",
+    "goal_en": "Build a \"reading cushion\" that slightly darkens the area under text, or a panel fading to transparent at the edge to blend with video. Design controllable color fields from the purpose, not for flash. Example: a lower-third cushion — in Material Editor > Add Shader > Gradient, make the two top colors light and the two bottom dark (higher bottom alpha) so it's denser under the text. To make only both ends transparent, combine the Box Mask effect (Left/Right Edge + Feather); a Gradient alone can't.",
+    "overview_en": "Gradient is a four-color linear gradient (with opacity). Use it as a color field that keeps information readable, not a pretty background. Order: decide the purpose → place the text area first → give colors and opacity roles → adjust in small steps. Note: 4 colors = corners only, so 'fade one side' works but 'both ends transparent (center opaque)' can't be done in one Gradient → combine the Box Mask effect (Effect > Left/Right Edge + Feather).",
     "checklist_en": [
       "Decided the purpose (read / blend) before building",
       "Placed the text/number areas before the colors",
       "Gave the four colors roles (constrained the direction of change)",
       "Opacity balances blending and readability",
+      "Used the Box Mask effect when both ends must be transparent (a Gradient alone can't)",
       "The area under text is dense enough to read",
       "The result is a controllable color field, not a flashy one"
     ]
@@ -885,7 +913,7 @@ window.TUTORIALS = [
     "srcChap": "第5章",
     "level": "中級",
     "minutes": 30,
-    "goal": "現在時刻の表示と、試合・イベント開始までのカウントダウンを作る。時間を『文字』ではなく『変化する情報』として扱い、目標時刻を作って現在時刻との差を出し、見やすい文字列に整える。",
+    "goal": "現在時刻の表示と、試合・イベント開始までのカウントダウンを作る。時間を『文字』ではなく『変化する情報』として扱い、目標時刻を作って現在時刻との差を出し、見やすい文字列に整える。作例（VLは Timers/Counters）：現在時刻＝Clock→Format Date Time→Text。カウントダウン＝Clock と Encode Date Time（目標時刻）を Time Delta に入れ、Hours/Minutes/Seconds を Format Date Time で整形して Text へ。",
     "goalImg": "v4_93_001.jpg",
     "overview": "Clockだけで済む場面（現在時刻をそのまま出す）と、Date Timeブロックが要る場面（目標時刻との差＝カウントダウン等）を切り分ける。Clockで現在時刻→Encode Date Timeで目標時刻→Time Deltaで差→Format Date Timeで整える、が基本の流れ。",
     "steps": [
@@ -898,33 +926,33 @@ window.TUTORIALS = [
       },
       {
         "h": "ClockかDate Timeブロックかを切り分ける",
-        "body": "現在時刻や日付をそのまま出すだけなら Clock で足りる。「目標時刻との差（カウントダウン）」「日時を分解して曜日を出す」「指定した年月日から日時を作る」には Date Time系ブロックが要る。\nどちらもVisual Logic Editorの Function Blocks > Date Time カテゴリにある（実機のブロック一覧で確認済み）。\n\n✅ 確認：Clockだけで足りるか、Date Time系ブロックが要るか判断できた。",
+        "body": "現在時刻や日付をそのまま出すだけなら Clock で足りる。「目標時刻との差（カウントダウン）」「日時を分解して曜日を出す」「指定した年月日から日時を作る」には Date Time系ブロックが要る。\nどちらもVisual Logic Editorの Timers/Counters カテゴリにある（Clock・Encode/Decode Date Time・Time Delta・Format Date Time などの Date Time 系ブロックはここ。実機のブロック一覧で確認済み）。\n\n✅ 確認：Clockだけで足りるか、Date Time系ブロックが要るか判断できた。",
         "img": "v4_93_003.jpg",
         "h_en": "Clock or Date Time blocks — decide which",
-        "body_en": "If you just show the current time or date, Clock suffices. For \"difference from a target time (countdown)\", \"decomposing a datetime to get the weekday\", or \"building a datetime from a given date\", you need the Date Time blocks.\nBoth live in the Visual Logic Editor under Function Blocks > Date Time (confirmed in the machine's block list).\n\n✅ Check: You decided whether Clock is enough or Date Time blocks are needed."
+        "body_en": "If you just show the current time or date, Clock suffices. For \"difference from a target time (countdown)\", \"decomposing a datetime to get the weekday\", or \"building a datetime from a given date\", you need the Date Time blocks.\nBoth live in the Visual Logic Editor under Timers/Counters (Clock and the Date Time blocks — Encode/Decode Date Time, Time Delta, Format Date Time — are here; confirmed in the machine's block list).\n\n✅ Check: You decided whether Clock is enough or Date Time blocks are needed."
       },
       {
         "h": "現在時刻をそのまま出す（Clock）",
-        "body": "① SceneのVisual Logic Editorを開く\n② Function Blocks > Date Time から Clock をドラッグ\n③ Clockの出力 → Format Date Time（表示用の文字列に整形）→ 表示用Textの Text に接続\n④ 時・分・秒のうち必要な桁だけ出す書式にする\n\n✅ 確認：現在時刻がTextに表示され、秒が進んでいる。",
+        "body": "① SceneのVisual Logic Editorを開く\n② Timers/Counters から Clock をドラッグ（Clock は Function Blocks ではなく Timers/Counters にある）\n③ Clockの出力 → Format Date Time（表示用の文字列に整形）→ 表示用Textの Text に接続\n④ 時・分・秒のうち必要な桁だけ出す書式にする\n\n✅ 確認：現在時刻がTextに表示され、秒が進んでいる。",
         "img": "v4_93_004.jpg",
         "h_en": "Show the current time as-is (Clock)",
-        "body_en": "① Open the Scene's Visual Logic Editor\n② Drag Clock from Function Blocks > Date Time\n③ Clock output → Format Date Time (shape into a display string) → the display Text's Text\n④ Use a format showing only the digits you need (hours/minutes/seconds)\n\n✅ Check: The current time shows in the Text and the seconds advance."
+        "body_en": "① Open the Scene's Visual Logic Editor\n② Drag Clock from Timers/Counters (Clock is under Timers/Counters, not Function Blocks)\n③ Clock output → Format Date Time (shape into a display string) → the display Text's Text\n④ Use a format showing only the digits you need (hours/minutes/seconds)\n\n✅ Check: The current time shows in the Text and the seconds advance."
       },
       {
         "h": "目標時刻を作る（Encode Date Time）",
-        "body": "① Date Time の Encode Date Time をドラッグ\n② 年・月・日・時・分・秒を入力（Math の Value ブロックで与える）して、試合開始時刻などの目標日時を組み立てる\n\n✅ 確認：Encode Date Timeから目標日時が出力されている。",
+        "body": "① Timers/Counters の Encode Date Time をドラッグ\n② 年・月・日・時・分・秒を入力（Math の Value ブロックで与える）して、試合開始時刻などの目標日時を組み立てる\n\n✅ 確認：Encode Date Timeから目標日時が出力されている。",
         "img": "v4_93_005.jpg",
         "tip": "月末±1か月のような境界（1/31の1か月後など）は期待通りになるか実機で確認。",
         "tip_en": "Check that boundary cases like end-of-month ±1 month (e.g. one month after 1/31) behave as expected on the real system.",
         "h_en": "Build the target time (Encode Date Time)",
-        "body_en": "① Drag Encode Date Time (Date Time)\n② Enter year/month/day/hour/minute/second (fed by Value blocks from Math) to assemble the target datetime, e.g. the game start\n\n✅ Check: Encode Date Time outputs the target datetime."
+        "body_en": "① Drag Encode Date Time (Timers/Counters)\n② Enter year/month/day/hour/minute/second (fed by Value blocks from Math) to assemble the target datetime, e.g. the game start\n\n✅ Check: Encode Date Time outputs the target datetime."
       },
       {
         "h": "差を計算して残り時間を出す（Time Delta）",
-        "body": "① Date Time の Time Delta をドラッグ\n② Clock（現在時刻）と Encode Date Time（目標時刻）を Time Delta に接続して差を計算\n③ 出力の Days／Hours／Minutes／Seconds を使って残り時間を表示につなぐ\n\n✅ 確認：残り時間（目標−現在）が表示され、1秒ごとに減っていく。",
+        "body": "① Timers/Counters の Time Delta をドラッグ\n② Clock（現在時刻）と Encode Date Time（目標時刻）を Time Delta に接続して差を計算\n③ 出力の Days／Hours／Minutes／Seconds を使って残り時間を表示につなぐ\n\n✅ 確認：残り時間（目標−現在）が表示され、1秒ごとに減っていく。",
         "img": "v4_93_006.jpg",
         "h_en": "Compute the difference for time remaining (Time Delta)",
-        "body_en": "① Drag Time Delta (Date Time)\n② Wire Clock (now) and Encode Date Time (target) into Time Delta to compute the difference\n③ Use the Days / Hours / Minutes / Seconds outputs to display the remaining time\n\n✅ Check: The remaining time (target − now) displays and decreases each second."
+        "body_en": "① Drag Time Delta (Timers/Counters)\n② Wire Clock (now) and Encode Date Time (target) into Time Delta to compute the difference\n③ Use the Days / Hours / Minutes / Seconds outputs to display the remaining time\n\n✅ Check: The remaining time (target − now) displays and decreases each second."
       },
       {
         "h": "表示用に整える（Format Date Time）",
@@ -970,7 +998,7 @@ window.TUTORIALS = [
     "srcChap": "第4章",
     "level": "中級",
     "minutes": 30,
-    "goal": "別Sceneで作った情報表示（スコアや選手カード）を、演出Scene内のQuad＝仮想モニターに貼って表示する。素材Scene側を直すと演出側にも反映される「Sceneの部品化」を体験する。",
+    "goal": "別Sceneで作った情報表示（スコアや選手カード）を、演出Scene内のQuad＝仮想モニターに貼って表示する。素材Scene側を直すと演出側にも反映される「Sceneの部品化」を体験する。作例：素材 Scene『SRC_ScorePanel』を作り、Material Editor で Render View マテリアルを新規作成→参照 Scene に SRC_ScorePanel を指定→そのマテリアルを演出 Scene の Quad（VirtualMonitor）に割り当て。素材側を直すと Quad に即反映。",
     "overview": "「素材Sceneを用意」「貼り先のQuadを置く」「Render View Shaderを追加」「Resolutionを決める」「収まりを調整」「更新と参照関係を確認」の順で進めます。",
     "steps": [
       {
@@ -1047,7 +1075,7 @@ window.TUTORIALS = [
     "srcChap": "第3章",
     "level": "中級",
     "minutes": 40,
-    "goal": "選手リストのJSONをDataLinqで読み込み、選手名・背番号・ポジションをTextに表示する。さらにDataLinq Keyを使って「キーを1つ変えると行全体（名前・番号・ポジション）が連動して切り替わる」現場運用の形まで作る。素材は 13_JSON_PlayerList フォルダの players.json 一式を使用。",
+    "goal": "選手リストのJSONをDataLinqで読み込み、選手名・背番号・ポジションをTextに表示する。さらにDataLinq Keyを使って「キーを1つ変えると行全体（名前・番号・ポジション）が連動して切り替わる」現場運用の形まで作る。素材は 13_JSON_PlayerList フォルダの players.json 一式を使用。作例：players.json を DataLinq に追加し Table Presets で読み込み、行は players<N>（例 players0）で指定、Name/Number/Position を各 Text にバインド。Key を1つ変えると行全体が連動。JSONはUTF-8保存・再Takeで反映。",
     "overview": "「JSONを用意」「DataLinq ServerでSource追加（Encoding=UTF-8が重要）」「ツリーからTextに割り当て」「Table Presets（任意）」「DataLinq Keyで行連動」「Sequencer/外部からKey変更」「更新確認」「壊れたデータ確認」の順です。",
     "steps": [
       {
@@ -1146,7 +1174,7 @@ window.TUTORIALS = [
     "srcChap": "第6章",
     "level": "中級",
     "minutes": 30,
-    "goal": "Smart GPI / RossTalkをTCPで受けられるようにし、外部からTAKE / SEQI / SEQOなどのコマンドでTake Itemを出し入れする。外部制御の基本動作と消し方の違いを体験する。",
+    "goal": "Smart GPI / RossTalkをTCPで受けられるようにし、外部からTAKE / SEQI / SEQOなどのコマンドでTake Itemを出し入れする。外部制御の基本動作と消し方の違いを体験する。作例：同一PC（localhost）で RossTalk リスナーを有効化（ポート確認）→Take Item を用意→TCP接続→『TAKE 1』でオンエア→SEQI/SEQO で入替→SEQO/LAYEROFF で片付け。コマンドは CR/LF 終端。14_RossTalk の DashBoard サンプル(.grid)で送信可。",
     "overview": "「受け口を有効化」「Take Itemを用意」「TCPで接続」「TAKEで出す」「SEQI/SEQOを試す」「片付け系コマンド」「GPIコマンド（任意）」の順です。※同一PC（localhost）でも検証可。素材フォルダ 14_RossTalk に実機検証済みのDashBoardサンプルパネル（.grid）を同梱しています。",
     "steps": [
       {

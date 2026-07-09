@@ -1160,5 +1160,517 @@ window.QUIZ_EXTRA = [
       "Just place the image on the Scene Director"
     ],
     "explain_en": "Think of images in three steps: Material, Object, Sequencer. This flow leads naturally to swaps and DataLinq later. (Vol.1, Ch.15)"
+  },
+
+  /* ===== ここから 5テーマ追加分（VL / Script / RossTalk / Dynamic Material / DataLinq）2026-07-09 ===== */
+
+  /* ---- Visual Logic（第4巻） ---- */
+  {
+    "vol": 4, "topic": "VL：Greater Thanの向き",
+    "q": "Visual Logic の Greater Than が Out=1 を出すのはどんなとき？",
+    "choices": ["「>」ポートに入れた値が Base より大きいとき", "Base が「>」ポートの値より大きいとき", "2つの値が等しいとき", "どちらかが0のとき"],
+    "answer": 0,
+    "explain": "比較ブロックの向きは「Out=1 ⟺（比較側ポートの値）が Base より大きい」。Base が基準、ポート側が比較される値（実機検証済み）。",
+    "q_en": "When does Visual Logic's Greater Than output Out=1?",
+    "choices_en": ["When the value on the \">\" port is greater than Base", "When Base is greater than the \">\" port value", "When the two values are equal", "When either value is 0"],
+    "explain_en": "The comparator's direction is: Out=1 when the port-side value is greater than Base. Base is the reference; the port side is what gets compared (verified on hardware)."
+  },
+  {
+    "vol": 4, "topic": "VL：Greater Than/Eq To",
+    "q": "Greater Than/Eq To に Base=2、「>=」側=3 を入れた。Out はいくつ？",
+    "choices": ["1（3 >= 2 で真）", "0（2 >= 3 で偽）", "3", "エラーになる"],
+    "answer": 0,
+    "explain": "判定は「>=側 >= Base」。3 >= 2 なので Out=1。Base 側を主語に読むと逆になるので注意（実機検証済み：この向きでオブジェクト表示が点灯）。",
+    "q_en": "You feed Greater Than/Eq To with Base=2 and 3 on the \">=\" port. What is Out?",
+    "choices_en": ["1 (3 >= 2 is true)", "0 (2 >= 3 is false)", "3", "It errors"],
+    "explain_en": "The test is \"port side >= Base\": 3 >= 2, so Out=1. Reading Base as the subject flips it — a common mistake (hardware-verified direction)."
+  },
+  {
+    "vol": 4, "topic": "VL：Logicブロックの入力型",
+    "q": "And / Or / Not ブロックに入れられる値は？",
+    "choices": ["Boolean（1/0）だけ", "文字列も直結できる", "色も入れられる", "何でも自動変換される"],
+    "answer": 0,
+    "explain": "Logic（パープル）は Boolean 専用。String（マゼンタ）出力は直結できない。文字列は String Compare で 1/0 に変換してから入れる（実機検証済み）。",
+    "q_en": "What kind of values can go into And / Or / Not blocks?",
+    "choices_en": ["Boolean (1/0) only", "Strings can connect directly", "Colors work too", "Anything — it auto-converts"],
+    "explain_en": "Logic (purple) is Boolean-only. String (magenta) outputs can't connect directly; convert strings to 1/0 with String Compare first (verified on hardware)."
+  },
+  {
+    "vol": 4, "topic": "VL：文字列の判定",
+    "q": "文字列が特定の語と一致するかを And / Or に渡したい。正しい経路は？",
+    "choices": ["String Compare の Equal 出力を Logic に入れる", "文字列をそのまま And に入れる", "Equal To に文字列を入れる", "Format String を使う"],
+    "answer": 0,
+    "explain": "String Compare が文字列比較の入口。Equal / Greater / Less / Ordinal の Boolean 出力を Logic ブロックへ渡す。Equal To は数値用。",
+    "q_en": "You want to feed \"does this string match a word?\" into And / Or. What's the correct route?",
+    "choices_en": ["String Compare's Equal output into the Logic block", "Connect the string straight into And", "Put the string into Equal To", "Use Format String"],
+    "explain_en": "String Compare is the entry point for string tests. Its Boolean outputs (Equal / Greater / Less / Ordinal) feed Logic blocks. Equal To is for numbers."
+  },
+  {
+    "vol": 4, "topic": "VL：同点で両方消える理由",
+    "q": "優勢マーカーを Greater Than と Smaller Than の2つ（どちらも Base=Home）で作ると、同点のとき何が起きる？",
+    "choices": ["両方 false になり、両マーカーが自動で消える", "両方 true になり事故になる", "どちらか片方だけ点く", "エラーで止まる"],
+    "answer": 0,
+    "explain": "厳密な大小だけを判定するので、同点はどちらの条件も満たさず両方 false。明示的な Equal To 分岐なしで「両方勝ち」事故を防げる（実機検証済み：Home1=Away1で両マーカーVisible=0）。",
+    "q_en": "You build lead markers with Greater Than and Smaller Than (both Base=Home). What happens on a tie?",
+    "choices_en": ["Both go false and both markers hide automatically", "Both go true and you get the double-win bug", "Only one lights up", "It errors and stops"],
+    "explain_en": "Each tests strict inequality, so a tie satisfies neither — both false. No explicit Equal To branch is needed to prevent the \"both winning\" bug (verified: Home 1 = Away 1 → both markers Visible=0)."
+  },
+  {
+    "vol": 4, "topic": "VL：現在値デバッグ",
+    "q": "Visual Logic Editor で各ブロックの「今の値」を表示するショートカットは？",
+    "choices": ["ALT+V", "Ctrl+D", "F5", "Shift+Enter"],
+    "answer": 0,
+    "explain": "ALT+V で各ブロックの下に現在値が出る。値のズレをブロック単位で追える、原因切り分けの要。",
+    "q_en": "Which shortcut shows each block's current value in the Visual Logic Editor?",
+    "choices_en": ["ALT+V", "Ctrl+D", "F5", "Shift+Enter"],
+    "explain_en": "ALT+V displays the live value under every block — the key tool for isolating where a value goes wrong."
+  },
+  {
+    "vol": 4, "topic": "VL：接続線の色",
+    "q": "Visual Logic でブロック同士をつなごうとしたら線が赤い矢印になった。意味は？",
+    "choices": ["型が合わず接続できない", "接続済みの印", "データ共有中", "選択中の印"],
+    "answer": 0,
+    "explain": "緑=接続可、赤矢印=不可（型不一致）、青矢印=データ共有中。赤のままなら String→Logic 直結などの型違いを疑う。",
+    "q_en": "While wiring blocks in Visual Logic the line shows a red arrow. What does it mean?",
+    "choices_en": ["Types don't match — it can't connect", "Already connected", "Sharing data", "Currently selected"],
+    "explain_en": "Green = connectable, red arrow = not allowed (type mismatch), blue arrow = sharing data. A stubborn red line usually means something like String→Logic."
+  },
+  {
+    "vol": 4, "topic": "VL：ロジックの再利用",
+    "q": "完成した Visual Logic を他のシーンでも使い回すには？",
+    "choices": ["Save all tabs で XVL ファイルに保存し、他シーンで Open", "コピー＆ペーストしかない", "シーンごと複製する", "スクリーンショットを撮る"],
+    "answer": 0,
+    "explain": "Visual Logic メニュー → Save all tabs で XVL に保存→他シーンで Open。1タブ=1機能で分けておくと部品として流用しやすい。",
+    "q_en": "How do you reuse finished Visual Logic in other scenes?",
+    "choices_en": ["Save all tabs to an XVL file, then Open it in the other scene", "Copy & paste is the only way", "Duplicate the whole scene", "Take a screenshot"],
+    "explain_en": "Visual Logic menu → Save all tabs writes an XVL; Open loads it elsewhere. Keeping one tab = one function makes logic reusable as parts."
+  },
+  {
+    "vol": 4, "topic": "VL：日時の差を取る",
+    "q": "目標時刻までの残り時間（カウントダウン）を作るとき、2つの Date Time の差を出すブロックは？",
+    "choices": ["Time Delta", "Difference", "Subtract", "Date Compare"],
+    "answer": 0,
+    "explain": "Time Delta に目標（Encode Date Time）と現在（Clock）を入れると Days/Hours/Minutes/Seconds が出る。「Difference」というブロックは存在しない（実機確認済み）。",
+    "q_en": "Which block takes the difference of two Date Times for a countdown to a target time?",
+    "choices_en": ["Time Delta", "Difference", "Subtract", "Date Compare"],
+    "explain_en": "Feed Time Delta the target (Encode Date Time) and now (Clock) to get Days/Hours/Minutes/Seconds. There is no block named \"Difference\" (hardware-checked)."
+  },
+  {
+    "vol": 4, "topic": "VL：一括適用",
+    "q": "同じロジック/属性を多数の似たオブジェクトへ配りたい。手配線以外の方法は？",
+    "choices": ["Copy → Assign & Paste（Shift+Ctrl+V）で適用先を順送りしながら一括割り当て", "1本ずつ配線し直すしかない", "XVLを何度も読み込む", "オブジェクトを全部グループ化する"],
+    "answer": 0,
+    "explain": "元ブロックを Copy → 右クリック Assign & Paste → Destination Object で適用先を選び、Increment Destinations で順送り。手作業の配線ミスを防げる。",
+    "q_en": "You want to distribute the same logic/attribute to many similar objects. What beats manual wiring?",
+    "choices_en": ["Copy → Assign & Paste (Shift+Ctrl+V) and step through destinations in bulk", "Rewiring one by one is the only way", "Loading the XVL repeatedly", "Grouping every object"],
+    "explain_en": "Copy the source block → right-click Assign & Paste → pick targets in Destination Object, stepping with Increment Destinations. Avoids manual wiring mistakes."
+  },
+
+  /* ---- Script（第6巻） ---- */
+  {
+    "vol": 6, "topic": "Script：BC30451の原因",
+    "q": "Scene の OnOnline に Scene.GetObjectByName(...) と書いたら「BC30451 名前 'Scene' は宣言されていません」。正しい直し方は？",
+    "choices": ["Scene. を Self. に置き換える（SceneイベントではSelfがシーン）", "dim Scene as new xpScene を足す", "Engine.Scene と書く", "イベントを OnSetText に変える"],
+    "answer": 0,
+    "explain": "Sceneイベントの引数は (Engine, Self) で Scene 変数が無い。シーン自身は Self。サンプルプロジェクトのSceneイベント29本もすべて Self（例外ゼロ）。",
+    "q_en": "In a Scene's OnOnline, Scene.GetObjectByName(...) throws \"BC30451 'Scene' is not declared\". The correct fix?",
+    "choices_en": ["Replace Scene. with Self. (in Scene events, Self IS the scene)", "Add dim Scene as new xpScene", "Write Engine.Scene", "Switch the event to OnSetText"],
+    "explain_en": "Scene events receive (Engine, Self) — there is no Scene variable; the scene is Self. All 29 scene-event scripts in the sample projects use Self (zero exceptions)."
+  },
+  {
+    "vol": 6, "topic": "Script：SelfとSceneの使い分け",
+    "q": "Self と Scene の使い分けを決めるものは？",
+    "choices": ["スクリプトを書く場所（Sceneイベント=Self、オブジェクトイベント=Scene）", "書く人の好み", "XPressionのバージョン", "オブジェクトの種類"],
+    "answer": 0,
+    "explain": "Sceneイベント（OnOnline等）はSceneが渡らないのでSelf、オブジェクトイベント（OnSetText等）はSceneが引数で渡るのでScene。サンプル107本が例外なくこの使い分け。",
+    "q_en": "What determines whether you use Self or Scene?",
+    "choices_en": ["Where the script lives (Scene events = Self, object events = Scene)", "Personal preference", "The XPression version", "The object type"],
+    "explain_en": "Scene events (OnOnline etc.) get no Scene parameter, so use Self; object events (OnSetText etc.) receive Scene as a parameter. All 107 sample scripts follow this split."
+  },
+  {
+    "vol": 6, "topic": "Script：OnSetTextのtext",
+    "q": "テキストの OnSetText に渡ってくる text を書き換えるとどうなる？",
+    "choices": ["書き換えた内容がそのまま表示される（ByRef）", "何も起きない", "エラーになる", "元の値に戻る"],
+    "answer": 0,
+    "explain": "text は ByRef 引数。例えば text = text & \" ET\" と書けば、表示直前に加工できる（サンプルプロジェクトの定番パターン）。",
+    "q_en": "What happens if you modify the 'text' parameter inside a text's OnSetText?",
+    "choices_en": ["The modified content is what displays (ByRef)", "Nothing", "It errors", "It reverts to the original"],
+    "explain_en": "'text' is ByRef. For example text = text & \" ET\" transforms the value just before display — a classic sample-project pattern."
+  },
+  {
+    "vol": 6, "topic": "Script：公式流の取得",
+    "q": "GetObjectByName でテキストを取るとき、サンプルプロジェクト流の書き方は？",
+    "choices": ["dim txt as xpTextObject と宣言し、型付き変数を直接渡す", "xpBaseObject で受けてから TypeOf と CType で変換する", "戻り値を必ず If で確認する", "Try/Catch で囲む"],
+    "answer": 0,
+    "explain": "サンプル138種の実態：型付き変数を直接渡すのが公式流。TypeOf は1本・CType/戻り値チェック/Is Nothing は0本。防御的な多段キャストは公式文化に無い。",
+    "q_en": "What's the sample-project style for getting a text with GetObjectByName?",
+    "choices_en": ["Declare dim txt as xpTextObject and pass the typed variable straight in", "Receive as xpBaseObject, then TypeOf + CType", "Always If-check the return value", "Wrap it in Try/Catch"],
+    "explain_en": "Across 138 unique sample scripts: typed variables are passed directly. TypeOf appears once; CType, return-value checks and Is Nothing appear zero times."
+  },
+  {
+    "vol": 6, "topic": "Script：青いBC42030",
+    "q": "Script Editor の Messages に青字で BC42030（未代入で参照渡し）が出た。どうする？",
+    "choices": ["無害な警告なのでそのままでよい（動く）", "赤字と同じなので必ず直す", "XPressionを再起動する", "イベントを書き直す"],
+    "answer": 0,
+    "explain": "青字の BC42030 は警告で、スクリプトは動く。直すべきは赤字のエラー（BC30451・BC30800など）。気になるなら = Nothing で初期化すると消える。",
+    "q_en": "The Messages pane shows BC42030 (passed by reference before assignment) in blue. What do you do?",
+    "choices_en": ["Nothing — it's a harmless warning and the script runs", "Treat it like a red error and fix it", "Restart XPression", "Rewrite the event"],
+    "explain_en": "Blue BC42030 is a warning; the script still runs. Red errors (BC30451, BC30800…) are what must be fixed. Initializing with = Nothing silences it."
+  },
+  {
+    "vol": 6, "topic": "Script：かっこ必須",
+    "q": "XPressionのScript（VB.NET）で GetObjectByName \"Text1\", obj と書いたらエラー。理由は？",
+    "choices": ["VB.NETでは引数付き呼び出しにかっこが必須（BC30800）", "GetObjectByName が存在しない", "obj の型が違う", "文字列にシングルクォートが必要"],
+    "answer": 0,
+    "explain": "VB.NETはかっこ必須：GetObjectByName(\"Text1\", obj)。かっこ無しの古いVB6流は BC30800 になる。",
+    "q_en": "Writing GetObjectByName \"Text1\", obj errors in XPression Script (VB.NET). Why?",
+    "choices_en": ["VB.NET requires parentheses on calls with arguments (BC30800)", "GetObjectByName doesn't exist", "obj has the wrong type", "Strings need single quotes"],
+    "explain_en": "VB.NET requires parentheses: GetObjectByName(\"Text1\", obj). The old parenthesis-free VB6 style raises BC30800."
+  },
+  {
+    "vol": 6, "topic": "Script：出た瞬間に1回",
+    "q": "「シーンが表示された瞬間に1回だけ」値をセットしたい。書くイベントは？",
+    "choices": ["Scene の OnOnline", "Scene の OnRender", "テキストの OnSetText", "Scene の OnOffline"],
+    "answer": 0,
+    "explain": "OnOnline はオンエアになった時に1回だけ走る最頻イベント。表示前の重い準備は OnPrepare、毎フレームは OnRender。",
+    "q_en": "You want to set values \"once, the moment the scene appears\". Which event?",
+    "choices_en": ["The Scene's OnOnline", "The Scene's OnRender", "A text's OnSetText", "The Scene's OnOffline"],
+    "explain_en": "OnOnline runs once when the scene goes on air — the most-used event. Heavy prep goes in OnPrepare; per-frame work in OnRender."
+  },
+  {
+    "vol": 6, "topic": "Script：毎フレーム処理",
+    "q": "時計のように毎フレーム動かしたい処理を書くイベントと注意点は？",
+    "choices": ["Scene の OnRender。重い処理は入れない", "OnOnline。1回で十分", "OnSetText。テキスト専用", "OnExport。書き出し時"],
+    "answer": 0,
+    "explain": "OnRender は本線描画のたびに走る。毎フレーム実行なので、重いデータ取得などを書くと送出に響く。",
+    "q_en": "Which event runs something every frame (like a clock), and what's the caveat?",
+    "choices_en": ["The Scene's OnRender — keep it light", "OnOnline — once is enough", "OnSetText — texts only", "OnExport — on export"],
+    "explain_en": "OnRender fires on every rendered frame. Because it runs constantly, heavy work there hurts playout."
+  },
+  {
+    "vol": 6, "topic": "Script：別シーンの参照",
+    "q": "スクリプトから別のシーン（例：設定用シーン）のオブジェクトを読むには？",
+    "choices": ["Engine.GetSceneByName でシーンを取得し、そのシーンに GetObjectByName", "Self.GetObjectByName で直接届く", "Scene.Parent を使う", "できない"],
+    "answer": 0,
+    "explain": "Engine.GetSceneByName(\"シーン名\", scn) → scn.GetObjectByName(...)。設定用シーンの値をオンエア用シーンの OnOnline で取り込むのが定番（Ross Sports 2013 の実例あり）。",
+    "q_en": "How does a script read an object in another scene (e.g. a setup scene)?",
+    "choices_en": ["Engine.GetSceneByName to get the scene, then GetObjectByName on it", "Self.GetObjectByName reaches it directly", "Use Scene.Parent", "It can't be done"],
+    "explain_en": "Engine.GetSceneByName(\"name\", scn) → scn.GetObjectByName(...). Pulling setup-scene values in the on-air scene's OnOnline is the classic pattern (real example in Ross Sports 2013)."
+  },
+  {
+    "vol": 6, "topic": "Script：共通関数",
+    "q": "複数のイベントから呼びたい共通の関数はどこに書く？",
+    "choices": ["Script > Global Methods（Global Script Methods Editor）", "各イベントにコピーする", "OnOnline の先頭", "外部の .vb ファイル"],
+    "answer": 0,
+    "explain": "Global Script Methods にはプロジェクト全体で使える Function / Sub を定義でき、各イベントから名前で呼べる。同じ処理を1か所に書いて使い回す。",
+    "q_en": "Where do you write a shared function callable from multiple events?",
+    "choices_en": ["Script > Global Methods (the Global Script Methods Editor)", "Copy it into every event", "At the top of OnOnline", "An external .vb file"],
+    "explain_en": "Global Script Methods holds project-wide Functions/Subs, callable by name from any event — write a routine once, reuse it everywhere."
+  },
+
+  /* ---- RossTalk（第6巻） ---- */
+  {
+    "vol": 6, "topic": "RossTalk：受信設定",
+    "q": "XPressionでRossTalkを受けるための設定は？",
+    "choices": ["Hardware Setup → GPI Boards に RossTalk を追加し、Enabled・TCP・ポート7788", "Preferences → Network をON", "DataLinq Server に追加", "Sequencer の設定だけでよい"],
+    "answer": 0,
+    "explain": "Edit > Hardware Setup > GPI Boards タブ > Add > RossTalk > State=Enabled > TCP > Port 7788 が受信の基本設定。",
+    "q_en": "How do you set up XPression to receive RossTalk?",
+    "choices_en": ["Hardware Setup → GPI Boards → add RossTalk; Enabled, TCP, port 7788", "Preferences → turn Network on", "Add it in DataLinq Server", "Sequencer settings alone suffice"],
+    "explain_en": "Edit > Hardware Setup > GPI Boards tab > Add > RossTalk > State=Enabled > TCP > port 7788 is the standard receive setup."
+  },
+  {
+    "vol": 6, "topic": "RossTalk：終端と大文字小文字",
+    "q": "RossTalkコマンドを送っても反応しない。まず疑う送信側の基本2点は？",
+    "choices": ["末尾のCR/LF終端と、コマンドの大文字小文字", "ポートとIPだけ", "XPressionの再起動", "シーン名の長さ"],
+    "answer": 0,
+    "explain": "各コマンドは CR/LF で終端が必須、かつ大文字小文字を区別する（TAKE と take は別物）。この2つが無反応の定番原因。",
+    "q_en": "A RossTalk command gets no response. Which two sender-side basics do you check first?",
+    "choices_en": ["The trailing CR/LF terminator and the command's letter case", "Just the port and IP", "Restarting XPression", "The scene name's length"],
+    "explain_en": "Every command must end with CR/LF, and commands are case-sensitive (TAKE ≠ take). These two are the classic causes of silence."
+  },
+  {
+    "vol": 6, "topic": "RossTalk：buffer番号のずれ",
+    "q": "RossTalkの「buffer 0」はXPressionのどのフレームバッファ？",
+    "choices": ["フレームバッファ1（番号が1ずれる）", "フレームバッファ0", "プレビュー", "全フレームバッファ"],
+    "answer": 0,
+    "explain": "RossTalk の buffer 0 = XPression の FB1、buffer 1 = FB2…と1ずれる。TAKE や CLFB の指定ミスの定番。",
+    "q_en": "RossTalk's \"buffer 0\" is which XPression framebuffer?",
+    "choices_en": ["Framebuffer 1 (numbers are offset by one)", "Framebuffer 0", "The preview", "All framebuffers"],
+    "explain_en": "RossTalk buffer 0 = XPression FB1, buffer 1 = FB2, and so on. A classic source of TAKE/CLFB targeting mistakes."
+  },
+  {
+    "vol": 6, "topic": "RossTalk：TAKEとSEQIの違い",
+    "q": "TAKE と SEQI、フォーカスバーの動きの違いは？",
+    "choices": ["TAKEは動かない／SEQIはその項目へ移動する", "両方動く", "両方動かない", "SEQIだけ動かない"],
+    "answer": 0,
+    "explain": "TAKE takeid:buffer:layer はフォーカスを動かさず任意テンプレを割り込ませられる。SEQI はフォーカスがその項目に移動する。自動運行中の割り込みは TAKE 向き。",
+    "q_en": "TAKE vs SEQI — how does the focus bar behave?",
+    "choices_en": ["TAKE leaves it put / SEQI moves it to that item", "Both move it", "Neither moves it", "Only SEQI leaves it put"],
+    "explain_en": "TAKE takeid:buffer:layer fires a template without moving focus — good for interrupting automation. SEQI moves the focus to the item."
+  },
+  {
+    "vol": 6, "topic": "RossTalk：中身の更新",
+    "q": "オンエア中のテンプレの文字や表示を外部から書き換えるコマンドは？",
+    "choices": ["TEMPLATEDATA [takeid]:[object]:[property]:[value]", "TAKE", "FOCUS", "READ"],
+    "answer": 0,
+    "explain": "例：TEMPLATEDATA 0002:Text1:Visibility:0 で Take 0002 の Text1 を非表示。オブジェクト名・プロパティ名は大文字小文字まで正確に。",
+    "q_en": "Which command rewrites text or visibility in an on-air template from outside?",
+    "choices_en": ["TEMPLATEDATA [takeid]:[object]:[property]:[value]", "TAKE", "FOCUS", "READ"],
+    "explain_en": "E.g. TEMPLATEDATA 0002:Text1:Visibility:0 hides Text1 in Take 0002. Object and property names must match exactly, including case."
+  },
+  {
+    "vol": 6, "topic": "RossTalk：LAYEROFFの特徴",
+    "q": "LAYEROFF が SEQO / CLFB と違う点は？",
+    "choices": ["テンプレのアウトトランジションを再生して消す", "全フレームバッファを消す", "プレビューだけ消す", "違いはない"],
+    "answer": 0,
+    "explain": "LAYEROFF buffer:layer は、そのレイヤーのシーンをアウトトランジション付きでオフエアにする。ぶつ切りで消えない「きれいな消し方」。",
+    "q_en": "What sets LAYEROFF apart from SEQO / CLFB?",
+    "choices_en": ["It plays the template's out transition while removing it", "It clears every framebuffer", "It clears only the preview", "There's no difference"],
+    "explain_en": "LAYEROFF buffer:layer takes the scene on that layer off air using its out transition — the clean removal, not a hard cut."
+  },
+  {
+    "vol": 6, "topic": "RossTalk：UPNEXT",
+    "q": "UPNEXT [takeid] は何をする？",
+    "choices": ["フォーカスを動かさずに指定Take Itemをプレビューに載せる（出画しない）", "即オンエアする", "次の項目へ進めてオンエアする", "レイヤーをクリアする"],
+    "answer": 0,
+    "explain": "UPNEXT は「次に出すもの」を先に見せるためのプレビュー設定。出画は READ / NEXT / TAKE で行う。",
+    "q_en": "What does UPNEXT [takeid] do?",
+    "choices_en": ["Puts that take item on preview without moving focus (doesn't air it)", "Airs it immediately", "Advances and airs the next item", "Clears a layer"],
+    "explain_en": "UPNEXT stages what goes next on the preview. Actually airing is done with READ / NEXT / TAKE."
+  },
+  {
+    "vol": 6, "topic": "RossTalk：擬似GPI",
+    "q": "配線なしで、RossTalkからGPIトリガーを発火させる書式は？",
+    "choices": ["GPI [gpi番号]:[state]（stateは0/1）", "TRIGGER [番号]", "GPIO [番号]", "FIRE [番号]"],
+    "answer": 0,
+    "explain": "GPI 3:1 のように送ると、Keyboard/GPI Mapping で割り当てた機能をソフト的に叩ける（最大64入力）。物理接点なしでGPI運用を試せる。",
+    "q_en": "Which syntax fires a GPI trigger from RossTalk without wiring?",
+    "choices_en": ["GPI [gpi number]:[state] (state is 0/1)", "TRIGGER [number]", "GPIO [number]", "FIRE [number]"],
+    "explain_en": "Sending e.g. GPI 3:1 fires the function mapped in Keyboard/GPI Mapping in software (up to 64 inputs) — GPI workflows without physical contacts."
+  },
+  {
+    "vol": 6, "topic": "RossTalk：消すコマンド",
+    "q": "「レイヤー単位で消す」「全部消す」の組み合わせとして正しいのは？",
+    "choices": ["CLFB [buffer]:[layer] ／ CLRA", "SEQO ／ TAKE", "LAYEROFF ／ SEQI", "CLFB ／ READ"],
+    "answer": 0,
+    "explain": "CLFB がフレームバッファ/レイヤーのクリア、CLRA が全消し。トランジション付きで消したいときは LAYEROFF を使う。",
+    "q_en": "Which pair is \"clear one layer\" / \"clear everything\"?",
+    "choices_en": ["CLFB [buffer]:[layer] / CLRA", "SEQO / TAKE", "LAYEROFF / SEQI", "CLFB / READ"],
+    "explain_en": "CLFB clears a framebuffer/layer; CLRA clears all. Use LAYEROFF when you want the out transition."
+  },
+  {
+    "vol": 6, "topic": "RossTalk：使いどころ",
+    "q": "Advance-next型のGPIと比べた、RossTalkの運用上の強みは？",
+    "choices": ["任意の順番で任意のテンプレを呼べる", "配線が不要になるだけ", "画質が上がる", "遅延がゼロになる"],
+    "answer": 0,
+    "explain": "GPIは「次へ」型の順送りが基本だが、RossTalkは TAKE/SEQI で任意順のリコールができる。スイッチャー・自動運行・自作ツールからの制御に向く。",
+    "q_en": "Compared with advance-next GPI, what's RossTalk's operational strength?",
+    "choices_en": ["Recalling any template in any order", "Just saving wiring", "Better picture quality", "Zero latency"],
+    "explain_en": "GPI is basically sequential \"next\"; RossTalk recalls in any order via TAKE/SEQI — suited to switchers, automation, and custom tools."
+  },
+
+  /* ---- Dynamic Material（第5巻） ---- */
+  {
+    "vol": 5, "topic": "DynMat：解決できる4種",
+    "q": "Dynamic Material の Material Path が解決できるのは？",
+    "choices": ["ファイルパス／マテリアル名／色(#AARRGGBB)／ClipStore(recallid:)", "ファイルパスだけ", "マテリアル名と色だけ", "URLだけ"],
+    "answer": 0,
+    "explain": "パス文字列は4種に解決される：ファイル（相対/絶対）、プロジェクト内マテリアル名、#AARRGGBB の色、recallid:[project]:[recallid] の ClipStore。",
+    "q_en": "What can a Dynamic Material path resolve to?",
+    "choices_en": ["A file path / a material name / a color (#AARRGGBB) / ClipStore (recallid:)", "Only file paths", "Only material names and colors", "Only URLs"],
+    "explain_en": "The path string resolves four ways: a file (relative/absolute), a project material name, an #AARRGGBB color, or ClipStore via recallid:[project]:[recallid]."
+  },
+  {
+    "vol": 5, "topic": "DynMat：色指定の書式",
+    "q": "Material Path に #FF0A64FF と書いた。先頭の FF は何？",
+    "choices": ["不透明度（AA）。#AARRGGBB形式", "赤成分", "予約語", "エラーになる"],
+    "answer": 0,
+    "explain": "色は #AARRGGBB。AA=不透明度、RR/GG/BB=色。FF0A64FF は不透明の青系。RGBだけのつもりで書くと1バイトずれる。",
+    "q_en": "You type #FF0A64FF into Material Path. What is the leading FF?",
+    "choices_en": ["The alpha (AA) — the format is #AARRGGBB", "The red component", "A reserved word", "It errors"],
+    "explain_en": "Colors are #AARRGGBB: AA = alpha, then RR/GG/BB. #FF0A64FF is an opaque blue. Writing plain RGB shifts everything by one byte."
+  },
+  {
+    "vol": 5, "topic": "DynMat：ClipStore呼び出し",
+    "q": "ClipStore の内容を Material Path で呼ぶ正しい書式は？",
+    "choices": ["recallid:[project]:[recallid]（先頭の recallid: を忘れない）", "clipstore://project/id", "[project]:[recallid] だけ", "cs:[recallid]"],
+    "answer": 0,
+    "explain": "例：recallid:MyProject:1024。先頭の recallid: が無いとファイル名やマテリアル名として解釈されてしまう。",
+    "q_en": "The correct syntax to recall ClipStore content in a Material Path?",
+    "choices_en": ["recallid:[project]:[recallid] (don't drop the leading recallid:)", "clipstore://project/id", "Just [project]:[recallid]", "cs:[recallid]"],
+    "explain_en": "E.g. recallid:MyProject:1024. Without the leading recallid: the string is read as a file or material name."
+  },
+  {
+    "vol": 5, "topic": "DynMat：連番画像",
+    "q": "連番画像を動画として使いたいとき、Material Path の先頭に付けるのは？",
+    "choices": ["video:", "seq:", "anim:", "movie:"],
+    "answer": 0,
+    "explain": "video:seq/flag/ のように前置する。付けないと1枚の静止画と解釈されることがある。",
+    "q_en": "To use a numbered image sequence as a movie, what do you prefix the Material Path with?",
+    "choices_en": ["video:", "seq:", "anim:", "movie:"],
+    "explain_en": "Write e.g. video:seq/flag/. Without the prefix it may be read as a single still image."
+  },
+  {
+    "vol": 5, "topic": "DynMat：@名前@の解決順",
+    "q": "@TeamTriCode@ のようなマクロは、何をどの順で探す？",
+    "choices": ["同名のテキストオブジェクト→無ければウィジェット", "ウィジェット→テキスト", "グローバルマクロだけ", "DataLinqキーだけ"],
+    "answer": 0,
+    "explain": "@名前@ はまずテキストオブジェクト、無ければウィジェット。両方あるときは @W:名前@ でウィジェットを、@G:名前@ でグローバルマクロを強制できる。",
+    "q_en": "In what order does a macro like @TeamTriCode@ resolve?",
+    "choices_en": ["A text object of that name first, then a widget", "Widget first, then text", "Global macros only", "DataLinq keys only"],
+    "explain_en": "@Name@ looks for a text object first, then a widget. When both exist, force the widget with @W:Name@ or a global macro with @G:Name@."
+  },
+  {
+    "vol": 5, "topic": "DynMat：%datalinqkey%",
+    "q": "Material Path の中の %datalinqkey% は何に置き換わる？",
+    "choices": ["DataLinqキーの実際の値", "プロジェクト名", "オブジェクト名", "日付"],
+    "answer": 0,
+    "explain": "%キー名% はDataLinqの値に置換される。%teamColor% が #AARRGGBB なら色として、素材名なら素材として解決される、データ駆動の要。",
+    "q_en": "What does %datalinqkey% inside a Material Path become?",
+    "choices_en": ["The actual value of that DataLinq key", "The project name", "The object name", "The date"],
+    "explain_en": "%key% is replaced with the DataLinq value. If %teamColor% is #AARRGGBB it acts as a color; if it's a material name, as that material — the heart of data-driven looks."
+  },
+  {
+    "vol": 5, "topic": "DynMat：設定場所",
+    "q": "Dynamic Material はどこで設定する？",
+    "choices": ["Object Inspector → Materials（DataLinq）→ Dynamic Material にチェック → Material Path", "Edit → Preferences", "DataLinq Server", "Visual Logic Editor"],
+    "answer": 0,
+    "explain": "対象オブジェクトの Object Inspector で設定。Material Path 欄は右クリック → Insert Lookup からマクロを挿入できる。",
+    "q_en": "Where do you set up Dynamic Material?",
+    "choices_en": ["Object Inspector → Materials (DataLinq) → tick Dynamic Material → Material Path", "Edit → Preferences", "DataLinq Server", "The Visual Logic Editor"],
+    "explain_en": "It's configured in the object's Object Inspector. Right-click the Material Path field → Insert Lookup to insert macros."
+  },
+  {
+    "vol": 5, "topic": "DynMat：解決不能時",
+    "q": "パスが解決できなかったとき素材を残したくない。使う設定は？",
+    "choices": ["Clear material when material path is unresolvable にチェック", "Material Path を空にしておく", "Visible を切るVLを組む", "できない"],
+    "answer": 0,
+    "explain": "このチェックを入れると、解決不能時に前の素材が残らない。「前のチームのロゴが出っぱなし」事故の防止。",
+    "q_en": "You don't want a leftover material when the path can't resolve. Which setting?",
+    "choices_en": ["Tick \"Clear material when material path is unresolvable\"", "Keep the Material Path empty", "Build VL to switch Visible off", "It can't be done"],
+    "explain_en": "With the checkbox on, no material remains when resolution fails — preventing the \"previous team's logo stays up\" accident."
+  },
+  {
+    "vol": 5, "topic": "DynMat：ロゴ差替の定番",
+    "q": "チームコードのテキストに連動してロゴ画像を差し替える Material Path の定番は？",
+    "choices": ["logos/@TeamTriCode@.png のようにフォルダ＋マクロ＋拡張子", "ロゴごとにシーンを分ける", "Script必須", "手動で差し替える"],
+    "answer": 0,
+    "explain": "@TeamTriCode@ が実際のコード（例 NYY）に置換され logos/NYY.png を読む。命名規則を揃えておくのが前提。",
+    "q_en": "The classic Material Path for swapping a logo image based on a team-code text?",
+    "choices_en": ["Folder + macro + extension, e.g. logos/@TeamTriCode@.png", "A separate scene per logo", "Script is required", "Swap it by hand"],
+    "explain_en": "@TeamTriCode@ becomes the code (e.g. NYY), loading logos/NYY.png. It relies on a consistent file-naming convention."
+  },
+  {
+    "vol": 5, "topic": "DynMat：使いすぎ注意",
+    "q": "Dynamic Material を多用しすぎたときに起きやすい問題は？",
+    "choices": ["どこで何が差し替わるのか追えなくなり、管理・デバッグが難しくなる", "画質が落ちる", "ライセンス違反になる", "特に問題ない"],
+    "answer": 0,
+    "explain": "呼び出し設計の機能なので、乱用すると「なぜこの絵になったか」を追えなくなる。命名規則と使う場所の設計が本体（第5巻 第5章）。",
+    "q_en": "What tends to happen when Dynamic Material is overused?",
+    "choices_en": ["You lose track of what swaps where — management and debugging get hard", "Image quality drops", "It violates the license", "Nothing in particular"],
+    "explain_en": "It's a \"how things get called\" feature; overuse makes the picture untraceable. Naming rules and deciding where to use it are the real design (Vol.5, Ch.5)."
+  },
+
+  /* ---- DataLinq（第5巻） ---- */
+  {
+    "vol": 5, "topic": "DataLinq：Excelを読む",
+    "q": "Excel（XLSX）をDataLinqで読む定番のソースは？",
+    "choices": ["ADODB DataLinq Source（OLEDB/ODBC経由・ACE/Jetプロバイダが必要）", "Text DataLinq Source", "RSS/HTTP", "WebSocket"],
+    "answer": 0,
+    "explain": "ExcelはADODBで読む。ACE/Jetプロバイダの導入（32bitに注意）と、本番機側の読み取り環境確認が前提。CSVはTextソース。",
+    "q_en": "The standard source for reading Excel (XLSX) via DataLinq?",
+    "choices_en": ["ADODB DataLinq Source (via OLEDB/ODBC; needs the ACE/Jet provider)", "Text DataLinq Source", "RSS/HTTP", "WebSocket"],
+    "explain_en": "Excel is read through ADODB — install the ACE/Jet provider (mind 32-bit) and verify the playout machine's setup. CSV goes through the Text source."
+  },
+  {
+    "vol": 5, "topic": "DataLinq：CSVの列名",
+    "q": "CSVの1行目を「列名＝キー」として使いたい。Textソースで入れる設定は？",
+    "choices": ["Text File has Header Row にチェック", "Delimiter を Comma にするだけ", "Encoding を UTF-8 にするだけ", "設定不要"],
+    "answer": 0,
+    "explain": "Header Row を有効にすると先頭行が見出しになり、列名でバインドできる。Delimiter は実データの区切りに合わせる。",
+    "q_en": "You want the CSV's first row as column names (keys). Which Text-source setting?",
+    "choices_en": ["Tick \"Text File has Header Row\"", "Just set Delimiter to Comma", "Just set Encoding to UTF-8", "No setting needed"],
+    "explain_en": "With Header Row on, the first line becomes headers and you bind by column name. Match Delimiter to the actual data."
+  },
+  {
+    "vol": 5, "topic": "DataLinq：ネットワークドライブ",
+    "q": "ネットワークドライブ上のファイルをDataLinqで読むとき、更新検知はどちらが推奨？",
+    "choices": ["Poll every N seconds（定期読み直し）", "Wait for file change events（変更イベント検知）", "毎回手動で再読込", "どちらでも同じ"],
+    "answer": 0,
+    "explain": "変更イベント検知はネットワークドライブでは不確実なので非推奨。Pollで定期的に読み直す（短すぎる間隔は負荷に注意）。",
+    "q_en": "For files on a network drive, which update detection is recommended?",
+    "choices_en": ["Poll every N seconds (periodic re-read)", "Wait for file change events", "Manual reload every time", "They're equivalent"],
+    "explain_en": "File-change events are unreliable on network drives. Poll periodically instead (but not too frequently)."
+  },
+  {
+    "vol": 5, "topic": "DataLinq：JSONと文字コード",
+    "q": "JSON DataLinq で日本語が文字化けした。まず確認するのは？",
+    "choices": ["ファイルがUTF-8で保存されているか", "XPressionの言語設定", "フォント", "ポート番号"],
+    "answer": 0,
+    "explain": "JSONはUTF-8が前提（実機検証済み：他のエンコーディングでは化ける）。Encoding設定は実ファイルに合わせる。",
+    "q_en": "Japanese text from a JSON DataLinq shows garbled. First thing to check?",
+    "choices_en": ["Whether the file is saved as UTF-8", "XPression's language setting", "The font", "The port number"],
+    "explain_en": "JSON expects UTF-8 (hardware-verified: other encodings garble). Match the Encoding setting to the real file."
+  },
+  {
+    "vol": 5, "topic": "DataLinq：Table Presets",
+    "q": "JSON/データソースの「Table Presets」は実運用で何に使える？",
+    "choices": ["読み込むファイル（テーブル）をプリセットで切り替える", "文字色のプリセット", "レイアウトの保存", "使い道はない"],
+    "answer": 0,
+    "explain": "Table Presets でソースの向き先をプリセット切替できる（実機検証済み：試合ごとのファイル切替などに便利）。",
+    "q_en": "What is \"Table Presets\" good for in practice?",
+    "choices_en": ["Switching which file (table) the source reads via presets", "Text-color presets", "Saving layouts", "It has no use"],
+    "explain_en": "Table Presets switches the source's target as presets (hardware-verified — handy for per-game file switching)."
+  },
+  {
+    "vol": 5, "topic": "DataLinq：TCP受信の約束",
+    "q": "XML/JSON TCP DataLinq で外部からデータを送るときの約束は？",
+    "choices": ["各送信データをNULL文字で終端する（既定ポート7327）", "改行で終端する", "終端は不要", "必ずUDPを使う"],
+    "answer": 0,
+    "explain": "ソケット送信は各データを NULL 文字で終端する必要がある。既定ポートは 7327。RossTalk の CR/LF と混同しない。",
+    "q_en": "When pushing data to the XML/JSON TCP DataLinq, what's the rule?",
+    "choices_en": ["Terminate each transmission with a NULL character (default port 7327)", "Terminate with a newline", "No terminator needed", "Always use UDP"],
+    "explain_en": "Each socket transmission must end with a NULL character; the default port is 7327. Don't confuse it with RossTalk's CR/LF."
+  },
+  {
+    "vol": 5, "topic": "DataLinq：オンエア中の更新",
+    "q": "オンエア中もデータの変化を表示に反映させたい。Set DataLinq Properties で入れる設定は？",
+    "choices": ["Live Update にチェック", "Poll を0にする", "Entity Decoding にチェック", "Prepend を設定"],
+    "answer": 0,
+    "explain": "Live Update でデータ変化時に自動更新される。&amp; などの実体参照を戻すのは Entity Decoding、単位付けは Prepend/Append と役割が違う。",
+    "q_en": "You want on-air graphics to follow data changes. Which Set DataLinq Properties option?",
+    "choices_en": ["Tick Live Update", "Set Poll to 0", "Tick Entity Decoding", "Set Prepend"],
+    "explain_en": "Live Update refreshes automatically when data changes. Entity Decoding fixes HTML entities; Prepend/Append adds fixed text — different jobs."
+  },
+  {
+    "vol": 5, "topic": "DataLinq：単位を足す",
+    "q": "DataLinqの値「25」を「25pt」と表示したい。データを変えずに済む方法は？",
+    "choices": ["Set DataLinq Properties の Append に「pt」を設定", "元データに pt を書き足す", "Visual Logic で連結する以外ない", "できない"],
+    "answer": 0,
+    "explain": "Prepend / Append で値の前後に固定文字を付加できる。データ側を汚さず表示だけ整えられる。",
+    "q_en": "You want the DataLinq value \"25\" to display as \"25pt\" without touching the data. How?",
+    "choices_en": ["Set \"pt\" in Append under Set DataLinq Properties", "Edit the source data to include pt", "Only by concatenating in Visual Logic", "It can't be done"],
+    "explain_en": "Prepend/Append adds fixed text around the value — the display is shaped without polluting the data."
+  },
+  {
+    "vol": 5, "topic": "DataLinq：同名ソースの動き",
+    "q": "複数のDataLinq Serverに同名ソースがあるとき、XPressionはどう振る舞う？",
+    "choices": ["自動フェイルオーバーする（追加順が優先度）", "エラーで止まる", "常に両方から読む", "ランダムに選ぶ"],
+    "answer": 0,
+    "explain": "同名ソースは自動フェイルオーバーの仕組みとして働き、追加順＝優先度。冗長化に使えるが、意図しない同名は事故のもと。",
+    "q_en": "With same-named sources on multiple DataLinq Servers, what does XPression do?",
+    "choices_en": ["It fails over automatically (add order = priority)", "It stops with an error", "It always reads both", "It picks randomly"],
+    "explain_en": "Same-named sources act as automatic failover, with add order as priority. Useful for redundancy; accidental name clashes cause confusion."
+  },
+  {
+    "vol": 5, "topic": "DataLinq：来てない？出てない？",
+    "q": "「表示が変わらない」とき、“データが来ているか”をDataLinq側で確かめる道具は？",
+    "choices": ["DataLinq Data Logger", "Render View", "Script Editor", "Sequencer"],
+    "answer": 0,
+    "explain": "まず Data Logger で「来ているか」を見る。来ていれば表示側（バインド・Live Update・Scene）、来ていなければソース側（接続・パス・形式）と切り分けられる。",
+    "q_en": "The display won't change. Which tool checks \"is the data even arriving?\" on the DataLinq side?",
+    "choices_en": ["The DataLinq Data Logger", "Render View", "The Script Editor", "The Sequencer"],
+    "explain_en": "Check arrival with the Data Logger first. If data arrives, suspect the display side (binding, Live Update, scene); if not, the source side (connection, path, format)."
   }
 ];
