@@ -1,5 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<game status="LIVE" period="3" clock="05:42">
-  <home name="TokyoTeam" nameJp="東京チーム" nameEn="Tokyo Team" abbr="TKY" score="72" color="#1E5AC8" fouls="3"/>
-  <away name="OsakaTeam" nameJp="大阪チーム" nameEn="Osaka Team" abbr="OSK" score="68" color="#D23C32" fouls="5"/>
-</game>

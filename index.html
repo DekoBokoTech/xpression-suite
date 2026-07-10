@@ -1,147 +1,77 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>DBT XPression 実務ノート</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex">
+<title>XPression 学習ノート（お試し版）</title>
 <style>
-:root{
-  --bg:#FAF9F6;--panel:#FFFFFF;--panel2:#F5F3EE;--line:#E9E6E0;--ink:#1B1B1A;--sub:#8A8983;
-  --accent:#F26A1B;--accent2:#1FA37A;--c1:#F26A1B;--c2:#8B5CF6;--c3:#1FA37A;--c4:#2E7CF6;
-}
+:root{--bg:#FAF9F6;--panel:#FFFFFF;--line:#E9E6E0;--ink:#1B1B1A;--sub:#8A8983;--accent:#F26A1B;--accent2:#1FA37A}
 *{box-sizing:border-box}
-body{margin:0;min-height:100vh;background:radial-gradient(1000px 520px at 50% -12%,#FFF1E6,var(--bg));color:var(--ink);
-  font-family:-apple-system,"Segoe UI","Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif;line-height:1.7;
-  display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px 20px}
-.top{position:fixed;top:16px;right:18px}
-.langbtn{background:var(--panel);border:1px solid var(--line);color:var(--ink);padding:7px 13px;border-radius:9px;cursor:pointer;font-weight:700;font-size:13px}
-.langbtn:hover{background:var(--panel2);border-color:var(--accent)}
-.brand{display:flex;align-items:center;gap:10px;font-weight:800;letter-spacing:.02em;font-size:15px;color:var(--sub);margin-bottom:6px}
-.brand .dot{width:11px;height:11px;border-radius:50%;background:var(--accent2);box-shadow:0 0 12px var(--accent2)}
-h1{font-size:30px;margin:.1em 0 .1em;text-align:center}
-.lead{color:var(--sub);text-align:center;max-width:640px;margin:0 0 34px;font-size:15px}
-.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:20px;width:100%;max-width:1180px}
-.card{display:block;text-decoration:none;color:inherit;background:linear-gradient(160deg,var(--panel2),var(--panel));
-  border:1px solid var(--line);border-top:4px solid var(--cc);border-radius:18px;padding:26px 24px;
-  transition:transform .14s,border-color .14s,box-shadow .14s}
-.card:hover{transform:translateY(-4px);border-color:var(--cc);box-shadow:0 12px 34px rgba(0,0,0,.35)}
-.card .ic{font-size:34px;line-height:1;margin-bottom:14px}
-.card h2{margin:0 0 8px;font-size:20px}
-.card p{margin:0 0 14px;color:var(--sub);font-size:13.5px;min-height:38px}
-.card .tags{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:16px}
-.card .tag{font-size:11px;color:var(--sub);border:1px solid var(--line);border-radius:20px;padding:2px 9px}
-.card .go{display:inline-flex;align-items:center;gap:6px;font-weight:700;color:var(--cc);font-size:14px}
-footer{margin-top:38px;color:var(--sub);font-size:12px;text-align:center}
-.orgrow{display:flex;align-items:center;justify-content:center;gap:12px;flex-wrap:wrap;margin-bottom:10px}
-.orgbrand{display:inline-flex;align-items:center;text-decoration:none}
-.orglogo{height:40px;width:auto;display:block}
-.orgword{font-weight:800;font-size:15px;color:#F04E23;letter-spacing:.01em}
-.orglink{font-size:12.5px;color:var(--accent);text-decoration:none;border:1px solid var(--line);border-radius:20px;padding:6px 14px;background:var(--panel);box-shadow:2px 2px 6px rgba(120,102,72,.10),-2px -2px 6px rgba(255,255,255,.8)}
-.orglink:hover{border-color:var(--accent)}
-
-@media (max-width:560px){
-  body{padding:34px 16px}
-  h1{font-size:24px}
-  .lead{font-size:14px;margin-bottom:26px}
-  .top{top:12px;right:12px}
-  .card{padding:22px 18px}
-  .card h2{font-size:18px}
-}
-
-/* ===== soft neumorphic skin (subtle) ===== */
-:root{--bg:#FAF9F6;--panel:#FFFFFF;--panel2:#F0EDE7;--line:#EAE6DD;}
-.card{box-shadow:5px 5px 14px rgba(120,102,72,.15),-5px -5px 14px rgba(255,255,255,.85)}
-.card:hover{box-shadow:7px 7px 18px rgba(120,102,72,.20),-6px -6px 16px rgba(255,255,255,.9)}
-.langbtn{box-shadow:3px 3px 8px rgba(120,102,72,.12),-3px -3px 8px rgba(255,255,255,.85)}
-.tag{box-shadow:2px 2px 5px rgba(120,102,72,.10),-2px -2px 5px rgba(255,255,255,.8)}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Hiragino Kaku Gothic ProN","Noto Sans JP",Meiryo,sans-serif;line-height:1.7}
+.wrap{max-width:820px;margin:0 auto;padding:40px 20px 60px}
+.badge{display:inline-block;background:var(--accent);color:#fff;font-weight:700;font-size:12px;padding:4px 10px;border-radius:999px;letter-spacing:.04em}
+h1{font-size:28px;margin:14px 0 6px}
+.lead{color:var(--sub);margin:0 0 26px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:22px 24px;box-shadow:0 1px 3px rgba(0,0,0,.04);margin-bottom:20px}
+.btn{display:inline-block;background:var(--accent);color:#fff;font-weight:700;text-decoration:none;padding:14px 26px;border-radius:10px;font-size:16px}
+.btn.sub{background:#fff;color:var(--accent);border:1.5px solid var(--accent)}
+.btnrow{display:flex;gap:12px;flex-wrap:wrap;margin-top:8px}
+h2{font-size:16px;margin:0 0 10px}
+ul{margin:6px 0 0;padding-left:1.2em}
+li{margin:3px 0}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+@media(max-width:640px){.two{grid-template-columns:1fr}}
+.muted{color:var(--sub);font-size:13px}
+footer{border-top:1px solid var(--line);margin-top:34px;padding-top:18px;color:var(--sub);font-size:13px}
+footer a{color:var(--accent);text-decoration:none;font-weight:600}
+a.acc{color:var(--accent);font-weight:700;text-decoration:none}
 </style>
 </head>
 <body>
-<div class="top"><button id="langBtn" class="langbtn" onclick="toggleLang()">EN</button></div>
-<div class="brand"><span class="dot"></span><span id="brand">DBT XPression</span></div>
-<h1 id="h1">XPression 実務ノート</h1>
-<p class="lead" id="lead">学ぶための「学習ノート」と、現場で引くための「逆引きCookbook」。使いたい方を選んでください。</p>
-<div class="cards">
-  <a class="card" style="--cc:var(--c1)" href="app/study.html">
-    <div class="ic">📘</div>
-    <h2 id="t1">学習ノート</h2>
-    <p id="d1">全6巻を「読む→試す→覚える」。ロードマップ・クイズ・フラッシュカード・画像・統計。</p>
-    <div class="tags" id="tags1"><span class="tag">ロードマップ</span><span class="tag">クイズ</span><span class="tag">カード(SRS)</span><span class="tag">画像</span><span class="tag">統計</span></div>
-    <span class="go" id="g1">はじめる →</span>
-  </a>
-  <a class="card" style="--cc:var(--c2)" href="app/Cookbook.html">
-    <div class="ic">🔧</div>
-    <h2 id="t2">逆引き Cookbook &amp; Builders</h2>
-    <p id="d2">「やりたいこと」から引く。Visual Logic・RossTalk・Dynamic Material＋3つのビルダー。</p>
-    <div class="tags" id="tags2"><span class="tag">Visual Logic</span><span class="tag">RossTalk</span><span class="tag">Dynamic Material</span><span class="tag">Builder</span></div>
-    <span class="go" id="g2">ひらく →</span>
-  </a>
-  <a class="card" style="--cc:var(--c3)" href="app/XPression_Script_Reference.html">
-    <div class="ic">📜</div>
-    <h2 id="t3">Script Reference</h2>
-    <p id="d3">XPressionスクリプトのリファレンス。書きながら引く実装辞典。</p>
-    <div class="tags" id="tags3"><span class="tag">Script</span><span class="tag">API</span><span class="tag">サンプル</span></div>
-    <span class="go" id="g3">ひらく →</span>
-  </a>
-  <a class="card" id="cardHandbook" style="--cc:var(--c4)" href="XPression_Handson_Materials/Handbook/XPression_Handson_Handbook_JA.pdf" target="_blank" rel="noopener">
-    <div class="ic">🧰</div>
-    <h2 id="t4">ハンズオン素材</h2>
-    <p id="d4">手順書PDF＋全11作例のプロジェクト（.xprj）。素材は同梱の XPression_Handson_Materials フォルダに。</p>
-    <div class="tags" id="tags4"><span class="tag">手順書PDF</span><span class="tag">.xprj ×11</span><span class="tag">実機練習</span></div>
-    <span class="go" id="g4">手順書をひらく →</span>
-  </a>
-</div>
-<footer>
-  <div class="orgrow">
-    <a href="https://dekobokotech.com/" class="orgbrand" title="DekoBokoTech" target="_blank" rel="noopener">
-      <img src="assets/dekobokotech_logo.svg" alt="DekoBokoTech" class="orglogo" onerror="this.style.display='none';this.nextElementSibling.style.display='inline-block'">
-      <span class="orgword" style="display:none">DekoBokoTech</span>
-    </a>
-    <a class="orglink" id="lk_site" href="https://dekobokotech.com/" target="_blank" rel="noopener">公式サイト ↗</a>
-    <a class="orglink" id="lk_shop" href="https://dbtps.dekobokotech.com/" target="_blank" rel="noopener">オンラインショップ ↗</a>
-    <a class="orglink" id="lk_info" href="info.html">情報</a>
-  </div>
-  <span id="foot">オフライン動作 · データ内蔵 · DBT XPression Learning Suite</span>
-</footer>
+<div class="wrap">
+  <span class="badge">お試し版 / TRIAL</span>
+  <h1>XPression 学習ノート</h1>
+  <p class="lead">全6巻・全機能の学習アプリの一部を、そのまま体験できるサンプルです。</p>
 
-<script>
-const T={
- ja:{brand:'DBT XPression',h1:'XPression 実務ノート',lead:'学ぶための「学習ノート」と、現場で引くための「逆引きCookbook」。使いたい方を選んでください。',
-  t1:'学習ノート',d1:'全6巻を「読む→試す→覚える」。ロードマップ・クイズ・フラッシュカード・画像・統計。',g1:'はじめる →',
-  tags1:['ロードマップ','クイズ','カード(SRS)','画像','統計'],
-  t2:'逆引き Cookbook & Builders',d2:'「やりたいこと」から引く。Visual Logic・RossTalk・Dynamic Material＋3つのビルダー。',g2:'ひらく →',
-  tags2:['Visual Logic','RossTalk','Dynamic Material','Builder'],
-  t3:'Script Reference',d3:'XPressionスクリプトのリファレンス。書きながら引く実装辞典。',g3:'ひらく →',
-  tags3:['Script','API','サンプル'],
-  t4:'ハンズオン素材',d4:'手順書PDF（日本語版・英語版）＋作例プロジェクト（.xprj）。素材は同梱の XPression_Handson_Materials フォルダに。',g4:'手順書をひらく（日本語）→',
-  tags4:['手順書PDF','.xprj ×11','実機練習'],
-  foot:'オフライン動作 · データ内蔵 · DBT XPression Learning Suite',lk_site:'公式サイト ↗',lk_shop:'オンラインショップ ↗',lk_info:'情報',lang:'EN'},
- en:{brand:'DBT XPression',h1:'XPression Field Notes',lead:'A Study App to learn from, and a reverse-lookup Cookbook to reach for on the job. Pick one to start.',
-  t1:'Study App',d1:'Master all 6 volumes: Read -> Try -> Memorize. Roadmap, quizzes, flashcards, images, stats.',g1:'Start →',
-  tags1:['Roadmap','Quiz','Cards (SRS)','Images','Stats'],
-  t2:'Cookbook & Builders',d2:'Look things up by what you want to do: Visual Logic, RossTalk, Dynamic Material + 3 builders.',g2:'Open →',
-  tags2:['Visual Logic','RossTalk','Dynamic Material','Builder'],
-  t3:'Script Reference',d3:'XPression scripting reference — an implementation dictionary to keep open while you write.',g3:'Open →',
-  tags3:['Script','API','Samples'],
-  t4:'Hands-on Materials',d4:'Step-by-step handbook PDF (Japanese & English editions) + practice projects (.xprj). Files are in the bundled XPression_Handson_Materials folder.',g4:'Open handbook (English) →',
-  tags4:['Handbook PDF','.xprj ×11','Practice'],
-  foot:'Offline · Data embedded · DBT XPression Learning Suite',lk_site:'Website ↗',lk_shop:'Online shop ↗',lk_info:'Info',lang:'日本語'}
-};
-let LANG=localStorage.getItem('xpr_lang')||'ja';
-function apply(){
-  const d=T[LANG];document.documentElement.lang=LANG;
-  for(const id of ['brand','h1','lead','t1','d1','g1','t2','d2','g2','t3','d3','g3','t4','d4','g4','foot','lk_site','lk_shop','lk_info']){const e=document.getElementById(id);if(e)e.textContent=d[id];}
-  document.getElementById('langBtn').textContent=d.lang;
-  const hb=document.getElementById('cardHandbook'); if(hb) hb.setAttribute('href','XPression_Handson_Materials/Handbook/XPression_Handson_Handbook_'+(LANG==='ja'?'JA':'EN')+'.pdf');
-  const mk=arr=>arr.map(t=>`<span class="tag">${t}</span>`).join('');
-  document.getElementById('tags1').innerHTML=mk(d.tags1);
-  document.getElementById('tags2').innerHTML=mk(d.tags2);
-  document.getElementById('tags3').innerHTML=mk(d.tags3);
-  document.getElementById('tags4').innerHTML=mk(d.tags4);
-  document.title = LANG==='ja'?'DBT XPression 実務ノート':'DBT XPression Field Notes';
-}
-function toggleLang(){LANG=LANG==='ja'?'en':'ja';localStorage.setItem('xpr_lang',LANG);apply();}
-apply();
-</script>
+  <div class="card">
+    <div class="btnrow">
+      <a class="btn" href="app/study.html">お試し版をひらく →</a>
+      <a class="btn sub" href="https://dbtps.dekobokotech.com/" target="_blank" rel="noopener">全機能版のご案内 ↗</a>
+    </div>
+    <p class="muted" style="margin:14px 0 0">進捗（読了・カード・クイズ成績）は、ご利用のブラウザ内にのみ保存されます。</p>
+  </div>
+
+  <div class="two">
+    <div class="card">
+      <h2>体験できること</h2>
+      <ul>
+        <li>ロードマップと本文（各巻 はじめに＋第1・2章）</li>
+        <li>ハンズオン作例（4本：ローワーサード／スコアボード／Script／Visual Logic）</li>
+        <li>フラッシュカード（各デッキ抜粋）</li>
+        <li>クイズ（抜粋）</li>
+        <li>画像ギャラリー（本文図＋ハンズオン）</li>
+        <li>全文検索・学習統計</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h2>全機能版では</h2>
+      <ul>
+        <li>全6巻・全章の本文（100章以上）</li>
+        <li>ハンズオン82作例（作例13＋Script 22＋Visual Logic 47）＋本番前チェックリスト</li>
+        <li>クイズ／フラッシュカード フルセット</li>
+        <li>画像 約1,000枚＋高画質ダウンロード</li>
+        <li>逆引きCookbook・Script Reference 連携</li>
+      </ul>
+      <p style="margin:12px 0 0"><a class="acc" href="https://dbtps.dekobokotech.com/" target="_blank" rel="noopener">ショップで詳しく見る ↗</a></p>
+    </div>
+  </div>
+
+  <footer>
+    DBT XPression 実務ノート・学習アプリ（お試し版）
+    ｜ <a href="https://dekobokotech.com/" target="_blank" rel="noopener">DekoBokoTech 公式サイト</a>
+    ｜ <a href="https://dbtps.dekobokotech.com/" target="_blank" rel="noopener">ショップ</a>
+  </footer>
+</div>
 </body>
 </html>
