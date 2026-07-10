@@ -259,6 +259,7 @@ footer.orgfoot{margin-top:30px;padding:22px 16px;border-top:1px solid var(--line
     <div class="tabs">
       <span class="tab active" id="tabRecipes" data-i18n="tabRecipes" onclick="setView('recipes')">レシピ検索</span>
       <span class="tab" id="tabGlossary" data-i18n="tabGlossary" onclick="setView('glossary')">ブロック事典</span>
+      <span class="tab" id="tabVLB" data-i18n="tabVLB" onclick="setView('vlbuilder')">VLビルダー</span>
       <span class="tab" id="tabScrScene" data-i18n="tabScrScene" onclick="setView('scriptScene')">Script（シーン内）</span>
       <span class="tab" id="tabScrExt" data-i18n="tabScrExt" onclick="setView('scriptExt')" style="display:none">Script（外部制御）</span>
       <span class="tab" id="tabScrDict" data-i18n="tabScrDict" onclick="setView('scriptDict')">Script辞典</span>
@@ -1966,6 +1967,7 @@ const UI={
   subtitle:{ja:"VL・Script・RossTalk・Dynamic Material を「やりたいこと」から逆引き（レシピ・事典・ビルダー）",en:"Reverse-lookup for VL, Script, RossTalk & Dynamic Material — from what you want to do (recipes, guides, builders)"},
   tabRecipes:{ja:"VLレシピ",en:"VL Recipes"},
   tabGlossary:{ja:"VLブロック事典",en:"VL Block Guide"},
+  tabVLB:{ja:"VLビルダー",en:"VL Builder"},
   tabScrScene:{ja:"Script（シーン内）",en:"Script (in-scene)"},
   tabScrExt:{ja:"Script（外部制御）",en:"Script (external)"},
   tabScrDict:{ja:"Script辞典",en:"Script Guide"},
@@ -2488,9 +2490,9 @@ function dmBuilderCard(){
 }
 function setView(v){
   view=v;
-  const rec=v==="recipes", glo=v==="glossary", scr=(v==="scriptScene"||v==="scriptExt"||v==="scriptDict"||v==="builder"||v==="rosstalk"||v==="dynmat"||v==="datalinq");
-  [["tabRecipes","recipes"],["tabGlossary","glossary"],["tabScrScene","scriptScene"],["tabScrExt","scriptExt"],["tabScrDict","scriptDict"],["tabBuilder","builder"],["tabRossTalk","rosstalk"],["tabDynMat","dynmat"],["tabDataLinq","datalinq"]].forEach(a=>{const t=document.getElementById(a[0]);if(t)t.classList.toggle("active",v===a[1]);});
-  document.getElementById("q").style.display=v==="builder"?"none":"";
+  const rec=v==="recipes", glo=v==="glossary", scr=(v==="scriptScene"||v==="scriptExt"||v==="scriptDict"||v==="builder"||v==="rosstalk"||v==="dynmat"||v==="datalinq"||v==="vlbuilder");
+  [["tabRecipes","recipes"],["tabVLB","vlbuilder"],["tabGlossary","glossary"],["tabScrScene","scriptScene"],["tabScrExt","scriptExt"],["tabScrDict","scriptDict"],["tabBuilder","builder"],["tabRossTalk","rosstalk"],["tabDynMat","dynmat"],["tabDataLinq","datalinq"]].forEach(a=>{const t=document.getElementById(a[0]);if(t)t.classList.toggle("active",v===a[1]);});
+  document.getElementById("q").style.display=(v==="builder"||v==="vlbuilder")?"none":"";
   document.getElementById("meta").style.display=rec?"":"none";
   document.getElementById("cards").style.display=rec?"":"none";
   document.getElementById("chips").style.display=rec?"":"none";
@@ -2504,7 +2506,7 @@ function setView(v){
     : (lang==='en'?"Filter script recipes / API":"スクリプトのレシピ/APIを絞り込み");
   rerender();
 }
-function rerender(){ if(view==="recipes")render(); else if(view==="glossary")renderGlossary(); else if(view==="scriptDict")renderScriptDict(); else if(view==="builder")renderBuilder(); else if(view==="rosstalk")renderRossTalk(); else if(view==="dynmat")renderDynMat(); else if(view==="datalinq")renderDataLinq(); else renderScript(view==="scriptScene"?"scene":"ext"); }
+function rerender(){ if(view==="recipes")render(); else if(view==="glossary")renderGlossary(); else if(view==="scriptDict")renderScriptDict(); else if(view==="builder")renderBuilder(); else if(view==="vlbuilder")renderVLBuilder(); else if(view==="rosstalk")renderRossTalk(); else if(view==="dynmat")renderDynMat(); else if(view==="datalinq")renderDataLinq(); else renderScript(view==="scriptScene"?"scene":"ext"); }
 function renderScript(ctx){
   const g=document.getElementById("script");
   const q=(query||"").toLowerCase().split(/\s+/).filter(Boolean);
@@ -2941,7 +2943,7 @@ const ACTIONS=[
 ];
 let builderAct=ACTIONS[0].id;
 function currentAct(){ return ACTIONS.find(a=>a.id===builderAct)||ACTIONS[0]; }
-function renderBuilder(){
+function renderBuilderSingle(){
   const g=document.getElementById("script");
   const opts=ACTIONS.map(a=>`<option value="${a.id}"${a.id===builderAct?" selected":""}>[${a.ctx==="scene"?(lang==="en"?"in-scene":"シーン内"):(lang==="en"?"external":"外部")}] ${esc(lang==="en"?a.en:a.ja)}</option>`).join("");
   const placeRow=currentAct().ctx==="scene"
@@ -2950,7 +2952,7 @@ function renderBuilder(){
       +`<option value="sceneEvent"${builderPlace==="sceneEvent"?" selected":""}>${lang==="en"?"A Scene event (OnOnline / OnRender …) → Self.…":"Sceneのイベント（OnOnline・OnRender など）→ Self.〜"}</option>`
       +`</select></div>`
     :"";
-  g.innerHTML=`<div class="card">
+  g.innerHTML=sbModeRow()+`<div class="card">
     <div class="brow"><span class="blbl">${lang==="en"?"Action":"アクション"}</span><select id="b_act" onchange="builderAction()">${opts}</select></div>
     ${placeRow}
     <div id="b_params"></div>
@@ -3483,12 +3485,458 @@ document.getElementById("modalBgX").addEventListener("click",e=>{if(e.target.id=
 document.getElementById("nb_items").addEventListener("click",e=>{const x=e.target.closest(".nb-x");if(x&&x.dataset.i!=null)rmNode(parseInt(x.dataset.i,10));});
 document.getElementById("cn_items").addEventListener("click",e=>{const x=e.target.closest(".nb-x");if(x&&x.dataset.ci!=null)rmConn(parseInt(x.dataset.ci,10));});
 
+/* ---------- Script Builder combo mode ---------- */
+let sbMode="single",sbInst=[],sbUid=1,sbVals={};
+function sbSetMode(m){sbMode=m;renderBuilder();}
+function sbModeRow(){
+  const L=lang==='en';
+  const btn=(m,lab)=>'<button style="padding:7px 14px;border-radius:8px;border:1px solid var(--line,#ccc);cursor:pointer;font-size:13px;'+(sbMode===m?'background:var(--accent,#f26a1b);color:#fff;border-color:var(--accent,#f26a1b);font-weight:700':'background:#fff')+'" onclick="sbSetMode(\''+m+'\')">'+lab+'</button>';
+  return '<div style="display:flex;gap:8px;margin:0 0 12px">'+btn("single",L?'Single action':'1アクション')+btn("combo",L?'Combine actions':'組み合わせ')+'</div>';
+}
+function renderBuilder(){ if(sbMode==="combo")renderBuilderCombo(); else renderBuilderSingle(); }
+function sbAdd(){const sel=document.getElementById("sb_addsel");if(!sel)return;sbInst.push({id:sel.value,uid:sbUid++});renderBuilderCombo();}
+function sbDel(uid){sbInst=sbInst.filter(x=>x.uid!==uid);renderBuilderCombo();}
+function sbMove(uid,d){const i=sbInst.findIndex(x=>x.uid===uid);const j=i+d;if(i<0||j<0||j>=sbInst.length)return;const t=sbInst[i];sbInst[i]=sbInst[j];sbInst[j]=t;renderBuilderCombo();}
+function sbRow(a,uid,p){
+  const L=lang==='en';
+  const key="u"+uid;
+  const cur=(sbVals[key]&&sbVals[key][p[0]]!=null)?sbVals[key][p[0]]:p[3];
+  const label=esc(L?p[2]:p[1]);
+  if(p[4]&&p[4].length){
+    const opts=p[4].map(c=>'<option'+(String(cur)===String(c)?' selected':'')+'>'+esc(c)+'</option>').join('');
+    return '<div class="brow"><span class="blbl">'+label+'</span><select class="sb_in" data-uid="'+uid+'" data-k="'+p[0]+'" onchange="sbGen()">'+opts+'</select></div>';
+  }
+  return '<div class="brow"><span class="blbl">'+label+'</span><input type="text" class="sb_in" data-uid="'+uid+'" data-k="'+p[0]+'" value="'+esc(cur)+'" oninput="sbGen()"></div>';
+}
+function renderBuilderCombo(){
+  const L=lang==='en';
+  const g=document.getElementById("script");
+  const list=ACTIONS.filter(a=>a.ctx==="scene");
+  const addRow='<div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:10px"><select id="sb_addsel" style="font-size:13.5px;padding:7px 9px;border-radius:8px;border:1px solid var(--line,#ccc);max-width:70%">'
+    +list.map(a=>'<option value="'+a.id+'">'+esc(L?a.en:a.ja)+'</option>').join('')
+    +'</select><button style="padding:7px 16px;border-radius:8px;border:1px solid var(--accent,#f26a1b);background:var(--accent,#f26a1b);color:#fff;font-weight:700;cursor:pointer" onclick="sbAdd()">＋ '+(L?'Add':'追加')+'</button></div>';
+  const placeRow='<div class="brow"><span class="blbl">'+(L?'Paste into':'書く場所')+'</span><select onchange="builderPlace=this.value;sbGen()">'
+    +'<option value="objEvent"'+(builderPlace==="objEvent"?' selected':'')+'>'+(L?"An object's event (OnSetText / OnEvent …) → Scene.…":'オブジェクトのイベント（OnSetText・OnEvent など）→ Scene.〜')+'</option>'
+    +'<option value="sceneEvent"'+(builderPlace==="sceneEvent"?' selected':'')+'>'+(L?'A Scene event (OnOnline / OnRender …) → Self.…':'Sceneのイベント（OnOnline・OnRender など）→ Self.〜')+'</option>'
+    +'</select></div>';
+  const instSecs=sbInst.map((inst,ix)=>{
+    const a=ACTIONS.find(x=>x.id===inst.id); if(!a)return '';
+    const mv=(d,sym,dis)=>'<button style="border:1px solid var(--line,#ccc);background:#fff;border-radius:6px;cursor:pointer;padding:2px 8px;'+(dis?'opacity:.35;pointer-events:none':'')+'" onclick="sbMove('+inst.uid+','+d+')">'+sym+'</button>';
+    return '<div class="sec" style="border:1px solid var(--line,#e5e2dc);border-radius:10px;padding:10px 14px;margin:8px 0;background:#fff">'
+      +'<div style="display:flex;align-items:center;gap:6px;margin-bottom:4px"><b style="font-size:13.5px">'+(ix+1)+'）'+esc(L?a.en:a.ja)+'</b><span style="margin-left:auto;display:flex;gap:5px">'+mv(-1,'↑',ix===0)+mv(1,'↓',ix===sbInst.length-1)+'<button style="border:1px solid var(--line,#ccc);background:#fff;border-radius:6px;cursor:pointer;padding:2px 10px" onclick="sbDel('+inst.uid+')">✕</button></span></div>'
+      +a.p.map(p=>sbRow(a,inst.uid,p)).join('')+'</div>';
+  }).join('');
+  g.innerHTML=sbModeRow()+'<div class="card">'
+   +'<p style="color:#777;font-size:13px;margin:2px 0 10px">'+(L?'Add actions — the same action can be added as many times as you need (e.g. six texts = add "Set text" six times with different names). They run top to bottom; variables are auto-renamed so snippets never collide.':'アクションを追加してください。<b>同じアクションを必要なだけ何回でも追加できます</b>（例：テキスト6個なら「テキストを書き換える」を6回追加して別々の名前を入力）。上から順に実行され、変数名は自動リネームで衝突しません。')+'</p>'
+   +placeRow+addRow+instSecs
+   +'<div class="sec"><div class="lbl" style="display:flex;align-items:center;gap:8px">'+(L?'Generated code (Visual Basic)':'生成コード（Visual Basic）')+'<button class="copybtn" type="button" style="margin-left:auto'+(sbTidy?';background:var(--accent,#f26a1b);color:#fff;border-color:var(--accent,#f26a1b)':'')+'" onclick="sbToggleTidy()">🧹 '+(sbTidy?(L?'Undo tidy':'元に戻す'):(L?'Tidy up':'まとめる'))+'</button><button class="copybtn" type="button" onclick="sbAIPrompt(this)">🤖 '+(L?'AI prompt':'AI用プロンプト')+'</button><button class="copybtn" type="button" onclick="builderCopy(this)">'+(L?'Copy':'コピー')+'</button></div><pre class="code" id="b_code"></pre></div>'
+   +'<div class="src">'+(L?'Paste the whole block into ONE event (the place you chose above), inside Sub … End Sub. Actions execute in the numbered order.':'コード全体を、上で選んだ「書く場所」のイベント1つ（Sub 〜 End Sub の中）にまとめて貼り付けます。番号の順に実行されます。')+'</div>'
+   +'</div>'+scriptSharedPanels();
+  sbGen();
+}
+function sbGen(){
+  const L=lang==='en';
+  const out=document.getElementById("b_code"); if(!out)return;
+  if(!sbInst.length){ out.textContent=L?"' Add one or more actions above.":"' 上の「＋追加」でアクションを追加してください。"; return; }
+  const parts=sbCollect();
+  out.textContent=sbTidy?sbEmitTidy(parts,L):sbEmitRaw(parts,L);
+}
+/* ---- tidy pipeline (rule-based, safe patterns only) ---- */
+let sbTidy=false;
+const SB_IDEMPOTENT={setText:1,setLine:1,showHide:1,setColor:1,setEmissive:1,move:1,rotate:1,scale:1,alpha:1,swapMaterial:1,swapMaterialWhole:1,counterSet:1};
+function sbToggleTidy(){sbTidy=!sbTidy;renderBuilderCombo();}
+function sbCollect(){
+  const parts=[];
+  sbInst.forEach(inst=>{
+    const a=ACTIONS.find(x=>x.id===inst.id); if(!a)return;
+    const key="u"+inst.uid,v={};
+    a.p.forEach(p=>{
+      const el=document.querySelector('.sb_in[data-uid="'+inst.uid+'"][data-k="'+p[0]+'"]');
+      v[p[0]]=el?el.value:((sbVals[key]&&sbVals[key][p[0]])!=null?sbVals[key][p[0]]:p[3]);
+      (sbVals[key]=sbVals[key]||{})[p[0]]=v[p[0]];
+    });
+    parts.push({a:a,v:v,lines:a.gen(v).map(String)});
+  });
+  return parts;
+}
+function sbEmitRaw(parts,L){
+  return parts.map((p,ix)=>{
+    const dims=[];p.lines.forEach(l=>{const m=l.match(/^\s*dim\s+(\w+)\s+as\s/i);if(m)dims.push(m[1]);});
+    let code=p.lines.join("\n");
+    dims.forEach(w=>{code=code.replace(new RegExp("\\b"+w+"\\b","g"),w+"_"+(ix+1));});
+    return "' --- "+(ix+1)+") "+(L?p.a.en:p.a.ja)+" ---\n"+code;
+  }).join("\n\n");
+}
+function sbEmitTidy(parts,L){
+  // phase1: collapse ADJACENT exact duplicates of idempotent actions
+  const P=[];
+  parts.forEach(p=>{
+    const last=P[P.length-1];
+    if(last&&!last.loop&&last.a.id===p.a.id&&SB_IDEMPOTENT[p.a.id]&&JSON.stringify(last.v)===JSON.stringify(p.v)){last.dup=(last.dup||1)+1;return;}
+    P.push({a:p.a,v:p.v,lines:p.lines.slice()});
+  });
+  // phase2: roll contiguous runs (>=3, same action, exactly one varying numbered param) into For loops
+  const Q=[];let li=0,loopN=0;
+  while(li<P.length){
+    let j=li;
+    while(j<P.length&&P[j].a.id===P[li].a.id&&!P[j].dup)j++;
+    const run=P.slice(li,j);
+    let made=false;
+    if(run.length>=3){
+      const keys=run[0].a.p.map(p=>p[0]);
+      const varying=keys.filter(k=>run.some(x=>x.v[k]!==run[0].v[k]));
+      if(varying.length===1){
+        const k=varying[0];
+        const ms=run.map(x=>String(x.v[k]).match(/^(.*?)(\d+)$/));
+        if(ms.every(Boolean)&&ms.every(m=>m[1]===ms[0][1])){
+          const nums=ms.map(m=>parseInt(m[2],10));
+          const consec=nums.every((n,ii)=>ii===0||n===nums[ii-1]+1);
+          const val0='"'+run[0].v[k]+'"';
+          const cnt=run[0].lines.join("\n").split(val0).length-1;
+          if(consec&&cnt===1){
+            loopN++;
+            const iv=loopN===1?"i":("i"+loopN);
+            const dims=[],body=[];
+            run[0].lines.forEach(l=>{ if(/^\s*dim\s+\w+\s+as\s/i.test(l))dims.push(l); else body.push("  "+l.replace(val0,'"'+ms[0][1]+'" & '+iv)); });
+            Q.push({loop:true,a:run[0].a,count:run.length,
+              lines:dims.concat(["Dim "+iv+" as Integer","For "+iv+" = "+nums[0]+" to "+nums[nums.length-1]]).concat(body).concat(["Next "+iv])});
+            li=j;made=true;
+          }
+        }
+      }
+    }
+    if(!made){Q.push(P[li]);li++;}
+  }
+  // phase3: shared-variable reuse across non-loop blocks + global unique renaming
+  const used={},getterMap={};
+  const uniq=w=>{ if(!used[w]){used[w]=1;return w;} used[w]++; return w+"_"+used[w]; };
+  const out=Q.map((p,ix)=>{
+    const head="' --- "+(ix+1)+") "+(L?p.a.en:p.a.ja)+(p.loop?(" ×"+p.count+(L?" (For loop)":"（Forループ化）")):"")+(p.dup?(L?(" (merged "+p.dup+" duplicates)"):("（同一設定の重複"+p.dup+"件を統合）")):"")+" ---";
+    let lines=p.lines.slice();
+    if(p.loop){
+      const map={};
+      lines=lines.map(l=>{const m=l.match(/^\s*dim\s+(\w+)\s+as\s/i);if(m){map[m[1]]=uniq(m[1]);}return l;});
+      Object.keys(map).forEach(w=>{ if(map[w]!==w) lines=lines.map(l=>l.replace(new RegExp("\\b"+w+"\\b","g"),map[w])); });
+      return head+"\n"+lines.join("\n");
+    }
+    // simple blocks: detect dim + getter pairs
+    const map={},drop=[];
+    lines.forEach((l,i2)=>{
+      const m=l.match(/^\s*dim\s+(\w+)\s+as\s+(\w+)/i);
+      if(!m)return;
+      const w=m[1],ty=m[2];
+      let gi=-1;
+      for(let g=i2+1;g<lines.length;g++){ if(lines[g].indexOf("ByName(")>=0&&new RegExp("\\b"+w+"\\b").test(lines[g])){gi=g;break;} }
+      if(gi<0){map[w]=uniq(w);return;}
+      const key=ty+"|"+lines[gi].replace(new RegExp("\\b"+w+"\\b","g"),"@");
+      if(getterMap[key]){ map[w]=getterMap[key]; drop.push(i2,gi); }
+      else { map[w]=uniq(w); getterMap[key]=map[w]; }
+    });
+    lines=lines.filter((l,i2)=>drop.indexOf(i2)<0);
+    Object.keys(map).forEach(w=>{ if(map[w]!==w) lines=lines.map(l=>l.replace(new RegExp("\\b"+w+"\\b","g"),map[w])); });
+    return head+"\n"+lines.join("\n");
+  });
+  return out.join("\n\n");
+}
+function sbToast(msg){
+  const t=document.createElement("div");
+  t.textContent=msg;
+  t.style.cssText="position:fixed;left:50%;bottom:34px;transform:translateX(-50%) scale(.7);background:#1b1b1a;color:#fff;padding:12px 22px;border-radius:12px;font-size:14px;font-weight:700;box-shadow:0 6px 24px rgba(0,0,0,.25);z-index:9999;opacity:0;transition:opacity .2s,transform .3s cubic-bezier(.34,1.56,.64,1)";
+  document.body.appendChild(t);
+  requestAnimationFrame(()=>{t.style.opacity="1";t.style.transform="translateX(-50%) scale(1)";});
+  setTimeout(()=>{t.style.opacity="0";setTimeout(()=>t.remove(),300);},2600);
+}
+function sbAIPrompt(btn){
+  const L=lang==='en';
+  const parts=sbCollect();
+  const code=sbEmitRaw(parts,L);
+  const prompt=L
+   ? "You are an engineer familiar with Ross XPression Script (Visual Basic style). Refactor the script below WITHOUT changing its behavior:\n- Merge duplicate GetObjectByName fetches of the same object into one variable\n- Turn repeated operations on numbered objects (e.g. Row1..Row7) into For loops using name & i\n- XPression constraints: inside Scene events use Self., inside object events use Scene.; pass typed variables directly to GetObjectByName; no defensive coding needed; widgets via .Project.GetWidgetByName\n- Keep execution order; mark every change with a comment\n\n```vb\n"+code+"\n```"
+   : "あなたは Ross XPression の Script（Visual Basic系）に詳しいエンジニアです。以下のスクリプトを、動作を一切変えずに整理してください：\n- 同じオブジェクトの GetObjectByName 重複は変数を共有して1回に\n- 連番オブジェクト（例 Row1〜Row7）への同種処理は 名前 & i の For ループに\n- XPressionの制約：Sceneイベント内は Self.、オブジェクトのイベント内は Scene.。型付き変数をそのまま GetObjectByName に渡す。防御的コードは不要。ウィジェットは .Project.GetWidgetByName\n- 実行順は維持し、変更箇所にはコメントを付けること\n\n```vb\n"+code+"\n```";
+  const done=()=>{ if(btn){const o=btn.textContent;btn.textContent=(L?'Copied!':'コピー済');setTimeout(()=>btn.textContent=o,1200);} sbToast(L?'✅ AI prompt copied — paste it into ChatGPT / Claude.':'✅ AI用プロンプトをコピーしました。ChatGPTやClaudeに貼り付けてください。'); };
+  if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(prompt).then(done,()=>fallbackCopy(prompt,done));}
+  else fallbackCopy(prompt,done);
+}
+
+/* ---------- VL Builder (level A: diagram + settings + wiring steps) ---------- */
+/* 47 recipes auto-derived from SEED at runtime; 5 curated entries override. Combo mode merges shared object nodes. */
+function vlbEscRe(t){return t.replace(/[.*+?^${}()|[\]\\]/g,"\\$&");}
+const VLB_PROPW=new Set(["Text","Width","Height","Visible","Enabled","WordWrap","Layer1","Colors","Diffuse","Color","Value","String","Length","Base","Index","Output","PosX","PosY","PosZ","Alpha","Scale","ScaleX","ScaleY","Material","Materials","Emissive","StartAngle","EndAngle","Left","Right","Equal","Greater","Less","Than","Compare","Selector","Input","Date","Time","Format","Decode","Encode","Clock","Timer","Not","And","Or","Add","Subtract","Multiply","Divide","Offset","Concatenate","Replace","Sort","Waveform","DataLinq","Delta","Float","Ordinal","Out","the","and"]);
+function vlbTokens(r){
+  const toks=[];
+  Object.keys(r.wire.n).forEach(id=>{
+    const nd=r.wire.n[id];
+    if(nd[0]!=="object")return;
+    (String(nd[1]).match(/[A-Za-z][A-Za-z0-9_]{2,}/g)||[]).forEach(t=>{
+      if(!VLB_PROPW.has(t)&&toks.indexOf(t)<0)toks.push(t);
+    });
+  });
+  return toks;
+}
+function vlbSubst(text,r,v){
+  let s=String(text);
+  r.params.forEach(p=>{
+    if(p.tok&&v[p.k]&&v[p.k]!==p.def){ s=s.replace(new RegExp("\\b"+vlbEscRe(p.def)+"\\b","g"),v[p.k]); }
+  });
+  return s;
+}
+function vlbAuto(r,idx){
+  const toks=vlbTokens(r);
+  return {
+    id:"seed"+idx, seedIdx:idx, auto:true,
+    t:r.title, t_en:r.title_en, diff:r.diff,
+    goal:(r.steps&&r.steps.length)?r.steps[r.steps.length-1]:"",
+    goal_en:(r.steps_en&&r.steps_en.length)?r.steps_en[r.steps_en.length-1]:"",
+    params:toks.map(t=>({k:t,tok:true,lab:"オブジェクト名 "+t,lab_en:"Object name "+t,def:t})),
+    wire:function(v){
+      const w={n:{},e:(r.wire.e||[]).map(x=>x.slice())};
+      Object.keys(r.wire.n).forEach(id=>{ const nd=r.wire.n[id]; w.n[id]=[nd[0],vlbSubst(nd[1],this,v)]; });
+      return w;
+    },
+    blocks:function(v){
+      return Object.keys(r.wire.n).map(id=>{
+        const nd=r.wire.n[id]; const lab=vlbSubst(nd[1],this,v);
+        let props=null,m;
+        if(m=lab.match(/^Value\s+([\d.\-]+)/))props={"Value":m[1]};
+        else if(m=lab.match(/^(Left|Right) String\s+(\d+)/))props={"Length":m[2]};
+        else if(m=lab.match(/^String Value\s+(.+)$/))props={"String":m[1]};
+        return {cat:nd[0],name:lab,props:props};
+      });
+    },
+    steps:function(v){
+      const pre="対象オブジェクトの Visual Logic エディタを開き、結線図のとおりブロックを配置する（数値の変更は各ブロックのプロパティ欄で）";
+      return [pre].concat((r.steps||[]).map(x=>esc(vlbSubst(x,this,v))));
+    },
+    steps_en:function(v){
+      const pre="Open the Visual Logic editor on the target object and place the blocks as in the diagram (tweak numbers in each block's property panel)";
+      return [pre].concat((r.steps_en&&r.steps_en.length?r.steps_en:r.steps||[]).map(x=>esc(vlbSubst(x,this,v))));
+    },
+    gotcha:r.gotcha||"",gotcha_en:r.gotcha_en||r.gotcha||""
+  };
+}
+const VLB_CUR=[
+ {id:"mirror",
+  t:"テキストをそのままコピー（ミラー）",t_en:"Mirror one text into another",
+  goal:"コピー元の文字が変わると、表示先も同じ文字になる（最小のVL）。",
+  goal_en:"When the source text changes, the destination shows the same text (the smallest VL).",
+  params:[
+   {k:"src",lab:"コピー元テキスト名",lab_en:"Source text object",def:"Text_Src"},
+   {k:"dst",lab:"表示先テキスト名",lab_en:"Destination text object",def:"Text1"}],
+  blocks:v=>[
+   {cat:"object",name:v.src,item:"Text",note:"出力として使う（値の発生源）",note_en:"Used as output (value source)"},
+   {cat:"object",name:v.dst,item:"Text",note:"入力として使う（書き込み先）",note_en:"Used as input (write target)"}],
+  wire:v=>({n:{a:["object",v.src+" .Text"],b:["object",v.dst+" .Text"]},e:[["a","b"]]}),
+  steps:v=>["<b>"+esc(v.dst)+"</b> の Visual Logic エディタを開く","オブジェクトブロックを2つ置く： "+esc(v.src)+"（Text）／ "+esc(v.dst)+"（Text）","<b>"+esc(v.src)+"</b> の Text 出力 → <b>"+esc(v.dst)+"</b> の Text 入力 に結線","確認： "+esc(v.src)+" の文字を変えると "+esc(v.dst)+" も変わる"],
+  steps_en:v=>["Open the Visual Logic editor on <b>"+esc(v.dst)+"</b>","Place two object blocks: "+esc(v.src)+" (Text) and "+esc(v.dst)+" (Text)","Wire <b>"+esc(v.src)+"</b> Text output → <b>"+esc(v.dst)+"</b> Text input","Check: change "+esc(v.src)+" and "+esc(v.dst)+" follows"],
+  gotcha:"オブジェクト名は1文字も違わず。同じオブジェクトでもプロパティごとに別ブロックとして置く。",
+  gotcha_en:"Names must match exactly. The same object appears as one block per property."},
+ {id:"trim",
+  t:"文字列の左からN桁だけ表示（右端の余分を削る）",t_en:"Show only N characters from the left (trim the tail)",
+  goal:"DB値の末尾に付く不要文字を落とし、左からN桁だけを表示する。",
+  goal_en:"Drop junk appended to a DB value and show only the first N characters.",
+  params:[
+   {k:"src",lab:"元テキスト名",lab_en:"Source text object",def:"Text_DB"},
+   {k:"dst",lab:"表示テキスト名",lab_en:"Display text object",def:"Text1"},
+   {k:"len",lab:"残す桁数",lab_en:"Characters to keep",def:"3"}],
+  blocks:v=>[
+   {cat:"object",name:v.src,item:"Text"},
+   {cat:"str",name:"Left String",props:{"Length":v.len},note_en:""},
+   {cat:"object",name:v.dst,item:"Text"}],
+  wire:v=>({n:{a:["object",v.src+" .Text"],ls:["str","Left String"],b:["object",v.dst+" .Text"]},e:[["a","ls","","In"],["ls","b"]]}),
+  steps:v=>["<b>"+esc(v.dst)+"</b> の Visual Logic エディタを開く","ブロックを置く： "+esc(v.src)+"（Text）／ Left String ／ "+esc(v.dst)+"（Text）","Left String のプロパティで <b>Length = "+esc(v.len)+"</b> に設定","結線： "+esc(v.src)+" の Text 出力 → Left String の <b>In</b>","結線： Left String の <b>Out</b> → "+esc(v.dst)+" の Text 入力","確認： 例 245f → "+esc(v.len)+"桁（245）だけ表示される"],
+  steps_en:v=>["Open the VL editor on <b>"+esc(v.dst)+"</b>","Place blocks: "+esc(v.src)+" (Text), Left String, "+esc(v.dst)+" (Text)","In Left String set <b>Length = "+esc(v.len)+"</b>","Wire "+esc(v.src)+" Text output → Left String <b>In</b>","Wire Left String <b>Out</b> → "+esc(v.dst)+" Text input","Check: e.g. 245f → shows only "+esc(v.len)+" chars (245)"],
+  gotcha:"桁数はポート（Length）に Value ブロックを繋いでも指定できるが、固定値ならプロパティ欄の方が簡単（実機エクスポートでも len プロパティ使用）。",
+  gotcha_en:"You can also feed Length via a Value block, but for a constant the property field is simpler (real exports use the len property)."},
+ {id:"wordwrap",
+  t:"文字数がしきい値を超えたら Word Wrap を自動ON",t_en:"Auto-enable Word Wrap when text exceeds a length",
+  goal:"名前が長いときだけ折り返しを有効にし、折り返し幅も自動設定する。",
+  goal_en:"Enable wrapping only for long names, and set the wrap width automatically.",
+  params:[
+   {k:"txt",lab:"対象テキスト名",lab_en:"Target text object",def:"LT_Name_TXT"},
+   {k:"th",lab:"しきい値（文字数）",lab_en:"Threshold (character count)",def:"43"},
+   {k:"w",lab:"折り返し幅（px）",lab_en:"Wrap width (px)",def:"1520"}],
+  blocks:v=>[
+   {cat:"object",name:v.txt,item:"Text",note:"文字数の測定元",note_en:"Length source"},
+   {cat:"str",name:"String Length"},
+   {cat:"math",name:"Value",props:{"Value":v.th}},
+   {cat:"logic",name:"Greater Than",note:"Out＝「>」入力 が Base より大きいか",note_en:"Out = ('>' input) > Base"},
+   {cat:"str",name:"String Value",props:{"String":v.w}},
+   {cat:"object",name:v.txt,item:"WordWrap.Enabled"},
+   {cat:"object",name:v.txt,item:"WordWrap.Width"}],
+  wire:v=>({n:{t:["object",v.txt+" .Text"],sl:["str","String Length"],val:["math","Value "+v.th],gt:["logic","Greater Than"],sv:["str","String Value "+v.w],en:["object",v.txt+" WordWrap.Enabled"],wd:["object",v.txt+" WordWrap.Width"]},
+    e:[["t","sl","","In"],["val","gt","","Base"],["sl","gt","",">"],["gt","en"],["sv","wd"]]}),
+  steps:v=>["<b>"+esc(v.txt)+"</b> の Visual Logic エディタを開く","ブロックを置く： "+esc(v.txt)+"（Text）／ String Length ／ Value ／ Greater Than ／ String Value ／ "+esc(v.txt)+"（WordWrap.Enabled）／ "+esc(v.txt)+"（WordWrap.Width）","Value に <b>"+esc(v.th)+"</b>、String Value に <b>"+esc(v.w)+"</b> を設定","結線： "+esc(v.txt)+" の Text → String Length の <b>In</b>","結線： Value の Out → Greater Than の <b>Base</b>／ String Length の Out → Greater Than の <b>&gt;</b>","結線： Greater Than の Out → <b>WordWrap.Enabled</b>","結線： String Value の String → <b>WordWrap.Width</b>","確認： "+esc(v.th)+"文字を超える名前を入れると折り返しON"],
+  steps_en:v=>["Open the VL editor on <b>"+esc(v.txt)+"</b>","Place blocks: "+esc(v.txt)+" (Text), String Length, Value, Greater Than, String Value, "+esc(v.txt)+" (WordWrap.Enabled), "+esc(v.txt)+" (WordWrap.Width)","Set Value = <b>"+esc(v.th)+"</b> and String Value = <b>"+esc(v.w)+"</b>","Wire "+esc(v.txt)+" Text → String Length <b>In</b>","Wire Value Out → Greater Than <b>Base</b>, and String Length Out → Greater Than <b>&gt;</b>","Wire Greater Than Out → <b>WordWrap.Enabled</b>","Wire String Value String → <b>WordWrap.Width</b>","Check: names longer than "+esc(v.th)+" chars wrap"],
+  gotcha:"Greater Than の向きに注意： Out は「>ポートの値 が Base より大きい」。Base にしきい値（Value）を入れる。※実機エクスポート（WordWrap自動ON）と同一構成。",
+  gotcha_en:"Mind the direction: Out is true when the '>' port exceeds Base — the threshold goes into Base. Identical to a machine-exported graph."},
+ {id:"clockfmt",
+  t:"残り時間でゲームクロックの表示形式を切替（NN:SS ⇄ SS.ZZZ）",t_en:"Switch game-clock format by remaining time (NN:SS ⇄ SS.ZZZ)",
+  goal:"残り1分未満（先頭2桁が00）になったら、分:秒表示を秒.ミリ秒表示に自動で切り替える。",
+  goal_en:"When under one minute (first two chars are 00), switch from MM:SS to SS.ZZZ automatically.",
+  params:[
+   {k:"raw",lab:"元時間テキスト名（書式 NN:SS.ZZZ）",lab_en:"Raw time text (format NN:SS.ZZZ)",def:"GC_Time_Raw_TXT"},
+   {k:"disp",lab:"表示テキスト名",lab_en:"Display text object",def:"GC_Time_Display_TXT"}],
+  blocks:v=>[
+   {cat:"object",name:v.raw,item:"Text"},
+   {cat:"str",name:"Left String",props:{"Length":"2"},note:"先頭2桁（分）を取り出す",note_en:"Extract the first two chars (minutes)"},
+   {cat:"str",name:"String Value",props:{"String":"00"}},
+   {cat:"str",name:"String Compare",props:{"Case sensitive":"0"}},
+   {cat:"str",name:"Left String",props:{"Length":"5"},note:"通常表示 NN:SS",note_en:"Normal display NN:SS"},
+   {cat:"str",name:"Right String",props:{"Length":"6"},note:"残り僅か表示 SS.ZZZ",note_en:"Final-minute display SS.ZZZ"},
+   {cat:"sel",name:"Input Selector",note:"Index=0で[0]、1で[1]を出力",note_en:"Outputs [0] when Index=0, [1] when 1"},
+   {cat:"object",name:v.disp,item:"Text"}],
+  wire:v=>({n:{r:["object",v.raw+" .Text"],l2:["str","Left String 2"],sv:["str","String Value 00"],sc:["str","String Compare"],l5:["str","Left String 5"],r6:["str","Right String 6"],is:["sel","Input Selector"],d:["object",v.disp+" .Text"]},
+    e:[["r","l2","","In"],["r","l5","","In"],["r","r6","","In"],["l2","sc","","String1"],["sv","sc","","String2"],["sc","is","Equal","Index"],["l5","is","","[0]"],["r6","is","","[1]"],["is","d"]]}),
+  steps:v=>["<b>"+esc(v.disp)+"</b> の Visual Logic エディタを開く","ブロックを置く（上の表のとおり8個・Left Stringは2個）","各ブロックの設定： Left String①=<b>2</b>／ Left String②=<b>5</b>／ Right String=<b>6</b>／ String Value=<b>00</b>","結線： "+esc(v.raw)+" の Text → Left String①・Left String②・Right String の各 <b>In</b>（3本）","結線： Left String① の Out → String Compare の <b>String1</b>／ String Value → <b>String2</b>","結線： String Compare の <b>Equal</b> → Input Selector の <b>Index</b>","結線： Left String② の Out → <b>[0]</b>／ Right String の Out → <b>[1]</b>","結線： Input Selector の Output → "+esc(v.disp)+" の Text","確認： 01:23.456 → 01:23、00:59.123 → 59.123 に切替"],
+  steps_en:v=>["Open the VL editor on <b>"+esc(v.disp)+"</b>","Place the 8 blocks from the table (two Left Strings)","Settings: Left String #1 = <b>2</b>, Left String #2 = <b>5</b>, Right String = <b>6</b>, String Value = <b>00</b>","Wire "+esc(v.raw)+" Text → the <b>In</b> of Left String #1, Left String #2 and Right String (3 wires)","Wire Left String #1 Out → String Compare <b>String1</b>, String Value → <b>String2</b>","Wire String Compare <b>Equal</b> → Input Selector <b>Index</b>","Wire Left String #2 Out → <b>[0]</b>, Right String Out → <b>[1]</b>","Wire Input Selector Output → "+esc(v.disp)+" Text","Check: 01:23.456 → 01:23, and 00:59.123 → 59.123"],
+  gotcha:"桁数（2/5/6）は元の書式に合わせて調整可。Equal=一致で1 → [1]側（SS.ZZZ）が選ばれる。※実機エクスポートと同一構成。",
+  gotcha_en:"Adjust the lengths (2/5/6) to your raw format. Equal outputs 1 on match → picks [1] (SS.ZZZ). Identical to a machine-exported graph."},
+ {id:"barratio",
+  t:"スコア比率でバーの幅を伸縮（ホーム側シェアバー）",t_en:"Drive a bar width by score ratio (home share bar)",
+  goal:"ホーム得点÷合計得点の比率で、バーの幅を最大幅×比率に自動調整する。0-0のときは50%で表示。",
+  goal_en:"Sets the bar width to max × (home ÷ total). Shows 50% while the score is 0-0.",
+  params:[
+   {k:"home",lab:"ホーム得点テキスト名",lab_en:"Home score text",def:"SB_HomeScore_TXT"},
+   {k:"away",lab:"アウェイ得点テキスト名",lab_en:"Away score text",def:"SB_AwayScore_TXT"},
+   {k:"bar",lab:"バーのオブジェクト名（Quad等）",lab_en:"Bar object (Quad etc.)",def:"SB_HomeBar_SHAPE"},
+   {k:"maxw",lab:"最大幅（px）",lab_en:"Max width (px)",def:"1500"}],
+  blocks:v=>[
+   {cat:"object",name:v.home,item:"Text"},
+   {cat:"object",name:v.away,item:"Text"},
+   {cat:"math",name:"Add",note:"合計得点",note_en:"Total score"},
+   {cat:"math",name:"Divide",note:"ホーム÷合計＝比率",note_en:"home ÷ total = ratio"},
+   {cat:"math",name:"Value",props:{"Value":"0"},note:"0判定用",note_en:"For zero check"},
+   {cat:"logic",name:"Equal To",note:"比率が0（=0-0開始時）か判定",note_en:"Detects ratio 0 (0-0 start)"},
+   {cat:"math",name:"Value",props:{"Value":"0.5"},note:"0-0時の表示比率",note_en:"Ratio shown at 0-0"},
+   {cat:"sel",name:"Input Selector"},
+   {cat:"math",name:"Value",props:{"Value":v.maxw},note:"最大幅",note_en:"Max width"},
+   {cat:"math",name:"Multiply",note:"最大幅×比率",note_en:"max × ratio"},
+   {cat:"object",name:v.bar,item:"Width"}],
+  wire:v=>({n:{h:["object",v.home+" .Text"],a:["object",v.away+" .Text"],ad:["math","Add"],dv:["math","Divide"],z:["math","Value 0"],eq:["logic","Equal To"],hf:["math","Value 0.5"],is:["sel","Input Selector"],mx:["math","Value "+v.maxw],ml:["math","Multiply"],b:["object",v.bar+" .Width"]},
+    e:[["h","ad","","Base"],["a","ad","","+"],["h","dv","","Base"],["ad","dv","","Divisor"],["z","eq","","Base"],["dv","eq","","=="],["eq","is","","Index"],["dv","is","","[0]"],["hf","is","","[1]"],["mx","ml","","Base"],["is","ml","","Multiplier"],["ml","b"]]}),
+  steps:v=>["<b>"+esc(v.bar)+"</b> の Visual Logic エディタを開く","上の表の11ブロックを置き、Value 3個に <b>0 / 0.5 / "+esc(v.maxw)+"</b> を設定","結線： "+esc(v.home)+" の Text → Add の <b>Base</b>／ "+esc(v.away)+" の Text → Add の <b>+</b>","結線： "+esc(v.home)+" の Text → Divide の <b>Base</b>／ Add の Out → Divide の <b>Divisor</b>","結線： Value(0) → Equal To の <b>Base</b>／ Divide の Out → Equal To の <b>==</b>","結線： Equal To の Out → Input Selector の <b>Index</b>／ Divide の Out → <b>[0]</b>／ Value(0.5) → <b>[1]</b>","結線： Value("+esc(v.maxw)+") → Multiply の <b>Base</b>／ Input Selector の Output → <b>Multiplier</b>","結線： Multiply の Out → "+esc(v.bar)+" の <b>Width</b>","確認： 得点を変えるとバー幅が比率で伸縮（0-0では50%）"],
+  steps_en:v=>["Open the VL editor on <b>"+esc(v.bar)+"</b>","Place the 11 blocks from the table; set the three Values to <b>0 / 0.5 / "+esc(v.maxw)+"</b>","Wire "+esc(v.home)+" Text → Add <b>Base</b>, "+esc(v.away)+" Text → Add <b>+</b>","Wire "+esc(v.home)+" Text → Divide <b>Base</b>, Add Out → Divide <b>Divisor</b>","Wire Value(0) → Equal To <b>Base</b>, Divide Out → Equal To <b>==</b>","Wire Equal To Out → Input Selector <b>Index</b>, Divide Out → <b>[0]</b>, Value(0.5) → <b>[1]</b>","Wire Value("+esc(v.maxw)+") → Multiply <b>Base</b>, Input Selector Output → <b>Multiplier</b>","Wire Multiply Out → "+esc(v.bar)+" <b>Width</b>","Check: bar width follows the score ratio (50% at 0-0)"],
+  gotcha:"比率が0のとき（0-0開始時）だけ0.5に差し替えるガード入り。バーは左端基準にすると自然に伸びる。※実機エクスポート（％BAR）と同一構成。",
+  gotcha_en:"Includes the guard that swaps in 0.5 when the ratio is 0 (0-0 start). Anchor the bar at its left edge. Identical to the machine-exported %BAR graph."}
+];
+const VLB_CURMAP={
+ "Mirror one text into another (exact copy)":"mirror",
+ "Trim trailing characters (show only N from the left)":"trim",
+ "Auto-enable Word Wrap when text exceeds a length threshold":"wordwrap",
+ "Switch game-clock format by remaining time (NN:SS ⇄ SS.ZZZ)":"clockfmt",
+ "Control bar width by score ratio (Home Score Ratio Width)":"barratio"};
+const VLBALL=SEED.map((r,i)=>{
+  const cid=VLB_CURMAP[r.title_en];
+  if(cid){const c=VLB_CUR.filter(x=>x.id===cid)[0];if(c){c.diff=r.diff;c.seedIdx=i;return c;}}
+  return vlbAuto(r,i);
+});
+let vlbMode="single",vlbSel=0,vlbVals={},vlbInst=[],vlbUid=1;
+function vlbP(r,key){key=key||r.id;const v={};(r.params||[]).forEach(p=>{const s=vlbVals[key]&&vlbVals[key][p.k];v[p.k]=(s!=null&&s!=="")?s:p.def;});return v;}
+function vlbInput(id,k,el){(vlbVals[id]=vlbVals[id]||{})[k]=el.value;renderVLBuilder();}
+function vlbInputU(uid,k,el){(vlbVals["u"+uid]=vlbVals["u"+uid]||{})[k]=el.value;renderVLBuilder();}
+function vlbAdd(){const sel=document.getElementById("vlb_addsel");if(!sel)return;vlbInst.push({ri:+sel.value,uid:vlbUid++});renderVLBuilder();}
+function vlbDel(uid){vlbInst=vlbInst.filter(x=>x.uid!==uid);renderVLBuilder();}
+function vlbSetMode(m){vlbMode=m;renderVLBuilder();}
+function vlbBlockRows(list,L){
+  return list.map(b=>{
+    const col=CAT[b.cat]?CAT[b.cat].v:"#8a93a6";
+    const nm=b.item?esc(b.name)+' <span style="color:#888">('+esc(b.item)+')</span>':esc(b.name);
+    const set=b.props?Object.keys(b.props).map(k2=>esc(k2)+' = <b>'+esc(b.props[k2])+'</b>').join('　'):'';
+    const nt=b.note?('<span style="color:#888">'+esc(L?(b.note_en||b.note):b.note)+'</span>'):'';
+    return '<tr><td style="padding:6px 10px;border-bottom:1px solid var(--line,#eee)"><i style="display:inline-block;width:9px;height:9px;border-radius:50%;background:'+col+';margin-right:7px"></i>'+nm+'</td><td style="padding:6px 10px;border-bottom:1px solid var(--line,#eee)">'+(set||nt||'—')+(set&&nt?('<br>'+nt):'')+'</td></tr>';
+  }).join('');
+}
+function vlbTable(rows,L){return '<table style="border-collapse:collapse;font-size:13px;background:#fff;border:1px solid var(--line,#e5e2dc);width:100%;max-width:760px"><tr><th style="text-align:left;padding:6px 10px;border-bottom:2px solid var(--line,#ddd)">'+(L?'Block':'ブロック')+'</th><th style="text-align:left;padding:6px 10px;border-bottom:2px solid var(--line,#ddd)">'+(L?'Settings / role':'設定・役割')+'</th></tr>'+rows+'</table>';}
+function vlbMerge(insts){
+  const n={},e=[],sinks={};let conflicts=[];
+  insts.forEach(inst=>{
+    const r=VLBALL[inst.ri],v=vlbP(r,"u"+inst.uid),w=r.wire(v),map={};
+    Object.keys(w.n).forEach(id=>{
+      const nd=w.n[id];
+      const key=(nd[0]==="object")?("O:"+nd[1]):("F:"+inst.uid+":"+id);
+      if(!n[key])n[key]=nd;
+      map[id]=key;
+    });
+    (w.e||[]).forEach(ed=>{
+      const to=map[ed[1]];
+      e.push([map[ed[0]],to,ed[2]||"",ed[3]||""]);
+      if(to.slice(0,2)==="O:"){(sinks[to]=sinks[to]||new Set()).add(inst.uid);}
+    });
+  });
+  Object.keys(sinks).forEach(k=>{ if(sinks[k].size>1) conflicts.push(k.slice(2)); });
+  return {w:{n:n,e:e},conflicts:conflicts};
+}
+function vlbGroupedOptions(L,selIdx){
+  const groups={"初級":[],"中級":[],"上級":[]};
+  VLBALL.forEach((r,i)=>{(groups[r.diff]||groups["中級"]).push(i);});
+  const gl={"初級":L?"Beginner":"初級","中級":L?"Intermediate":"中級","上級":L?"Advanced":"上級"};
+  return Object.keys(groups).map(g=>'<optgroup label="'+gl[g]+'">'+groups[g].map(i=>'<option value="'+i+'"'+(i===selIdx?' selected':'')+'>'+String(i+1).padStart(2,"0")+'｜'+esc(L?VLBALL[i].t_en:VLBALL[i].t)+'</option>').join('')+'</optgroup>').join('');
+}
+function vlbParamInputs(params,vals,handler,L){
+  return params.map(p=>'<label style="display:flex;flex-direction:column;gap:3px;font-size:12px;color:#666"><span>'+esc(L?p.lab_en:p.lab)+'</span><input type="text" value="'+esc(vals[p.k])+'" style="padding:7px 9px;border:1px solid var(--line,#ccc);border-radius:7px;font-size:13.5px;min-width:150px" onchange="'+handler(p)+'"></label>').join('');
+}
+function renderVLBuilder(){
+  const L=lang==='en';
+  const host=document.getElementById("script");
+  const modeBtn=(m,lab)=>'<button style="padding:7px 14px;border-radius:8px;border:1px solid var(--line,#ccc);cursor:pointer;font-size:13px;'+(vlbMode===m?'background:var(--accent,#f26a1b);color:#fff;border-color:var(--accent,#f26a1b);font-weight:700':'background:#fff')+'" onclick="vlbSetMode(\''+m+'\')">'+lab+'</button>';
+  let body='';
+  if(vlbMode==="single"){
+    const r=VLBALL[vlbSel],v=vlbP(r);
+    const sel='<select style="font-size:14px;padding:8px 10px;border-radius:8px;border:1px solid var(--line,#ccc);max-width:100%" onchange="vlbSel=+this.value;renderVLBuilder()">'+vlbGroupedOptions(L,vlbSel)+'</select>';
+    const inputs=vlbParamInputs(r.params||[],v,p=>"vlbInput('"+r.id+"','"+p.k+"',this)",L);
+    const svg=svgWire(r.wire(v),null);
+    const steps=(L?r.steps_en(v):r.steps(v)).map(x=>'<li style="margin:5px 0">'+x+'</li>').join('');
+    const goal=L?r.goal_en:r.goal;
+    body='<div style="display:flex;gap:14px;flex-wrap:wrap;align-items:flex-end;margin-bottom:10px">'+sel+inputs+'</div>'
+     +(goal?'<p style="font-size:13px;margin:2px 0 10px;color:#555">🎯 '+esc(goal)+'</p>':'')
+     +'<div style="font-weight:700;font-size:13px;margin:12px 0 6px">'+(L?'Finished wiring':'完成イメージ')+'</div>'
+     +'<div style="background:#fff;border:1px solid var(--line,#e5e2dc);border-radius:10px;padding:12px;overflow-x:auto">'+svg+'</div>'
+     +'<div style="font-weight:700;font-size:13px;margin:14px 0 6px">'+(L?'Blocks & settings':'置くブロックと設定')+'</div>'
+     +vlbTable(vlbBlockRows(r.blocks(v),L),L)
+     +'<div style="font-weight:700;font-size:13px;margin:14px 0 6px">'+(L?'Wiring steps':'結線手順')+'</div>'
+     +'<ol style="font-size:13.5px;padding-left:1.4em;margin:0">'+steps+'</ol>'
+     +(r.gotcha?'<div style="margin:14px 0 24px;padding:10px 14px;border-left:3px solid var(--accent,#f26a1b);background:#fff;border-radius:0 10px 10px 0;font-size:13px">💡 '+esc(L?(r.gotcha_en||r.gotcha):r.gotcha)+'</div>':'');
+  }else{
+    const addRow='<div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:10px"><select id="vlb_addsel" style="font-size:13.5px;padding:7px 9px;border-radius:8px;border:1px solid var(--line,#ccc);max-width:70%">'+vlbGroupedOptions(L,-1)+'</select><button style="padding:7px 16px;border-radius:8px;border:1px solid var(--accent,#f26a1b);background:var(--accent,#f26a1b);color:#fff;font-weight:700;cursor:pointer" onclick="vlbAdd()">＋ '+(L?'Add':'追加')+'</button></div>';
+    if(!vlbInst.length){
+      body=addRow+'<p style="color:#777;font-size:13px">'+(L?'Add two or more recipes — the same recipe can be added many times (once per object). Blocks pointing at the same object name are unified automatically, so matching names link recipes together.':'レシピを追加してください。<b>同じレシピを何回でも追加できます</b>（オブジェクト1つにつき1回）。同じオブジェクト名を指すブロックは自動で1つに統合されるので、名前を揃えるとレシピ同士が連携します。')+'</p>';
+    }else{
+      const instRows=vlbInst.map((inst,ix)=>{
+        const r=VLBALL[inst.ri],v=vlbP(r,"u"+inst.uid);
+        const inputs=vlbParamInputs(r.params||[],v,p=>"vlbInputU("+inst.uid+",'"+p.k+"',this)",L);
+        return '<div style="border:1px solid var(--line,#e5e2dc);border-radius:10px;background:#fff;padding:10px 14px;margin:8px 0">'
+         +'<div style="display:flex;align-items:center;gap:8px;margin-bottom:6px"><b style="font-size:13.5px">'+(ix+1)+'）'+esc(L?r.t_en:r.t)+'</b><button style="margin-left:auto;border:1px solid var(--line,#ccc);background:#fff;border-radius:7px;cursor:pointer;padding:3px 10px" onclick="vlbDel('+inst.uid+')">✕ '+(L?'Remove':'削除')+'</button></div>'
+         +'<div style="display:flex;gap:12px;flex-wrap:wrap">'+(inputs||('<span style="color:#999;font-size:12.5px">'+(L?'No name parameters in this recipe':'このレシピに名前パラメータはありません')+'</span>'))+'</div></div>';
+      }).join('');
+      const m=vlbMerge(vlbInst);
+      const svg=svgWire(m.w,null);
+      const warn=m.conflicts.length?('<div style="margin:10px 0;padding:10px 14px;border-left:3px solid #e24b4a;background:#fff;border-radius:0 10px 10px 0;font-size:13px;color:#b23">⚠ '+(L?'Multiple recipes write into the same input: ':'複数のレシピが同じ入力プロパティへ書き込んでいます： ')+m.conflicts.map(c=>'<b>'+esc(c)+'</b>').join(" / ")+(L?' — keep only one writer or switch with a Selector.':' — どちらか一方にするか、Selector系で切り替えてください。')+'</div>'):'';
+      const per=vlbInst.map((inst,ix)=>{
+        const r=VLBALL[inst.ri],v=vlbP(r,"u"+inst.uid);
+        const steps=(L?r.steps_en(v):r.steps(v)).map(x=>'<li style="margin:4px 0">'+x+'</li>').join('');
+        return '<details style="margin:10px 0;background:#fff;border:1px solid var(--line,#e5e2dc);border-radius:10px;padding:10px 14px"><summary style="font-weight:700;font-size:13.5px;cursor:pointer">'+(ix+1)+'）'+esc(L?r.t_en:r.t)+'</summary>'
+         +'<div style="margin-top:8px">'+vlbTable(vlbBlockRows(r.blocks(v),L),L)+'<ol style="font-size:13px;padding-left:1.4em;margin:10px 0 4px">'+steps+'</ol>'
+         +(r.gotcha?'<div style="font-size:12.5px;color:#777;margin-top:6px">💡 '+esc(L?(r.gotcha_en||r.gotcha):r.gotcha)+'</div>':'')+'</div></details>';
+      }).join('');
+      body=addRow+instRows+warn
+       +'<div style="font-weight:700;font-size:13px;margin:12px 0 6px">'+(L?'Merged wiring ('+vlbInst.length+' recipes)':'合成した完成イメージ（'+vlbInst.length+'レシピ）')+'</div>'
+       +'<div style="background:#fff;border:1px solid var(--line,#e5e2dc);border-radius:10px;padding:12px;overflow-x:auto">'+svg+'</div>'
+       +'<div style="font-weight:700;font-size:13px;margin:14px 0 6px">'+(L?'Per-recipe blocks & steps':'レシピ別のブロックと手順')+'</div>'+per+'<div style="height:16px"></div>';
+    }
+  }
+  host.innerHTML='<div style="max-width:1080px">'
+   +'<h2 style="margin:4px 0 2px">'+(L?'VL Builder':'VLビルダー')+'</h2>'
+   +'<p style="color:#777;font-size:13px;margin:0 0 10px">'+(L?'Pick a recipe, type your object names — the diagram, settings and wiring steps update for rebuilding by hand in XPression.':'レシピを選んでオブジェクト名を入れると、完成イメージ（結線図）・設定・結線手順があなたの名前で表示されます。それを見ながら実機のVLエディタで組んでください。')+'</p>'
+   +'<div style="display:flex;gap:8px;margin-bottom:12px">'+modeBtn("single",L?'Single recipe':'1レシピ')+modeBtn("combo",L?'Combine recipes':'組み合わせ')+'</div>'
+   +body+'</div>';
+}
+
 fillCatSelect();
 nbFillCat();
 applyUI();
 render();
 document.addEventListener('DOMContentLoaded',applyUI);
-(function(){var hv={"#builder":"builder","#scriptScene":"scriptScene","#scriptExt":"scriptExt","#scriptDict":"scriptDict","#rosstalk":"rosstalk","#dynmat":"dynmat","#datalinq":"datalinq","#glossary":"glossary","#recipes":"recipes"};if(hv[location.hash])setView(hv[location.hash]);})();
+(function(){var hv={"#builder":"builder","#scriptScene":"scriptScene","#scriptExt":"scriptExt","#scriptDict":"scriptDict","#rosstalk":"rosstalk","#dynmat":"dynmat","#datalinq":"datalinq","#glossary":"glossary","#recipes":"recipes","#vlbuilder":"vlbuilder"};if(hv[location.hash])setView(hv[location.hash]);})();
 </script>
 <footer class="orgfoot">
   <div class="orgrow">
